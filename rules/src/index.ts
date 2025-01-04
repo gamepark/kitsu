@@ -1,3 +1,3 @@
-export { GameTemplateRules } from './GameTemplateRules'
-export { GameTemplateOptionsSpec } from './GameTemplateOptions'
-export { GameTemplateSetup } from './GameTemplateSetup'
+export { KitsuRules } from './KitsuRules'
+export { KitsuOptionsSpec } from './KitsuOptions'
+export { KitsuSetup } from './KitsuSetup'

@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
-import { GameTemplateOptionsSpec } from '@gamepark/game-template/GameTemplateOptions'
-import { GameTemplateRules } from '@gamepark/game-template/GameTemplateRules'
-import { GameTemplateSetup } from '@gamepark/game-template/GameTemplateSetup'
+import { KitsuOptionsSpec } from '@gamepark/kitsu/KitsuOptions'
+import { KitsuRules } from '@gamepark/kitsu/KitsuRules'
+import { KitsuSetup } from '@gamepark/kitsu/KitsuSetup'
 import { GameProvider, setupTranslation } from '@gamepark/react-game'
 import { StrictMode } from 'react'
 import ReactDOM from 'react-dom'
@@ -16,10 +16,10 @@ setupTranslation(translations, { debug: false })
 ReactDOM.render(
   <StrictMode>
     <GameProvider
-      game="game-template"
-      Rules={GameTemplateRules}
-      optionsSpec={GameTemplateOptionsSpec}
-      GameSetup={GameTemplateSetup}
+      game="kitsu"
+      Rules={KitsuRules}
+      optionsSpec={KitsuOptionsSpec}
+      GameSetup={KitsuSetup}
       material={Material}
       locators={Locators}
       animations={gameAnimations}>
