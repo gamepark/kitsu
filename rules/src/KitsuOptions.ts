@@ -24,7 +24,7 @@ export type KitsuOptions = {
 export const KitsuOptionsSpec: OptionsSpec<KitsuOptions> = {
   players: {
     team: {
-      label: t => t('TeamColor'),
+      label: t => t('Team color'),
       values: teamColors,
       valueSpec: color => ({ label: t => getTeamName(color, t) }),
     }
