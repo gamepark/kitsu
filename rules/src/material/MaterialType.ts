@@ -5,6 +5,6 @@ export enum MaterialType {
     KitsuCard,
     ClanCard,
     LeaderToken,
-    RoundVictory,
+    RoundVictoryCard,
     SetupCard
 }
