@@ -1,12 +1,12 @@
 import { OptionsSpec } from '@gamepark/rules-api'
 import { TFunction } from 'i18next'
-import {TeamColor, teamColors} from "./TeamColor";
+import { TeamColor, teamColors } from "./TeamColor";
 
 /**
  * This is the options for each player in the game.
  */
 type PlayerOptions = {
-  Team: TeamColor
+  team: TeamColor
 }
 
 /**
@@ -23,19 +23,19 @@ export type KitsuOptions = {
  */
 export const KitsuOptionsSpec: OptionsSpec<KitsuOptions> = {
   players: {
-    Team: {
-      label: t => t("TeamColor"),
+    team: {
+      label: t => t('TeamColor'),
       values: teamColors,
-      valueSpec: color => ({ label: t => getTypeName(color, t) }),
+      valueSpec: color => ({ label: t => getTeamName(color, t) }),
     }
   }
 }
 
-export function getTypeName (color: TeamColor, t: TFunction) {
+export function getTeamName (color: TeamColor, t: TFunction) {
   switch (color) {
     case TeamColor.Zenko:
-      return t('Bleu');
+      return t('Zenko (blue) team');
     case TeamColor.Yako:
-      return t('Orange');
+      return t('Yako (orange) team');
   }
 }
