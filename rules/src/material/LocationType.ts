@@ -1,20 +1,14 @@
 export enum LocationType {
-    WisdomBoardZone = 1,
-    KitsunePawnArea,
-    PowerTokenArea,
-    StackCardsArea,
-    DiscardedCardsArea,
-    DiscardedPowerTokenArea,
-    SetupCardZone,
-    ClanCardZone,
-    LeaderTokenSpot,
-    PowerTokenSpot,
-    PlayerHandZone,
-    PlayedCardZone
+    WisdomBoardSpot = 1,
+    KitsunePawnSpotOnWisdomBoard,
+    PowerTokenSpotOnWisdomBoard,
+    KitsuCardDeckSpotOnWisdomBoard,
+    KitsuCardDiscardSpotOnWisdomBoard,
+    DiscardedPowerTokenAreaOnWisdomBoard,
+    SetupCardSpot,
+    ClanCardSpot,
+    LeaderTokenSpotOnClanCard,
+    PowerTokenSpotOnClanCard,
+    PlayerHand,
+    PlayedKitsuCardSpot
 }
-
-/*
-Zone: placed directly on table
-Spot: placed on cards
-Area: placed on WisdomBoard
-*/
