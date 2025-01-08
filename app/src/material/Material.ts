@@ -3,7 +3,7 @@ import { MaterialDescription } from '@gamepark/react-game'
 import { clanCardDescription } from "./ClanCardDescription";
 import { kitsuCardDescription } from "./KitsuCardDescription";
 import { kitsunePawnDescription } from "./KitsunePawnDescription";
-import { leaderTokenDescription } from "./LeaderToken";
+import { leaderTokenDescription } from "./LeaderTokenDescription";
 import { powerTokenDescription } from "./PowerTokenDescription";
 import { setupCardDescription } from "./SetupCardDescription";
 import { victoryCardDescription } from "./VictoryCardDescription";
