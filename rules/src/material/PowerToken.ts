@@ -4,8 +4,7 @@ export enum PowerToken {
     ColourExchange = 1,
     NoAdvance,
     PickDiscarded,
-    Plus3Yako,
-    Plus3Zenko,
+    Plus3,
     Protection,
 }
 
