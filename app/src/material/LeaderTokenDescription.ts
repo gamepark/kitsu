@@ -1,8 +1,9 @@
-import { RoundTokenDescription } from '@gamepark/react-game'
-import FirstPlayerToken from '../images/Tokens/FirstPlayerToken.png'
+import { TokenDescription } from '@gamepark/react-game'
+import FirstPlayerToken from '../images/Tokens/FirstPlayerToken.jpg'
 
-class LeaderTokenDescription extends RoundTokenDescription {
-    diameter = 4.6
+class LeaderTokenDescription extends TokenDescription {
+    width = 3.50
+    height = 4.00
     image = FirstPlayerToken
 }
 
