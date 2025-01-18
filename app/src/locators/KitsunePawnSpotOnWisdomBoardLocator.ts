@@ -33,10 +33,7 @@ class KitsunePawnSpotOnWisdomBoardLocator extends ListLocator {
         const numberOfItems = this.countListItems(item.location, context);
         let coordinates = super.getItemCoordinates(item, context);
         if (numberOfItems === 2 && typeof coordinates.x !== 'undefined') {
-            coordinates = {
-                x: coordinates.x - 0.5,
-                y: coordinates.y
-            }
+            coordinates.x -= 0.5
         }
         return coordinates;
     }
