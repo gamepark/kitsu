@@ -7,7 +7,8 @@ class SetupCardSpotLocator extends Locator {
     coordinates = { x: 0, y: 0 }
     getRotateZ(_location: Location<number, number>, context: MaterialContext<number, number, number>): number {
         const numberOfPlayers = context.rules.players.length;
-        const teamPlayer = context.rules.remind<TeamColor>(Memorize.Team, context.player);
+        const playerPointOfView = (context.player === undefined) ? 1 : context.player;
+        const teamPlayer = context.rules.remind<TeamColor>(Memorize.Team, playerPointOfView);
         let rotation: number = 0;
         if (numberOfPlayers === 4) {
             rotation += (teamPlayer === TeamColor.Zenko) ? 45 : -45;

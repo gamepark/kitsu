@@ -1,7 +1,6 @@
 import {getRelativePlayerIndex, Locator, MaterialContext} from "@gamepark/react-game";
 import {Coordinates, Location} from "@gamepark/rules-api";
-
-const RADIUS: number = 25;
+import { RADIUS } from "./Radius";
 
 class ClanCardSpotLocator extends Locator {
     getCoordinates(location: Location<number, number>, context: MaterialContext<number, number, number>): Partial<Coordinates> {
@@ -21,4 +20,3 @@ class ClanCardSpotLocator extends Locator {
 }
 
 export const clanCardSpotLocator = new ClanCardSpotLocator();
-export const GameTableRadius: number = RADIUS;

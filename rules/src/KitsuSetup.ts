@@ -19,7 +19,7 @@ export class KitsuSetup extends MaterialGameSetup<number, MaterialType, Location
     this.material(MaterialType.KitsunePawn).createItems(kitsunePawnIds.map(player => ({
       id: player,
       location: {
-        id: 1,
+        id: 0,
         type: LocationType.KitsunePawnSpotOnWisdomBoard,
       },
     })));
