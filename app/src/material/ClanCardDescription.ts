@@ -44,7 +44,7 @@ class ClanCardDescription extends CardDescription {
             case 4:
                 return playerTeam === TeamColor.Yako ? ClanCard.Yako4Players : ClanCard.Zenko4Players;
             case 6:
-                return playerTeam === TeamColor.Yako ? ClanCard.Yako6Players : ClanCard.Zenko4Players;
+                return playerTeam === TeamColor.Yako ? ClanCard.Yako6Players : ClanCard.Zenko6Players;
             default:
                 throw new Error("Invalid number of players");
         }

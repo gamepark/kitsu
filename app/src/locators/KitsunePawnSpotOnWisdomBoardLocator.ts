@@ -1,6 +1,6 @@
-import { ListLocator, MaterialContext } from "@gamepark/react-game";
+import { ItemContext, ListLocator, MaterialContext } from "@gamepark/react-game";
 import { MaterialType } from "@gamepark/kitsu/material/MaterialType";
-import { Coordinates, Location } from "@gamepark/rules-api";
+import { Coordinates, Location, MaterialItem } from "@gamepark/rules-api";
 
 const spotsCoordinates = [
     { x: -10.36, y: -1.19 },
@@ -25,10 +25,23 @@ class KitsunePawnSpotOnWisdomBoardLocator extends ListLocator {
     getCoordinates(location: Location<number, number>, _context: MaterialContext<number, number, number>): Partial<Coordinates> {
         return {
             x: spotsCoordinates[location.id].x,
-            y: spotsCoordinates[location.id].y
+            y: spotsCoordinates[location.id].y - 0.7
         }
     }
-    gap = { x: 1, y: 1 }
+
+    getItemCoordinates(item: MaterialItem<number, number>, context: ItemContext<number, number, number>): Partial<Coordinates> {
+        const numberOfItems = this.countListItems(item.location, context);
+        let coordinates = super.getItemCoordinates(item, context);
+        if (numberOfItems === 2 && typeof coordinates.x !== 'undefined') {
+            coordinates = {
+                x: coordinates.x - 0.5,
+                y: coordinates.y
+            }
+        }
+        return coordinates;
+    }
+
+    gap = { x: 1, y: 0 }
     maxCount = 2
 }
 

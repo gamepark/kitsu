@@ -6,6 +6,7 @@ import { MaterialType } from './material/MaterialType'
 import { RuleId } from './rules/RuleId'
 import { Memorize } from "./Memorize";
 import { TeamColor } from "./TeamColor";
+import { kitsunePawnIds } from "./material/KitsunePawn";
 
 /**
  * This class creates a new Game based on the game options
@@ -14,7 +15,14 @@ export class KitsuSetup extends MaterialGameSetup<number, MaterialType, Location
   Rules = KitsuRules
 
   setupMaterial(options: KitsuOptions) {
-    this.MemorizeTeamsAndReorderPlayers(options)
+    this.MemorizeTeamsAndReorderPlayers(options);
+    this.material(MaterialType.KitsunePawn).createItems(kitsunePawnIds.map(player => ({
+      id: player,
+      location: {
+        id: 1,
+        type: LocationType.KitsunePawnSpotOnWisdomBoard,
+      },
+    })));
   }
 
   start() {

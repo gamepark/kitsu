@@ -8,8 +8,8 @@ import { MaterialItem } from "@gamepark/rules-api";
 
 
 class SetupCardDescription extends CardDescription {
-    width = 6.30
-    height = 8.80
+    width = 8.00
+    height = 12.00
     images = {
         [SetupCard.For2Players]: SetupCard2,
         [SetupCard.For4Players]: SetupCard4,
