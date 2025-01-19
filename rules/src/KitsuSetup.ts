@@ -28,7 +28,7 @@ export class KitsuSetup extends MaterialGameSetup<number, MaterialType, Location
   }
 
   private CreatePowerTokens() {
-    this.material( MaterialType.PowerToken ).createItems( powerToken.map( token => ({
+    this.material(MaterialType.PowerToken).createItems(powerToken.map(token => ({
       id: token,
       location: {
         id: token,
