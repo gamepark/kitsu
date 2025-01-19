@@ -1,9 +1,7 @@
 import {
   hideItemId, hideItemIdToOthers,
-  //HiddenMaterialRules,
   MaterialGame,
   MaterialMove,
-  //MaterialRules,
   PositiveSequenceStrategy,
   SecretMaterialRules,
   TimeLimit
@@ -18,7 +16,7 @@ import { RuleId } from './rules/RuleId'
  * This class implements the rules of the board game.
  * It must follow Game Park "Rules" API so that the Game Park server can enforce the rules.
  */
-export class KitsuRules extends SecretMaterialRules
+export class KitsuRules extends SecretMaterialRules<number, MaterialType, LocationType>
   implements TimeLimit<MaterialGame<number, MaterialType, LocationType>, MaterialMove<number, MaterialType, LocationType>, number> {
   rules = {
     [RuleId.TheFirstStep]: TheFirstStepRule
