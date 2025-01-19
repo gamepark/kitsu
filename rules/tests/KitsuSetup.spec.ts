@@ -261,7 +261,7 @@ describe('Setup tests', () => {
             setup.setupMaterial(options);
 
             // Then
-            expect(setup.players).toHaveLength(2);
+            expect(setup.players).toHaveLength(6);
             expect(setup.players).toEqual(expected);
         });
 
@@ -306,9 +306,9 @@ describe('Setup tests', () => {
             const kitsuCardIds = kitsuCardItems.map(kitsuCard => kitsuCard.id);
 
             // Then
-            expect(kitsuCardItems).toHaveLength(24);
+            expect(kitsuCardItems).toHaveLength(30);
             expect(kitsuCardItems.every(item => item.location.type === LocationType.KitsuCardDeckSpotOnWisdomBoard)).toBe(true);
-            expect(kitsuCardIds).toContainEqual(getEnumValues(KitsuCard));
+            expect(kitsuCardIds).toEqual(getEnumValues(KitsuCard));
         });
 
         test('KitsuSetup.setupMaterial() should create the 5 power tokens and place them in the corresponding spots', () => {
