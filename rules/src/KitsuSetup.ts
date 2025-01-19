@@ -41,7 +41,7 @@ export class KitsuSetup extends MaterialGameSetup<number, MaterialType, Location
     // How can we get the length of the kitsuCardsIds enum ?
     const lastCardToTake = this.players.length === 6 ? kitsuCardIds.length : last24PlayersKitsuCardId;
 
-    this.material( MaterialType.KitsuCard ).createItems( kitsuCardIds.slice(0, lastCardToTake).map( card => ({
+    this.material(MaterialType.KitsuCard).createItems(kitsuCardIds.slice(0, lastCardToTake).map(card => ({
       id: card,
       location: {
         type: LocationType.KitsuCardDeckSpotOnWisdomBoard,
