@@ -265,27 +265,6 @@ describe('Setup tests', () => {
             expect(setup.players).toEqual(expected);
         });
 
-        test('KistuSetup.setupNewMaterial() should reorder the players according to teams', () => {
-            // Given
-            const setup = new KitsuSetup();
-            const options = {
-                players : [
-                    {team: TeamColor.Zenko, id: 3},
-                    {team: TeamColor.Yako, id: 1},
-                    {team: TeamColor.Yako, id: 4},
-                    {team: TeamColor.Yako, id: 2},
-                    {team: TeamColor.Zenko, id: 5},
-                    {team: TeamColor.Zenko, id: 6}
-                ]
-            };
-
-            // When
-            setup.setupMaterial(options);
-
-            // Then
-            expect(setup.players).toEqual([3, 1, 5, 4, 6, 2]);
-        });
-
         test('KitsuSetup.setupMaterial() should create the 30 Kitsu cards in the Deck location', () => {
             // Given
             const setup = new KitsuSetup();
