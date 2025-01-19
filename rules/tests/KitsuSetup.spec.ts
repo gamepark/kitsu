@@ -132,7 +132,7 @@ describe('Setup tests', () => {
             setup.setupMaterial(options);
 
             // Then
-            expect(setup.players).toHaveLength(2);
+            expect(setup.players).toHaveLength(4);
             expect(setup.players).toEqual(expected);
         });
 
@@ -141,8 +141,10 @@ describe('Setup tests', () => {
             const setup = new KitsuSetup();
             const options = {
                 players : [
-                    {team: TeamColor.Zenko, id: 1},
-                    {team: TeamColor.Yako, id: 2}
+                    {team: TeamColor.Yako, id: 1},
+                    {team: TeamColor.Yako, id: 3},
+                    {team: TeamColor.Zenko, id: 4},
+                    {team: TeamColor.Zenko, id: 2}
                 ]
             };
 
@@ -153,7 +155,8 @@ describe('Setup tests', () => {
             // Then
             expect(kitsunePawns).toHaveLength(2);
             expect(kitsunePawns.every((pawn) => pawn.location.id === 0)).toEqual(true);
-            expect(kitsunePawns.map(pawn => pawn.id)).toContainEqual(getEnumValues(KitsunePawn));
+            expect(kitsunePawns.map(pawn => pawn.id)).toEqual(expect.arrayContaining(getEnumValues(KitsunePawn)));
+            //expect(kitsunePawns.map(pawn => pawn.id)).toContainEqual(getEnumValues(KitsunePawn));
         });
 
         test('KitsuSetup.setupMaterial() should create the 24 Kitsu cards in the Deck location', () => {
@@ -176,7 +179,7 @@ describe('Setup tests', () => {
             // Then
             expect(kitsuCardItems).toHaveLength(24);
             expect(kitsuCardItems.every(item => item.location.type === LocationType.KitsuCardDeckSpotOnWisdomBoard)).toBe(true);
-            expect(kitsuCardIds).toContainEqual(getEnumValues(KitsuCard).slice(0, last24PlayersKitsuCardId + 1));
+            expect(kitsuCardIds).toEqual(getEnumValues(KitsuCard).slice(0, last24PlayersKitsuCardId));
         });
 
         test('KitsuSetup.setupMaterial() should create the 5 power tokens and place them in the corresponding spots', () => {
