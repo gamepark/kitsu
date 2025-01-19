@@ -1,5 +1,5 @@
 import { DeckLocator } from "@gamepark/react-game";
-import {MaterialType} from "@gamepark/kitsu/material/MaterialType";
+import { MaterialType } from "@gamepark/kitsu/material/MaterialType";
 
 class KitsuCardDeckSpotOnWisdomBoardLocator extends DeckLocator {
     parentItemType = MaterialType.WisdomBoard

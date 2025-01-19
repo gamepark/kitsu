@@ -16,7 +16,8 @@
   "scripts": {
     "build": "tsc",
     "prepublishOnly": "tsc",
-    "publish": "lerna publish"
+    "publish": "lerna publish",
+    "test": "jest"
   },
   "peerDependencies": {
     "@gamepark/rules-api": ">=6.28",
@@ -24,8 +25,11 @@
   },
   "devDependencies": {
     "@gamepark/rules-api": "~6.28.0",
+    "@types/jest": "^27.5.2",
     "@types/lodash": "^4.17.7",
     "i18next": "^22.0.3",
-    "lodash": "^4.17.21"
+    "lodash": "^4.17.21",
+    "ts-jest": "^27.1.5",
+    "ts-node": "^10.9.2"
   }
 }
