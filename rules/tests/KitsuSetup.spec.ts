@@ -12,7 +12,7 @@ describe('Setup tests', () => {
             {options: {players: [{team: TeamColor.Zenko, id: 1}, {team: TeamColor.Yako, id: 2}]}, expected: [1, 2]},
             {options: {players: [{team: TeamColor.Zenko, id: 2}, {team: TeamColor.Yako, id: 1}]}, expected: [2, 1]},
             {options: {players: [{team: TeamColor.Yako, id: 1}, {team: TeamColor.Zenko, id: 2}]}, expected: [1, 2]},
-            {options: {players: [{team: TeamColor.Yako, id: 2},  {team: TeamColor.Yako, id: 1}]}, expected: [2, 1]},
+            {options: {players: [{team: TeamColor.Yako, id: 2},  {team: TeamColor.Zenko, id: 1}]}, expected: [2, 1]},
         ])('KistuSetup.setupNewMaterial({players: [$options.players.0, $options.players.1}) should reorder the players according to teams : $expected', ({options, expected}) => {
             // Given
             const setup = new KitsuSetup();
@@ -42,7 +42,7 @@ describe('Setup tests', () => {
             // Then
             expect(kitsunePawns).toHaveLength(2);
             expect(kitsunePawns.every((pawn) => pawn.location.id === 0)).toEqual(true);
-            expect(kitsunePawns.map(pawn => pawn.id)).toContainEqual(getEnumValues(KitsunePawn));
+            expect(kitsunePawns.map(pawn => pawn.id)).toEqual(expect.arrayContaining(getEnumValues(KitsunePawn)));
         });
 
         test('KitsuSetup.setupMaterial() should create the 24 Kitsu cards in the Deck location', () => {
@@ -63,7 +63,7 @@ describe('Setup tests', () => {
             // Then
             expect(kitsuCardItems).toHaveLength(24);
             expect(kitsuCardItems.every(item => item.location.type === LocationType.KitsuCardDeckSpotOnWisdomBoard)).toBe(true);
-            expect(kitsuCardIds).toEqual(getEnumValues(KitsuCard).slice(0, last24PlayersKitsuCardId + 1));
+            expect(kitsuCardIds).toEqual(getEnumValues(KitsuCard).slice(0, last24PlayersKitsuCardId));
         });
 
         test('KitsuSetup.setupMaterial() should create the 5 power tokens and place them in the corresponding spots', () => {

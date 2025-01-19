@@ -7,6 +7,7 @@ import { RuleId } from './rules/RuleId'
 import { Memorize } from "./Memorize";
 import { TeamColor } from "./TeamColor";
 import { kitsunePawnIds } from "./material/KitsunePawn";
+import { kitsuCardIds, last24PlayersKitsuCardId } from "./material/KitsuCard";
 
 /**
  * This class creates a new Game based on the game options
@@ -16,17 +17,34 @@ export class KitsuSetup extends MaterialGameSetup<number, MaterialType, Location
 
   setupMaterial(options: KitsuOptions) {
     this.MemorizeTeamsAndReorderPlayers(options);
-    this.material(MaterialType.KitsunePawn).createItems(kitsunePawnIds.map(player => ({
-      id: player,
-      location: {
-        id: 0,
-        type: LocationType.KitsunePawnSpotOnWisdomBoard,
-      },
-    })));
+    this.CreateKitsunePawns();
+    this.CreateKitsuCards();
   }
 
   start() {
     this.startPlayerTurn(RuleId.TheFirstStep, this.players[0])
+  }
+
+  private CreateKitsuCards() {
+    const numberOfPlayers = this.players.length;
+    const lastCardToTake = (numberOfPlayers ===6) ? 30 : last24PlayersKitsuCardId;
+
+    this.material( MaterialType.KitsuCard ).createItems( kitsuCardIds.slice(0, lastCardToTake).map( card => ({
+      id: card,
+      location: {
+        type: LocationType.KitsuCardDeckSpotOnWisdomBoard,
+      },
+    })));
+  }
+
+  private CreateKitsunePawns(): void {
+    this.material( MaterialType.KitsunePawn ).createItems( kitsunePawnIds.map( player => ({
+      id: player,
+      location: {
+        id:0,
+        type: LocationType.KitsunePawnSpotOnWisdomBoard,
+      },
+    })));
   }
 
   private MemorizeTeamsAndReorderPlayers(options: KitsuOptions) {

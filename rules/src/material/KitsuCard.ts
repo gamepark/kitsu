@@ -33,6 +33,6 @@ export enum KitsuCard {
     Zenko3_2,
 }
 
-export const kistuCardIds = getEnumValues(KitsuCard);
+export const kitsuCardIds = getEnumValues(KitsuCard);
 
 export const last24PlayersKitsuCardId = KitsuCard.Katana_2
