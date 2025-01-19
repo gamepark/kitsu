@@ -156,7 +156,6 @@ describe('Setup tests', () => {
             expect(kitsunePawns).toHaveLength(2);
             expect(kitsunePawns.every((pawn) => pawn.location.id === 0)).toEqual(true);
             expect(kitsunePawns.map(pawn => pawn.id)).toEqual(expect.arrayContaining(getEnumValues(KitsunePawn)));
-            //expect(kitsunePawns.map(pawn => pawn.id)).toContainEqual(getEnumValues(KitsunePawn));
         });
 
         test('KitsuSetup.setupMaterial() should create the 24 Kitsu cards in the Deck location', () => {
