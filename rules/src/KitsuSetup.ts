@@ -8,6 +8,7 @@ import { Memorize } from "./Memorize";
 import { TeamColor } from "./TeamColor";
 import { kitsunePawnIds } from "./material/KitsunePawn";
 import { kitsuCardIds, last24PlayersKitsuCardId } from "./material/KitsuCard";
+import { powerToken } from "./material/PowerToken";
 
 /**
  * This class creates a new Game based on the game options
@@ -19,15 +20,26 @@ export class KitsuSetup extends MaterialGameSetup<number, MaterialType, Location
     this.MemorizeTeamsAndReorderPlayers(options);
     this.CreateKitsunePawns();
     this.CreateKitsuCards();
+    this.CreatePowerTokens();
   }
 
   start() {
     this.startPlayerTurn(RuleId.TheFirstStep, this.players[0])
   }
 
+  private CreatePowerTokens() {
+    this.material( MaterialType.PowerToken ).createItems( powerToken.map( token => ({
+      id: token,
+      location: {
+        id: token,
+        type: LocationType.PowerTokenSpotOnWisdomBoard,
+      },
+    })));
+  }
+
   private CreateKitsuCards() {
-    const numberOfPlayers = this.players.length;
-    const lastCardToTake = (numberOfPlayers ===6) ? 30 : last24PlayersKitsuCardId;
+    // How can we get the length of the kitsuCardsIds enum ?
+    const lastCardToTake = (this.players.length === 6) ? 30 : last24PlayersKitsuCardId;
 
     this.material( MaterialType.KitsuCard ).createItems( kitsuCardIds.slice(0, lastCardToTake).map( card => ({
       id: card,
