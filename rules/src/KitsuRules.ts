@@ -10,6 +10,7 @@ import { LocationType } from './material/LocationType'
 import { MaterialType } from './material/MaterialType'
 import { RoundSetupRule } from './rules/RoundSetupRule'
 import { RuleId } from './rules/RuleId'
+import { PlayKitsuCardRule } from "./rules/PlayKitsuCardRule";
 
 
 /**
@@ -19,7 +20,8 @@ import { RuleId } from './rules/RuleId'
 export class KitsuRules extends SecretMaterialRules<number, MaterialType, LocationType>
   implements TimeLimit<MaterialGame<number, MaterialType, LocationType>, MaterialMove<number, MaterialType, LocationType>, number> {
   rules = {
-    [RuleId.RoundSetup]: RoundSetupRule
+    [RuleId.RoundSetup]: RoundSetupRule,
+    [RuleId.PlayKitsuCard]: PlayKitsuCardRule,
   }
 
   locationsStrategies = {
