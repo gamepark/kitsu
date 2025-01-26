@@ -25,7 +25,7 @@ export class KitsuSetup extends MaterialGameSetup<number, MaterialType, Location
   }
 
   start() {
-    this.startPlayerTurn(RuleId.RoundSetup, this.players[0])
+    this.startPlayerTurn(RuleId.RoundSetupMoveKitsunePawns, this.players[0])
   }
 
   private CreateLeaderToken() {

@@ -18,7 +18,7 @@ export class PlayKitsuCardRule extends PlayerTurnRule<number, MaterialType, Loca
             const numberOfCardsPlayed = this.material(MaterialType.KitsuCard).location(LocationType.PlayedKitsuCardSpot).length;
             return (numberOfCardsPlayed < 4)
                 ? [this.startPlayerTurn<number, RuleId>(RuleId.PlayKitsuCard, this.nextPlayer)]
-                : [this.startPlayerTurn<number, RuleId>(RuleId.EndOfTrickDiscardCardsAndMoveKitsunePawn, this.nextPlayer)];
+                : [this.startPlayerTurn<number, RuleId>(RuleId.EndOfTrickKistunePawnMove, this.nextPlayer)];
         }
         return [];
     }

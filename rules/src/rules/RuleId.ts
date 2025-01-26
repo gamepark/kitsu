@@ -1,5 +1,11 @@
 export enum RuleId {
-  RoundSetup = 1,
+  RoundSetupMoveKitsunePawns = 1,
+  RoundSetupDealCards,
   PlayKitsuCard,
-  EndOfTrickDiscardCardsAndMoveKitsunePawn,
+  EndOfTrickDiscardCards,
+  EndOfTrickKistunePawnMove,
+  EndOfTrickDecideEndOfRound,
+  EndOfTrickMoveLeaderToken,
+  EndOfTrickPickCards,
+  RoundEnd
 }

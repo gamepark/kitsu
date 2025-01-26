@@ -3,7 +3,7 @@ import { RuleId } from "./RuleId";
 import { MaterialType } from "../material/MaterialType";
 import { LocationType } from "../material/LocationType";
 
-export class RoundSetupRule extends PlayerTurnRule<number, MaterialType, LocationType> {
+export class RoundSetupMoveKitsunePawnsRule extends PlayerTurnRule<number, MaterialType, LocationType> {
     onRuleStart(_move: RuleMove<number, RuleId>, _previousRule?: RuleStep, _context?: PlayMoveContext): MaterialMove<number, MaterialType, LocationType>[] {
         const deck = this.material(MaterialType.KitsuCard).location(LocationType.KitsuCardDeckSpotOnWisdomBoard).deck();
         const leaderPlayer = this.material(MaterialType.LeaderToken).getItem()!.location.player!;

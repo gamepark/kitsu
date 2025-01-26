@@ -8,7 +8,7 @@ import {
 } from '@gamepark/rules-api'
 import { LocationType } from './material/LocationType'
 import { MaterialType } from './material/MaterialType'
-import { RoundSetupRule } from './rules/RoundSetupRule'
+import { RoundSetupMoveKitsunePawnsRule } from './rules/RoundSetupMoveKitsunePawnsRule'
 import { RuleId } from './rules/RuleId'
 import { PlayKitsuCardRule } from "./rules/PlayKitsuCardRule";
 
@@ -20,7 +20,7 @@ import { PlayKitsuCardRule } from "./rules/PlayKitsuCardRule";
 export class KitsuRules extends SecretMaterialRules<number, MaterialType, LocationType>
   implements TimeLimit<MaterialGame<number, MaterialType, LocationType>, MaterialMove<number, MaterialType, LocationType>, number> {
   rules = {
-    [RuleId.RoundSetup]: RoundSetupRule,
+    [RuleId.RoundSetupMoveKitsunePawns]: RoundSetupMoveKitsunePawnsRule,
     [RuleId.PlayKitsuCard]: PlayKitsuCardRule,
   }
 
