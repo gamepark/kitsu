@@ -1,16 +1,16 @@
 import { TeamColor, teamColors } from "../src/TeamColor";
 import { RoundSetupRule } from "../src/rules/RoundSetupRule";
 import {
-    isMoveItemType,
+    isMoveItemType, isMoveItemTypeAtOnce,
     isShuffleItemType,
-    isStartPlayerTurn,
+    isStartRule,
     MaterialGame,
     MaterialItem,
-    MoveItem,
+    MoveItem, MoveItemsAtOnce,
     MoveKind,
     RuleMoveType,
     Shuffle,
-    StartPlayerTurn,
+    StartRule,
 } from "@gamepark/rules-api";
 import { RuleId } from "../src/rules/RuleId";
 import { MaterialType } from "../src/material/MaterialType";
@@ -70,8 +70,8 @@ describe('Round setup rule tests', () => {
             const shuffleMove = moves[0];
 
             // Then
-            expect(isShuffleItemType(MaterialType.KitsuCard)(shuffleMove)).toBe(true);
-            expect((shuffleMove as Shuffle).indexes).toHaveLength(24);
+            expect(isShuffleItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard)(shuffleMove)).toBe(true);
+            expect((shuffleMove as Shuffle<MaterialType>).indexes).toHaveLength(24);
         });
 
         test('onRuleStart() should return an array of moves containing two moves of KitsuneToken to LocationType.KistunePawnSpotOnWisdomBoard and id 0', () => {
@@ -81,12 +81,12 @@ describe('Round setup rule tests', () => {
 
             // When
             const moves = roundSetupRule.onRuleStart({type: RuleMoveType.StartPlayerTurn, player: 1, id: RuleId.RoundSetup, kind: MoveKind.RulesMove})
-            const kitsuneTokenMoves = moves.filter(move => isMoveItemType(MaterialType.KitsunePawn)(move))
-                .map(move => move as MoveItem);
+            const kitsuneTokenMoves = moves.filter(move => isMoveItemTypeAtOnce<number, MaterialType, LocationType>(MaterialType.KitsunePawn)(move))
+                .map(move => move as MoveItemsAtOnce<number, MaterialType, LocationType>);
 
             // Then
-            expect(kitsuneTokenMoves).toHaveLength(2);
-            expect(kitsuneTokenMoves.every(move => move.location.type === LocationType.KitsunePawnSpotOnWisdomBoard && move.location.id === 0)).toBe(true);
+            expect(kitsuneTokenMoves).toHaveLength(1);
+            expect(kitsuneTokenMoves[0].location).toEqual({ type: LocationType.KitsunePawnSpotOnWisdomBoard, id: 0 });
         });
 
         test('onRuleStart() should return an array of moves containing 12 deal KitsuCard moves, 6 for each player, each player being alternated', () => {
@@ -96,8 +96,8 @@ describe('Round setup rule tests', () => {
 
             // When
             const moves = roundSetupRule.onRuleStart({type: RuleMoveType.StartPlayerTurn, player: 1, id: RuleId.RoundSetup, kind: MoveKind.RulesMove})
-            const dealCardMoves = moves.filter(move => isMoveItemType(MaterialType.KitsuCard)(move)
-                && (move as MoveItem).location.type === LocationType.PlayerHand)
+            const dealCardMoves = moves.filter(move => isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard)(move)
+                && (move as MoveItem<number, MaterialType, LocationType>).location.type === LocationType.PlayerHand)
                 .map((move, index) => ({index: index, move: move as MoveItem}));
             const firstPlayerMoves = dealCardMoves.filter(({move}) => move.location.player === 1);
             const secondPlayerMoves = dealCardMoves.filter(({move}) => move.location.player === 2);
@@ -117,13 +117,12 @@ describe('Round setup rule tests', () => {
 
             // When
             const moves = roundSetupRule.onRuleStart({type: RuleMoveType.StartPlayerTurn, player: 1, id: RuleId.RoundSetup, kind: MoveKind.RulesMove})
-            const ruleMoves = moves.filter(move => isStartPlayerTurn(move)).map(move => move as StartPlayerTurn);
+            const ruleMoves = moves.filter(move => isStartRule(move)).map(move => move as StartRule);
 
             // Expect
             expect(ruleMoves).toHaveLength(1);
             expect(moves.indexOf(ruleMoves[0])).toBe(moves.length - 1);
             expect(ruleMoves[0].id).toBe(RuleId.PlayKitsuCard);
-            expect(ruleMoves[0].player).toBe(1);
         });
     });
 });
