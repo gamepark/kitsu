@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
 
-export const TheFirstStepHeader = () => {
+export const RoundSetupHeader = () => {
   return <>Hello world!</>
 }

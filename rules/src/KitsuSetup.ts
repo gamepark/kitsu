@@ -21,10 +21,20 @@ export class KitsuSetup extends MaterialGameSetup<number, MaterialType, Location
     this.CreateKitsunePawns();
     this.CreateKitsuCards();
     this.CreatePowerTokens();
+    this.CreateLeaderToken();
   }
 
   start() {
     this.startPlayerTurn(RuleId.RoundSetup, this.players[0])
+  }
+
+  private CreateLeaderToken() {
+    this.material(MaterialType.LeaderToken).createItem({
+      location: {
+        type: LocationType.LeaderTokenSpotOnClanCard,
+        player: this.players[0],
+      },
+    })
   }
 
   private CreatePowerTokens() {
