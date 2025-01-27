@@ -1,5 +1,5 @@
 import { TokenDescription } from '@gamepark/react-game'
-import FirstPlayerToken from '../images/Tokens/FirstPlayerToken.jpg'
+import FirstPlayerToken from '../images/Tokens/FirstPlayerToken.png'
 
 class LeaderTokenDescription extends TokenDescription {
     width = 3.50

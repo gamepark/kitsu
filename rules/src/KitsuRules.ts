@@ -26,7 +26,15 @@ export class KitsuRules extends SecretMaterialRules<number, MaterialType, Locati
 
   locationsStrategies = {
     [MaterialType.KitsunePawn]: {
-      [LocationType.KitsunePawnSpotOnWisdomBoard]: new PositiveSequenceStrategy()
+      [LocationType.KitsunePawnSpotOnWisdomBoard]: new PositiveSequenceStrategy(),
+    },
+    [MaterialType.KitsuCard]: {
+      [LocationType.PlayerHand]: new PositiveSequenceStrategy(),
+      [LocationType.KitsuCardDiscardSpotOnWisdomBoard]: new PositiveSequenceStrategy(),
+      [LocationType.PlayedKitsuCardSpot]: new PositiveSequenceStrategy(),
+    },
+    [MaterialType.PowerToken]: {
+      [LocationType.DiscardedPowerTokenAreaOnWisdomBoard]: new PositiveSequenceStrategy(),
     }
   }
 
