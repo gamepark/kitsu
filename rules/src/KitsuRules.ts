@@ -8,7 +8,7 @@ import {
 } from '@gamepark/rules-api'
 import { LocationType } from './material/LocationType'
 import { MaterialType } from './material/MaterialType'
-import { TheFirstStepRule } from './rules/TheFirstStepRule'
+import { RoundSetupRule } from './rules/RoundSetupRule'
 import { RuleId } from './rules/RuleId'
 
 
@@ -19,7 +19,7 @@ import { RuleId } from './rules/RuleId'
 export class KitsuRules extends SecretMaterialRules<number, MaterialType, LocationType>
   implements TimeLimit<MaterialGame<number, MaterialType, LocationType>, MaterialMove<number, MaterialType, LocationType>, number> {
   rules = {
-    [RuleId.TheFirstStep]: TheFirstStepRule
+    [RuleId.RoundSetup]: RoundSetupRule
   }
 
   locationsStrategies = {
