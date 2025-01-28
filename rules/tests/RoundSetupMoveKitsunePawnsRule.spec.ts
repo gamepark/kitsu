@@ -1,9 +1,9 @@
 import { RoundSetupMoveKitsunePawnsRule } from "../src/rules/RoundSetupMoveKitsunePawnsRule";
 import {
-    isMoveItemType, isStartPlayerTurn,
-    MoveItem,
+    isMoveItemTypeAtOnce, isStartRule,
+    MoveItemsAtOnce,
     MoveKind,
-    RuleMoveType, StartPlayerTurn,
+    RuleMoveType, StartRule,
 } from "@gamepark/rules-api";
 import { RuleId } from "../src/rules/RuleId";
 import { MaterialType } from "../src/material/MaterialType";
@@ -19,12 +19,13 @@ describe('Round setup - move kitsune pawns rule tests', () => {
 
             // When
             const moves = roundSetupRule.onRuleStart({type: RuleMoveType.StartPlayerTurn, player: 1, id: RuleId.RoundSetupMoveKitsunePawns, kind: MoveKind.RulesMove})
-            const kitsuneTokenMoves = moves.filter(move => isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsunePawn)(move))
-                .map(move => move as MoveItem);
+            const kitsuneTokenMoves = moves.filter(move => isMoveItemTypeAtOnce<number, MaterialType, LocationType>(MaterialType.KitsunePawn)(move))
+                .map(move => move as MoveItemsAtOnce<number, MaterialType, LocationType>);
 
             // Then
-            expect(kitsuneTokenMoves).toHaveLength(2);
-            expect(kitsuneTokenMoves.every(move => move.location.type === LocationType.KitsunePawnSpotOnWisdomBoard && move.location.id === 0)).toBe(true);
+            expect(kitsuneTokenMoves).toHaveLength(1);
+            expect(kitsuneTokenMoves[0].location.type).toEqual(LocationType.KitsunePawnSpotOnWisdomBoard)
+            expect(kitsuneTokenMoves[0].location.id).toBe(0);
         });
 
         test('onRuleStart() should return an array of 3 moves with the last being a rule move to the RoundSetupDealCardsRule', () => {
@@ -34,13 +35,13 @@ describe('Round setup - move kitsune pawns rule tests', () => {
 
             // When
             const moves = roundSetupRule.onRuleStart({type: RuleMoveType.StartPlayerTurn, player: 1, id: RuleId.RoundSetupMoveKitsunePawns, kind: MoveKind.RulesMove})
-            const ruleMoves = moves.filter(move => isStartPlayerTurn<number, MaterialType, LocationType>(move))
-                .map(move => move as StartPlayerTurn<number, RuleId>);
+            const ruleMoves = moves.filter(move => isStartRule<number, MaterialType, LocationType>(move))
+                .map(move => move as StartRule<RuleId>);
 
             // Then
-            expect(moves).not.toHaveLength(3);
+            expect(moves).toHaveLength(2);
             expect(ruleMoves).toHaveLength(1);
-            expect(ruleMoves[0]).toBe(moves[2]);
+            expect(ruleMoves[0]).toBe(moves[1]);
             expect(ruleMoves[0].id).toBe(RuleId.RoundSetupDealCards);
         })
     });

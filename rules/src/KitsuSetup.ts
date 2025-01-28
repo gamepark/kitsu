@@ -7,7 +7,7 @@ import { RuleId } from './rules/RuleId'
 import { Memorize } from "./Memorize";
 import { TeamColor } from "./TeamColor";
 import { kitsunePawnIds } from "./material/KitsunePawn";
-import { kitsuCardIds, last24PlayersKitsuCardId } from "./material/KitsuCard";
+import { kitsuCardIds, last24PlayersKitsuCardEnumValueIndex } from "./material/KitsuCard";
 import { powerToken } from "./material/PowerToken";
 
 /**
@@ -49,7 +49,7 @@ export class KitsuSetup extends MaterialGameSetup<number, MaterialType, Location
 
   private CreateKitsuCards() {
     // How can we get the length of the kitsuCardsIds enum ?
-    const lastCardToTake = this.players.length === 6 ? kitsuCardIds.length : last24PlayersKitsuCardId;
+    const lastCardToTake = this.players.length === 6 ? kitsuCardIds.length : last24PlayersKitsuCardEnumValueIndex;
 
     this.material(MaterialType.KitsuCard).createItems(kitsuCardIds.slice(0, lastCardToTake).map(card => ({
       id: card,

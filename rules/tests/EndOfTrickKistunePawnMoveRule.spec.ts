@@ -1,10 +1,10 @@
 import {
     isMoveItemType,
-    isStartPlayerTurn,
+    isStartRule,
     MoveItem,
     MoveKind,
     RuleMoveType,
-    StartPlayerTurn
+    StartPlayerTurn, StartRule
 } from '@gamepark/rules-api';
 import { KitsuCard } from '../src/material/KitsuCard';
 import { LocationType } from '../src/material/LocationType';
@@ -51,8 +51,8 @@ describe('End of trick - kitsune pawn move rule', () => {
                 }, {player: (2 as 1 | 2), playedCardIds: [KitsuCard.Yako2_1, KitsuCard.Yako2_2]}],
                 givenKitsunePawnSpots: {[TeamColor.Zenko]: 10, [TeamColor.Yako]: 5},
                 expectedWinningTeam: TeamColor.Yako,
-                expectedNumberOfKitsunePawnMoves: 2,
-                expectedKitsunePawnReachedSpot: 12
+                expectedNumberOfKitsunePawnMoves: 8,
+                expectedKitsunePawnReachedSpot: 13
             }, {
                 givenPlayedCards: [{
                     player: (1 as 1 | 2),
@@ -73,7 +73,7 @@ describe('End of trick - kitsune pawn move rule', () => {
                                                                                                 }) => {
             // Given
             const game = create2PlayersGameStateWithPlayedCards(givenPlayedCards);
-            teamColors.forEach(color => game.items[color]!.find(pawn => pawn.id === color)!.location = {
+            teamColors.forEach(color => game.items[MaterialType.KitsunePawn]!.find(pawn => pawn.id === color)!.location = {
                 type: LocationType.KitsunePawnSpotOnWisdomBoard,
                 id: givenKitsunePawnSpots[color],
             });
@@ -176,7 +176,7 @@ describe('End of trick - kitsune pawn move rule', () => {
                                                                                                                              }) => {
             // Given
             const game = create2PlayersGameStateWithPlayedCards(givenPlayedCards);
-            teamColors.forEach(color => game.items[color]!.find(pawn => pawn.id === color)!.location = {
+            teamColors.forEach(color => game.items[MaterialType.KitsunePawn]!.find(pawn => pawn.id === color)!.location = {
                 type: LocationType.KitsunePawnSpotOnWisdomBoard,
                 id: givenKitsunePawnSpots[color],
             });
@@ -189,18 +189,17 @@ describe('End of trick - kitsune pawn move rule', () => {
 
             // When
             const consequences = rule.onRuleStart(previousRuleMove);
-            const ruleMoves = consequences.filter(move => isStartPlayerTurn<number, MaterialType, LocationType>(move))
-                .map(move => (move as StartPlayerTurn<number, RuleId>));
+            const ruleMoves = consequences.filter(move => isStartRule<number, MaterialType, LocationType>(move))
+                .map(move => (move as StartRule<RuleId>));
 
             // Then
             expect(consequences).toHaveLength(expectedConsequencesLength);
             expect(ruleMoves).toHaveLength(1);
             expect(consequences[consequences.length - 1]).toBe(ruleMoves[0]);
-            expect(ruleMoves[0]).toBe({
+            expect(ruleMoves[0]).toEqual({
                 kind: MoveKind.RulesMove,
-                type: RuleMoveType.StartPlayerTurn,
+                type: RuleMoveType.StartRule,
                 id: expectedRuleId,
-                player: 1,
             });
         });
     });
