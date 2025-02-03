@@ -3,7 +3,7 @@ import { TeamColor } from "../src/TeamColor";
 import { MaterialType } from "../src/material/MaterialType";
 import { LocationType } from "../src/material/LocationType";
 import { getEnumValues } from "@gamepark/rules-api";
-import { KitsuCard, last24PlayersKitsuCardId } from "../src/material/KitsuCard";
+import { KitsuCard, last24PlayersKitsuCardEnumValueIndex } from "../src/material/KitsuCard";
 import { KitsunePawn } from "../src/material/KitsunePawn";
 
 describe('Setup tests', () => {
@@ -63,7 +63,7 @@ describe('Setup tests', () => {
             // Then
             expect(kitsuCardItems).toHaveLength(24);
             expect(kitsuCardItems.every(item => item.location.type === LocationType.KitsuCardDeckSpotOnWisdomBoard)).toBe(true);
-            expect(kitsuCardIds).toEqual(getEnumValues(KitsuCard).slice(0, last24PlayersKitsuCardId));
+            expect(kitsuCardIds).toEqual(getEnumValues(KitsuCard).slice(0, last24PlayersKitsuCardEnumValueIndex));
         });
 
         test('KitsuSetup.setupMaterial() should create the 5 power tokens and place them in the corresponding spots', () => {
@@ -178,7 +178,7 @@ describe('Setup tests', () => {
             // Then
             expect(kitsuCardItems).toHaveLength(24);
             expect(kitsuCardItems.every(item => item.location.type === LocationType.KitsuCardDeckSpotOnWisdomBoard)).toBe(true);
-            expect(kitsuCardIds).toEqual(getEnumValues(KitsuCard).slice(0, last24PlayersKitsuCardId));
+            expect(kitsuCardIds).toEqual(getEnumValues(KitsuCard).slice(0, last24PlayersKitsuCardEnumValueIndex));
         });
 
         test('KitsuSetup.setupMaterial() should create the 5 power tokens and place them in the corresponding spots', () => {

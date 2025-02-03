@@ -1,7 +1,6 @@
 import {
     isMoveItemType,
     ItemMoveType,
-    MaterialGame,
     MoveItem,
     MoveKind,
     RuleMoveType,
@@ -9,58 +8,10 @@ import {
 } from "@gamepark/rules-api";
 import { MaterialType } from "../src/material/MaterialType";
 import { LocationType } from "../src/material/LocationType";
-import { KitsuCard, kitsuCardIds } from "../src/material/KitsuCard";
-import { Memorize } from "../src/Memorize";
-import { TeamColor, teamColors } from "../src/TeamColor";
+import { KitsuCard } from "../src/material/KitsuCard";
 import { RuleId } from "../src/rules/RuleId";
 import { PlayKitsuCardRule } from "../src/rules/PlayKitsuCardRule";
-
-const create2PlayersGameState = (): MaterialGame<number, MaterialType, LocationType> => ({
-    players: [2, 1],
-    memory: {
-        [Memorize.Team]: {
-            1: TeamColor.Zenko,
-            2: TeamColor.Yako,
-        },
-    },
-    items: {
-        [MaterialType.KitsuCard]: kitsuCardIds.map((cardId, index) => ({
-            id: cardId,
-            location: {
-                type: LocationType.KitsuCardDeckSpotOnWisdomBoard,
-                x: index
-            }
-        })),
-        [MaterialType.KitsunePawn]: teamColors.map((colorId) => ({
-            id: colorId,
-            location: {
-                type: LocationType.KitsunePawnSpotOnWisdomBoard,
-                id: 0,
-            }
-        })),
-        [MaterialType.LeaderToken]: [{
-            location: {
-                type: LocationType.LeaderTokenSpotOnClanCard,
-                player: 1
-            }
-        }],
-    },
-    rule: {
-        id: RuleId.PlayKitsuCard,
-        player: 1,
-    }
-})
-
-const create2PlayersGameStateWithCardsInPLayerHand = (player: 1 | 2, cardIds: KitsuCard[]): MaterialGame<number, MaterialType, LocationType> => {
-    const game = create2PlayersGameState();
-    cardIds.forEach((cardId) => {
-        game.items[MaterialType.KitsuCard]!.find(card => card.id === cardId)!.location = {
-            type: LocationType.PlayerHand,
-            player: player,
-        };
-    });
-    return game;
-}
+import { create2PlayersGameBuilderWithCardsInPlayerHand, create2PlayersGameState } from "./utils/MaterialGameTestUtils";
 
 describe('PlayKitsuCardRule tests', () => {
     describe('2 players tests', () => {
@@ -101,7 +52,9 @@ describe('PlayKitsuCardRule tests', () => {
                                                                                                                                                     expectedNumberOfMoves
                                                                                                                                                 }) => {
             // Given
-            const game = create2PlayersGameStateWithCardsInPLayerHand(1, givenCardIds);
+            const gameBuilder = create2PlayersGameBuilderWithCardsInPlayerHand(1, givenCardIds);
+            gameBuilder.setRule(RuleId.PlayKitsuCard, 1);
+            const game = gameBuilder.build();
             const rule = new PlayKitsuCardRule(game);
 
             // When
@@ -212,6 +165,10 @@ describe('PlayKitsuCardRule tests', () => {
                     };
                 });
             });
+            game.rule = {
+                id: RuleId.PlayKitsuCard,
+                player: 1
+            }
             const rule = new PlayKitsuCardRule(game);
             const itemMove: MoveItem<number, MaterialType, LocationType> = {
                 kind: MoveKind.ItemMove,
@@ -229,7 +186,7 @@ describe('PlayKitsuCardRule tests', () => {
             expect(consequences[0]).toEqual({
                 kind: MoveKind.RulesMove,
                 type: RuleMoveType.StartPlayerTurn,
-                id: RuleId.EndOfTrickDiscardCardsAndMoveKitsunePawn,
+                id: RuleId.EndOfTrickKistunePawnMove,
                 player: 2
             });
 

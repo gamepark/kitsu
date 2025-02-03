@@ -1,8 +1,8 @@
 import { getEnumValues } from "@gamepark/rules-api";
 
 export enum TeamColor {
-    Zenko = 1,
-    Yako
+    Yako = 1,
+    Zenko
 }
 
 export const teamColors = getEnumValues(TeamColor)
