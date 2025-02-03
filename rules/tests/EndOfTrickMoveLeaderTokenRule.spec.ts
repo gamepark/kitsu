@@ -1,10 +1,10 @@
 import {
     isMoveItemType,
-    isStartPlayerTurn,
+    isStartRule,
     MoveItem,
     MoveKind,
     RuleMoveType,
-    StartPlayerTurn
+    StartPlayerTurn, StartRule
 } from '@gamepark/rules-api';
 import { KitsuCard } from '../src/material/KitsuCard';
 import { LocationType } from '../src/material/LocationType';
@@ -35,7 +35,7 @@ describe('End of trick - Move leader token rule tests', () => {
                 }]
             },
         ])('Given non-empty player hands, onRuleStart() should return an array containing one item move for the ' +
-            'leader token and one rule move to the RoundSetupDealCardsRule', ({playerHands}) => {
+            'leader token and one rule move to the EndOfTrickPickCardsRule', ({playerHands}) => {
             // Given
             const game = create2PlayersGameStateWithCardsInPlayersHands(playerHands);
             const rule = new EndOfTrickMoveLeaderTokenRule(game);
@@ -50,16 +50,15 @@ describe('End of trick - Move leader token rule tests', () => {
             const consequences = rule.onRuleStart(previousRuleMove);
             const leaderTokenMoves = consequences.filter(move => isMoveItemType<number, MaterialType, LocationType>(MaterialType.LeaderToken)(move))
                 .map(move => move as MoveItem<number, MaterialType, LocationType>);
-            const ruleMoves = consequences.filter(move => isStartPlayerTurn<number, MaterialType, LocationType>(move))
-                .map(move => move as StartPlayerTurn<number, RuleId>);
+            const ruleMoves = consequences.filter(move => isStartRule<number, MaterialType, LocationType>(move))
+                .map(move => move as StartRule<RuleId>);
 
             // Then
             expect(consequences).toHaveLength(2);
             expect(leaderTokenMoves).toHaveLength(1);
             expect(leaderTokenMoves[0].location.player).toBe(2);
             expect(ruleMoves).toHaveLength(1);
-            expect(ruleMoves[0].player).toBe(1);
-            expect(ruleMoves[0].id).toBe(RuleId.RoundSetupDealCards);
+            expect(ruleMoves[0].id).toBe(RuleId.EndOfTrickPickCards);
         });
 
         test('Given empty player hands, onRuleStart() should return an array containing one item move for the ' +
@@ -78,16 +77,15 @@ describe('End of trick - Move leader token rule tests', () => {
             const consequences = rule.onRuleStart(previousRuleMove);
             const leaderTokenMoves = consequences.filter(move => isMoveItemType<number, MaterialType, LocationType>(MaterialType.LeaderToken)(move))
                 .map(move => move as MoveItem<number, MaterialType, LocationType>);
-            const ruleMoves = consequences.filter(move => isStartPlayerTurn<number, MaterialType, LocationType>(move))
-                .map(move => move as StartPlayerTurn<number, RuleId>);
+            const ruleMoves = consequences.filter(move => isStartRule<number, MaterialType, LocationType>(move))
+                .map(move => move as StartRule<RuleId>);
 
             // Then
             expect(consequences).toHaveLength(2);
             expect(leaderTokenMoves).toHaveLength(1);
             expect(leaderTokenMoves[0].location.player).toBe(2);
             expect(ruleMoves).toHaveLength(1);
-            expect(ruleMoves[0].player).toBe(1);
-            expect(ruleMoves[0].id).toBe(RuleId.EndOfTrickPickCards);
+            expect(ruleMoves[0].id).toBe(RuleId.RoundSetupDealCards);
         });
     });
 });

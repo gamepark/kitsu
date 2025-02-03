@@ -15,9 +15,10 @@ export class EndOfTrickKitsunePawnMoveRule extends PlayerTurnRule<number, Materi
         const winningTeam = scoreDifference === 0
             ? undefined
             : (yakoScore > zenkoScore ? TeamColor.Yako : TeamColor.Zenko);
+        const ruleMove = this.startRule(RuleId.EndOfTrickDiscardCards);
 
         if (winningTeam === undefined) {
-            return [this.startRule(RuleId.EndOfTrickDiscardCards)];
+            return [ruleMove];
         }
 
         const currentKitsuneSpotId = this.material(MaterialType.KitsunePawn).id(winningTeam).getItem()!.location.id;
@@ -28,7 +29,7 @@ export class EndOfTrickKitsunePawnMoveRule extends PlayerTurnRule<number, Materi
                 type: LocationType.KitsunePawnSpotOnWisdomBoard,
                 id: currentKitsuneSpotId + 1 + index,
             })),
-            this.startRule(RuleId.EndOfTrickDecideEndOfRound)
+            ruleMove
         ];
 
     }

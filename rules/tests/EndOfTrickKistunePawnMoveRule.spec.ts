@@ -142,7 +142,6 @@ describe('End of trick - kitsune pawn move rule', () => {
                 }, {player: (2 as 1 | 2), playedCardIds: [KitsuCard.Yako2_1, KitsuCard.Yako2_2]}],
                 givenKitsunePawnSpots: {[TeamColor.Zenko]: 5, [TeamColor.Yako]: 2},
                 expectedConsequencesLength: 5,
-                expectedRuleId: RuleId.EndOfTrickDecideEndOfRound
             }, {
                 givenPlayedCards: [{
                     player: (1 as 1 | 2),
@@ -150,7 +149,6 @@ describe('End of trick - kitsune pawn move rule', () => {
                 }, {player: (2 as 1 | 2), playedCardIds: [KitsuCard.Yako6, KitsuCard.Zenko5]}],
                 givenKitsunePawnSpots: {[TeamColor.Zenko]: 12, [TeamColor.Yako]: 10},
                 expectedConsequencesLength: 2,
-                expectedRuleId: RuleId.EndOfTrickDecideEndOfRound,
             }, {
                 givenPlayedCards: [{
                     player: (1 as 1 | 2),
@@ -158,7 +156,6 @@ describe('End of trick - kitsune pawn move rule', () => {
                 }, {player: (2 as 1 | 2), playedCardIds: [KitsuCard.Zenko5, KitsuCard.Zenko1_3]}],
                 givenKitsunePawnSpots: {[TeamColor.Zenko]: 1, [TeamColor.Yako]: 4},
                 expectedConsequencesLength: 1,
-                expectedRuleId: RuleId.EndOfTrickDiscardCards
             }, {
                 givenPlayedCards: [{
                     player: (1 as 1 | 2),
@@ -166,13 +163,11 @@ describe('End of trick - kitsune pawn move rule', () => {
                 }, {player: (2 as 1 | 2), playedCardIds: [KitsuCard.Zenko2_2, KitsuCard.Zenko1_2]}],
                 givenKitsunePawnSpots: {[TeamColor.Zenko]: 7, [TeamColor.Yako]: 5},
                 expectedConsequencesLength: 1,
-                expectedRuleId: RuleId.EndOfTrickDiscardCards
             }
         ])('Given played cards, onRuleStart() should return an array of move, the last being a rule move to the next rule', ({
                                                                                                                                  givenPlayedCards,
                                                                                                                                  givenKitsunePawnSpots,
-                                                                                                                                 expectedConsequencesLength,
-                                                                                                                                 expectedRuleId
+                                                                                                                                 expectedConsequencesLength
                                                                                                                              }) => {
             // Given
             const game = create2PlayersGameStateWithPlayedCards(givenPlayedCards);
@@ -199,7 +194,7 @@ describe('End of trick - kitsune pawn move rule', () => {
             expect(ruleMoves[0]).toEqual({
                 kind: MoveKind.RulesMove,
                 type: RuleMoveType.StartRule,
-                id: expectedRuleId,
+                id: RuleId.EndOfTrickDiscardCards,
             });
         });
     });

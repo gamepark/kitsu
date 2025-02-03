@@ -1,12 +1,12 @@
 import {
     isMoveItemTypeAtOnce,
-    isStartPlayerTurn,
+    isStartRule,
     ItemMoveType,
     MoveItemsAtOnce,
     MoveKind,
     RuleMoveType,
     Shuffle,
-    StartPlayerTurn
+    StartRule
 } from '@gamepark/rules-api';
 import { KitsuCard, kitsuCardIds } from '../src/material/KitsuCard';
 import { LocationType } from '../src/material/LocationType';
@@ -51,10 +51,9 @@ describe('End of trick - Discard cards rule ', () => {
             // Given
             const game = create2PlayersGameStateWithPlayedCards(cards);
             const rule = new EndOfTrickDiscardCardsRule(game);
-            const previousRuleMove: StartPlayerTurn = {
+            const previousRuleMove: StartRule = {
                 kind: MoveKind.RulesMove,
-                type: RuleMoveType.StartPlayerTurn,
-                player: 1,
+                type: RuleMoveType.StartRule,
                 id: RuleId.EndOfTrickDiscardCards
             };
 
@@ -71,7 +70,7 @@ describe('End of trick - Discard cards rule ', () => {
             expect(kistuCardMoves[0].indexes).toEqual(expect.arrayContaining(expectedIndexes));
         });
 
-        test('onRuleStart() should return an array of moves, the second and last of which is a rule move to start the EndOfTrickMoveLeaderTokenRule', () => {
+        test('onRuleStart() should return an array of moves, the second and last of which is a rule move to start the EndOfTrickDecideEndOfRoundRule', () => {
             // Given
             const cards = [{
                 player: (1 as 1 | 2),
@@ -82,24 +81,22 @@ describe('End of trick - Discard cards rule ', () => {
             }];
             const game = create2PlayersGameStateWithPlayedCards(cards);
             const rule = new EndOfTrickDiscardCardsRule(game);
-            const previousRuleMove: StartPlayerTurn = {
+            const previousRuleMove: StartRule = {
                 kind: MoveKind.RulesMove,
-                type: RuleMoveType.StartPlayerTurn,
-                player: 1,
-                id: RuleId.EndOfTrickMoveLeaderToken
+                type: RuleMoveType.StartRule,
+                id: RuleId.EndOfTrickDiscardCards
             };
 
             // When
             const moves = rule.onRuleStart(previousRuleMove);
-            const ruleMoves = moves.filter(move => isStartPlayerTurn<number, MaterialType, LocationType>(move))
-                .map(move => move as StartPlayerTurn<number, RuleId>);
+            const ruleMoves = moves.filter(move => isStartRule<number, MaterialType, LocationType>(move))
+                .map(move => move as StartRule<RuleId>);
 
             // Then
             expect(moves).toHaveLength(2);
             expect(ruleMoves).toHaveLength(1);
             expect(moves[1]).toBe(ruleMoves[0]);
-            expect(ruleMoves[0].id).toBe(RuleId.EndOfTrickKistunePawnMove);
-            expect(ruleMoves[0].player).toBe(1);
+            expect(ruleMoves[0].id).toBe(RuleId.EndOfTrickDecideEndOfRound);
         });
 
         test('given a KitsuCard move to the discard and empty player hands, afterItemMove() should return an array of' +
