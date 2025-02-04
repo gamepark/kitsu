@@ -37,6 +37,9 @@ export class KitsuRules extends SecretMaterialRules<number, MaterialType, Locati
     },
     [MaterialType.PowerToken]: {
       [LocationType.DiscardedPowerTokenAreaOnWisdomBoard]: new PositiveSequenceStrategy(),
+    },
+    [MaterialType.VictoryCard]: {
+      [LocationType.VictoryCardsSpot]: new PositiveSequenceStrategy(),
     }
   }
 

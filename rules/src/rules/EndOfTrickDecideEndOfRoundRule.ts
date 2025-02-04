@@ -2,7 +2,6 @@ import { MaterialMove, PlayerTurnRule, PlayMoveContext, RuleMove, RuleStep } fro
 import { MaterialType } from "../material/MaterialType";
 import { LocationType } from "../material/LocationType";
 import { RuleId } from "./RuleId";
-import { TeamColor } from "../TeamColor";
 
 export class EndOfTrickDecideEndOfRoundRule extends PlayerTurnRule<number, MaterialType, LocationType> {
     onRuleStart(_move: RuleMove<number, RuleId>, _previousRule?: RuleStep, _context?: PlayMoveContext): MaterialMove<number, MaterialType, LocationType>[] {
