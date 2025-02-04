@@ -1,7 +1,9 @@
 import {
     CreateItem,
+    CustomMove,
     EndGame,
     isCreateItemType,
+    isCustomMoveType,
     isEndGame,
     isMoveItemType,
     isStartPlayerTurn,
@@ -11,6 +13,7 @@ import {
     StartPlayerTurn,
     StartRule
 } from '@gamepark/rules-api';
+import { CustomMoveType } from '../src/material/CustomMoveType';
 import { LocationType } from '../src/material/LocationType';
 import { MaterialType } from '../src/material/MaterialType';
 import { VictoryCard } from '../src/material/VictoryCard';
@@ -59,15 +62,13 @@ describe('RoundEnd rule tests', () => {
 
     describe('2 players tests', () => {
         test.each([
-            {winningTeam: TeamColor.Yako, expectedVictoryCardId: VictoryCard.Yako, expectedPlayer: 2},
-            {winningTeam: TeamColor.Zenko, expectedVictoryCardId: VictoryCard.Zenko, expectedPlayer: 1},
+            {winningTeam: TeamColor.Yako, expectedVictoryCardId: VictoryCard.Yako},
+            {winningTeam: TeamColor.Zenko, expectedVictoryCardId: VictoryCard.Zenko},
         ])('Given no team already has a victory card, onRuleStart() should return an array of move, with the first being ' +
-            'a VictoryCard CreateItem, the second one a LeaderToken move the player in the winning team and the ' +
-            'last one a rule move to the RoundSetMoveKitsunePawnsRule', ({
-                                                                             winningTeam,
-                                                                             expectedVictoryCardId,
-                                                                             expectedPlayer
-                                                                         }) => {
+            'a VictoryCard CreateItem, the second and last one a custom move of type PickRandomPlayer', ({
+                                                                                                             winningTeam,
+                                                                                                             expectedVictoryCardId,
+                                                                                                         }) => {
             // Given
             const gameBuilder = create2PlayersGameBuilder();
             gameBuilder.material(MaterialType.KitsunePawn).id(winningTeam).moveItem({
@@ -84,39 +85,30 @@ describe('RoundEnd rule tests', () => {
 
             // When
             const consequences = rule.onRuleStart(previousRuleMove);
-            const ruleMoves = consequences.filter(move => isStartPlayerTurn<number, MaterialType, LocationType>(move))
-                .map(move => move as StartPlayerTurn<number, RuleId>);
             const victoryCardMoves = consequences.filter(move => isCreateItemType<number, MaterialType, LocationType>(MaterialType.VictoryCard)(move))
                 .map(move => move as CreateItem<number, MaterialType, LocationType>);
-            const leaderTokenMoves = consequences.filter(move => isMoveItemType<number, MaterialType, LocationType>(MaterialType.LeaderToken)(move))
-                .map(move => move as MoveItem<number, MaterialType, LocationType>);
+            const customMoves = consequences.filter(move => isCustomMoveType<CustomMoveType>(CustomMoveType.PickRandomPlayer)(move))
+                .map(move => move as CustomMove<CustomMoveType>);
 
             // Then
-            expect(consequences).toHaveLength(3);
+            expect(consequences).toHaveLength(2);
             expect(victoryCardMoves).toHaveLength(1);
-            expect(leaderTokenMoves).toHaveLength(1);
-            expect(ruleMoves).toHaveLength(1);
+            expect(customMoves).toHaveLength(1);
             expect(victoryCardMoves[0]).toBe(consequences[0]);
-            expect(leaderTokenMoves[0]).toBe(consequences[1]);
-            expect(ruleMoves[0]).toBe(consequences[2]);
+            expect(customMoves[0]).toBe(consequences[1]);
             expect(victoryCardMoves[0].item.id).toEqual(expectedVictoryCardId);
             expect(victoryCardMoves[0].item.location.type).toEqual(LocationType.VictoryCardsSpot);
-            expect(leaderTokenMoves[0].location.type).toEqual(LocationType.LeaderTokenSpotOnClanCard);
-            expect(leaderTokenMoves[0].location.player).toEqual(expectedPlayer);
-            expect(ruleMoves[0].id).toBe(RuleId.RoundSetupMoveKitsunePawns);
-            expect(ruleMoves[0].player).toBe(expectedPlayer);
+            expect(customMoves[0].data).toBeUndefined();
         });
 
         test.each([
-            {winningTeam: TeamColor.Yako, expectedVictoryCardId: VictoryCard.Yako, expectedPlayer: 2},
-            {winningTeam: TeamColor.Zenko, expectedVictoryCardId: VictoryCard.Zenko, expectedPlayer: 1},
+            {winningTeam: TeamColor.Yako, expectedVictoryCardId: VictoryCard.Yako},
+            {winningTeam: TeamColor.Zenko, expectedVictoryCardId: VictoryCard.Zenko},
         ])('Given loosing team team already has a victory card, onRuleStart() should return an array of move, with the first being ' +
-            'a VictoryCard CreateItem, the second one a LeaderToken move the player in the winning team and the ' +
-            'last one a rule move to the RoundSetMoveKitsunePawnsRule', ({
-                                                                             winningTeam,
-                                                                             expectedVictoryCardId,
-                                                                             expectedPlayer
-                                                                         }) => {
+            'a VictoryCard CreateItem, the second and last one a custom move of type PickRandomPlayer', ({
+                                                                                                             winningTeam,
+                                                                                                             expectedVictoryCardId,
+                                                                                                         }) => {
             // Given
             const gameBuilder = create2PlayersGameBuilder();
             gameBuilder.material(MaterialType.VictoryCard).createItem({
@@ -139,27 +131,65 @@ describe('RoundEnd rule tests', () => {
 
             // When
             const consequences = rule.onRuleStart(previousRuleMove);
-            const ruleMoves = consequences.filter(move => isStartPlayerTurn<number, MaterialType, LocationType>(move))
-                .map(move => move as StartPlayerTurn<number, RuleId>);
             const victoryCardMoves = consequences.filter(move => isCreateItemType<number, MaterialType, LocationType>(MaterialType.VictoryCard)(move))
                 .map(move => move as CreateItem<number, MaterialType, LocationType>);
-            const leaderTokenMoves = consequences.filter(move => isMoveItemType<number, MaterialType, LocationType>(MaterialType.LeaderToken)(move))
-                .map(move => move as MoveItem<number, MaterialType, LocationType>);
+            const customMoves = consequences.filter(move => isCustomMoveType<CustomMoveType>(CustomMoveType.PickRandomPlayer)(move))
+                .map(move => move as CustomMove<CustomMoveType>);
 
             // Then
-            expect(consequences).toHaveLength(3);
+            expect(consequences).toHaveLength(2);
             expect(victoryCardMoves).toHaveLength(1);
-            expect(leaderTokenMoves).toHaveLength(1);
-            expect(ruleMoves).toHaveLength(1);
+            expect(customMoves).toHaveLength(1);
             expect(victoryCardMoves[0]).toBe(consequences[0]);
-            expect(leaderTokenMoves[0]).toBe(consequences[1]);
-            expect(ruleMoves[0]).toBe(consequences[2]);
+            expect(customMoves[0]).toBe(consequences[1]);
             expect(victoryCardMoves[0].item.id).toEqual(expectedVictoryCardId);
             expect(victoryCardMoves[0].item.location.type).toEqual(LocationType.VictoryCardsSpot);
-            expect(leaderTokenMoves[0].location.type).toEqual(LocationType.LeaderTokenSpotOnClanCard);
-            expect(leaderTokenMoves[0].location.player).toEqual(expectedPlayer);
-            expect(ruleMoves[0].id).toBe(RuleId.RoundSetupMoveKitsunePawns);
+            expect(customMoves[0].data).toBeUndefined();
+        });
+
+        test.each([
+            {winningTeam: TeamColor.Yako, expectedPlayer: 2},
+            {winningTeam: TeamColor.Zenko, expectedPlayer: 1},
+        ])('onCustomMove() should return a leadertoken MoveItem and a StartPlayerTurn rule move', ({
+                                                                                                       winningTeam,
+                                                                                                       expectedPlayer
+                                                                                                   }) => {
+            // Given
+            const gameBuilder = create2PlayersGameBuilder();
+            gameBuilder.material(MaterialType.KitsunePawn).id(winningTeam).moveItem({
+                type: LocationType.KitsunePawnSpotOnWisdomBoard,
+                id: 13
+            });
+            gameBuilder.material(MaterialType.LeaderToken).createItem({
+                location: {
+                    type: LocationType.LeaderTokenSpotOnClanCard,
+                    player: 1
+                }
+            });
+            const game = gameBuilder.build();
+            const rule = new RoundEndRule(game);
+            const previousCustomMove: CustomMove<CustomMoveType> = {
+                kind: MoveKind.CustomMove,
+                type: CustomMoveType.PickRandomPlayer,
+                data: 0
+            };
+
+            // When
+            const consequences = rule.onCustomMove(previousCustomMove);
+            const leaderTokenMoves = consequences.filter(move => isMoveItemType<number, MaterialType, LocationType>(MaterialType.LeaderToken)(move))
+                .map(move => move as MoveItem<number, MaterialType, LocationType>);
+            const ruleMoves = consequences.filter(move => isStartPlayerTurn<number, MaterialType, LocationType>(move))
+                .map(move => move as StartPlayerTurn<number, RuleId>);
+
+            // Then
+            expect(consequences).toHaveLength(2);
+            expect(leaderTokenMoves).toHaveLength(1);
+            expect(ruleMoves).toHaveLength(1);
+            expect(leaderTokenMoves[0]).toBe(consequences[0]);
+            expect(leaderTokenMoves[0].location.player).toBe(expectedPlayer);
+            expect(ruleMoves[0]).toBe(consequences[1]);
             expect(ruleMoves[0].player).toBe(expectedPlayer);
+            expect(ruleMoves[0].id).toBe(RuleId.RoundSetupMoveKitsunePawns);
         });
 
 

@@ -1,10 +1,21 @@
-import { MaterialMove, PlayerTurnRule, PlayMoveContext, RuleMove, RuleStep } from '@gamepark/rules-api';
+import {
+    CustomMove,
+    isCustomMoveType,
+    MaterialMove,
+    PlayerTurnRule,
+    PlayMoveContext,
+    RuleMove,
+    RuleStep
+} from '@gamepark/rules-api';
+import { CustomMoveType } from '../material/CustomMoveType';
+import { KitsunePawn } from '../material/KitsunePawn';
 import { LocationType } from '../material/LocationType';
 import { MaterialType } from '../material/MaterialType';
+import { Memorize } from '../Memorize';
+import { TeamColor } from '../TeamColor';
 import { RuleId } from './RuleId';
-import { Memorize } from "../Memorize";
 
-export class RoundEndRule extends PlayerTurnRule<number, MaterialType, LocationType>{
+export class RoundEndRule extends PlayerTurnRule<number, MaterialType, LocationType> {
     public onRuleStart(_move: RuleMove<number, RuleId>, _previousRule?: RuleStep, _context?: PlayMoveContext): MaterialMove<number, MaterialType, LocationType>[] {
         const victoriousPawn = this.material(MaterialType.KitsunePawn).location(LocationType.KitsunePawnSpotOnWisdomBoard).locationId(13).getItem();
 
@@ -15,8 +26,6 @@ export class RoundEndRule extends PlayerTurnRule<number, MaterialType, LocationT
                 return [this.endGame()];
             }
 
-            const victoriousTeam = this.game.players.filter(player => this.remind(Memorize.Team, player) === victoriousPawn.id);
-            const newLeaderIndex = Math.floor(Math.random() * victoriousTeam.length);
             return [
                 this.material(MaterialType.VictoryCard).createItem({
                     id: victoriousPawn.id,
@@ -24,11 +33,23 @@ export class RoundEndRule extends PlayerTurnRule<number, MaterialType, LocationT
                         type: LocationType.VictoryCardsSpot
                     },
                 }),
+                this.customMove<CustomMoveType>(CustomMoveType.PickRandomPlayer),
+            ];
+        }
+        return [];
+    }
+
+    public onCustomMove(move: CustomMove, _context?: PlayMoveContext): MaterialMove<number, MaterialType, LocationType>[] {
+        if (isCustomMoveType<CustomMoveType>(CustomMoveType.PickRandomPlayer)(move)) {
+            const victoriousTeam = this.material(MaterialType.KitsunePawn).location(LocationType.KitsunePawnSpotOnWisdomBoard).locationId(13).getItem()!.id === KitsunePawn.Zenko ? TeamColor.Zenko : TeamColor.Yako;
+            const victoriousPlayers = this.game.players.filter(player => this.remind<TeamColor>(Memorize.Team, player) === victoriousTeam);
+            const nextLeader = victoriousPlayers[move.data];
+            return [
                 this.material(MaterialType.LeaderToken).moveItem({
                     type: LocationType.LeaderTokenSpotOnClanCard,
-                    player: victoriousTeam[newLeaderIndex],
+                    player: nextLeader
                 }),
-                this.startPlayerTurn(RuleId.RoundSetupMoveKitsunePawns, victoriousTeam[newLeaderIndex])
+                this.startPlayerTurn(RuleId.RoundSetupMoveKitsunePawns, nextLeader),
             ];
         }
         return [];
