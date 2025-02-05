@@ -12,6 +12,7 @@ import { powerTokenSpotOnClanCardLocator } from "./PowerTokenSpotOnClanCardLocat
 import { powerTokenSpotOnWisdomBoardLocator } from "./PowerTokenSpotOnWisdomBoardLocator";
 import { discardedPowerTokenAreaOnWisdomBoardLocator } from "./DiscardedPowerTokenAreaOnWisdomBoardLocator";
 import { playedKitsuCardSpotLocator } from "./PlayedKitsuCardSpotLocator";
+import { victoryCardSpotLocator } from "./VictoyCardSpotLocator";
 
 export const Locators: Partial<Record<LocationType, Locator<number, MaterialType, LocationType>>> = {
     [LocationType.WisdomBoardSpot]: wisdomBoardSpotLocator,
@@ -26,4 +27,5 @@ export const Locators: Partial<Record<LocationType, Locator<number, MaterialType
     [LocationType.PowerTokenSpotOnWisdomBoard]: powerTokenSpotOnWisdomBoardLocator,
     [LocationType.DiscardedPowerTokenAreaOnWisdomBoard]: discardedPowerTokenAreaOnWisdomBoardLocator,
     [LocationType.PlayedKitsuCardSpot]: playedKitsuCardSpotLocator,
+    [LocationType.VictoryCardsSpot]: victoryCardSpotLocator,
 }
