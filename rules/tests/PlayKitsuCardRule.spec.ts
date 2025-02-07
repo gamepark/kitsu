@@ -236,6 +236,11 @@ describe('PlayKitsuCardRule tests', () => {
                                                  }) => {
                 // Given
                 const gameBuilder = create2PlayersGameBuilderWithCardsInPlayerHand(givenActivePlayer as 1 | 2, givenActivePlayerHand);
+                gameBuilder.material(MaterialType.KitsuCard).id(KitsuCard.BlackKitsune_1).moveItem({
+                    type: LocationType.PlayedKitsuCardSpot,
+                    player: givenActivePlayer === 1 ? 2 : 1,
+                    x: 0
+                })
                 gameBuilder.setRule(RuleId.PlayKitsuCard, givenActivePlayer);
                 const game = gameBuilder.build();
                 const rule = new PlayKitsuCardRule(game);
