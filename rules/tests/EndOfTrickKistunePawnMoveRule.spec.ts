@@ -8,6 +8,7 @@ import {
     StartRule
 } from '@gamepark/rules-api';
 import { KitsuCard } from '../src/material/KitsuCard';
+import { KitsuCardRotation } from '../src/material/KitsuCardRotation';
 import { LocationType } from '../src/material/LocationType';
 import { MaterialType } from '../src/material/MaterialType';
 import { EndOfTrickKitsunePawnMoveRule } from '../src/rules/EndOfTrickKitsunePawnMoveRule';
@@ -76,12 +77,13 @@ describe('End of trick - kitsune pawn move rule', () => {
                                                                                                     expectedKitsunePawnReachedSpot
                                                                                                 }) => {
             // Given
-            const game = create2PlayersGameStateWithPlayedCards(givenPlayedCards);
-            teamColors.forEach(color => game.items[MaterialType.KitsunePawn]!.find(pawn => pawn.id === color)!.location = {
+            const gameBuilder = create2PlayersGameBuilderWithPlayedCards(givenPlayedCards);
+            teamColors.forEach(color => gameBuilder.material(MaterialType.KitsunePawn).id(color).moveItem({
                 type: LocationType.KitsunePawnSpotOnWisdomBoard,
                 id: givenKitsunePawnSpots[color],
-            });
-            const winningTeamPawnId = game.items[MaterialType.KitsunePawn]?.findIndex(pawn => pawn.id === expectedWinningTeam)!;
+            }));
+            const winningTeamPawnId = gameBuilder.material(MaterialType.KitsunePawn).id(expectedWinningTeam).getIndex();
+            const game = gameBuilder.build();
             const rule = new EndOfTrickKitsunePawnMoveRule(game);
             const previousRuleMove: StartPlayerTurn<number, RuleId> = {
                 kind: MoveKind.RulesMove,
@@ -278,6 +280,79 @@ describe('End of trick - kitsune pawn move rule', () => {
             const consequences = rule.onRuleStart(previousRuleMove);
             const kistunePawnMoves = consequences.filter(move => isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsunePawn)(move))
                 .map(move => move as MoveItem<number, MaterialType, LocationType>)
+
+            // Then
+            expect(consequences).toHaveLength(expectedNumberOfKitsunePawnMoves + 1);
+            expect(kistunePawnMoves).toHaveLength(expectedNumberOfKitsunePawnMoves);
+            expect(kistunePawnMoves.every(move => move.itemIndex === winningTeamPawnId)).toBe(true);
+            expect(kistunePawnMoves[expectedNumberOfKitsunePawnMoves - 1].location.id).toBe(expectedKitsunePawnReachedSpot);
+        });
+
+        test.each([
+            {
+                givenPlayedCards: [{
+                    player: (1 as 1 | 2),
+                    playedCardIds: [KitsuCard.Zenko6, KitsuCard.Zenko2_1]
+                }, {player: (2 as 1 | 2), playedCardIds: [KitsuCard.Katana_2, KitsuCard.Yako3_1]}],
+                givenKitsunePawnSpots: {[TeamColor.Zenko]: 0, [TeamColor.Yako]: 0},
+                givenRotatedFaceDownCardId: KitsuCard.Zenko2_1,
+                expectedWinningTeam: TeamColor.Zenko,
+                expectedNumberOfKitsunePawnMoves: 3,
+                expectedKitsunePawnReachedSpot: 3
+            }, {
+                givenPlayedCards: [{
+                    player: (1 as 1 | 2),
+                    playedCardIds: [KitsuCard.Yako3_1, KitsuCard.Yako4]
+                }, {player: (2 as 1 | 2), playedCardIds: [KitsuCard.Zenko6, KitsuCard.Katana_1]}],
+                givenKitsunePawnSpots: {[TeamColor.Zenko]: 2, [TeamColor.Yako]: 5},
+                givenRotatedFaceDownCardId: KitsuCard.Yako4,
+                expectedWinningTeam: TeamColor.Zenko,
+                expectedNumberOfKitsunePawnMoves: 3,
+                expectedKitsunePawnReachedSpot: 5
+            }, {
+                givenPlayedCards: [{
+                    player: (1 as 1 | 2),
+                    playedCardIds: [KitsuCard.Katana_1, KitsuCard.Zenko2_2]
+                }, {player: (2 as 1 | 2), playedCardIds: [KitsuCard.Yako3_1, KitsuCard.Yako1_3]}],
+                givenKitsunePawnSpots: {[TeamColor.Zenko]: 10, [TeamColor.Yako]: 11},
+                givenRotatedFaceDownCardId: KitsuCard.Yako1_3,
+                expectedWinningTeam: TeamColor.Yako,
+                expectedNumberOfKitsunePawnMoves: 1,
+                expectedKitsunePawnReachedSpot: 12
+            },
+        ])("Given played cards with rotated face down cards, onRuleStart() should return an array of moves containing" +
+            "the relevant number of kitsune pawn moves for the winning team", ({
+                                                                                   givenPlayedCards,
+                                                                                   givenRotatedFaceDownCardId,
+                                                                                   givenKitsunePawnSpots,
+                                                                                   expectedWinningTeam,
+                                                                                   expectedNumberOfKitsunePawnMoves,
+                                                                                   expectedKitsunePawnReachedSpot
+                                                                               }) => {
+            // Given
+            const gameBuilder = create2PlayersGameBuilderWithPlayedCards(givenPlayedCards);
+            gameBuilder.material(MaterialType.KitsuCard).location(LocationType.PlayedKitsuCardSpot).id(givenRotatedFaceDownCardId).moveItem(item => ({
+                type: LocationType.PlayedKitsuCardSpot,
+                player: item.location.player,
+                rotation: KitsuCardRotation.FaceDown
+            }));
+            teamColors.forEach(color => gameBuilder.material(MaterialType.KitsunePawn).id(color).moveItem({
+                type: LocationType.KitsunePawnSpotOnWisdomBoard,
+                id: givenKitsunePawnSpots[color],
+            }));
+            const winningTeamPawnId = gameBuilder.material(MaterialType.KitsunePawn).id(expectedWinningTeam).getIndex();
+            const game = gameBuilder.build();
+            const rule = new EndOfTrickKitsunePawnMoveRule(game);
+            const previousRuleMove: StartPlayerTurn<number, RuleId> = {
+                kind: MoveKind.RulesMove,
+                type: RuleMoveType.StartPlayerTurn,
+                id: RuleId.EndOfTrickKistunePawnMove
+            };
+
+            // When
+            const consequences = rule.onRuleStart(previousRuleMove);
+            const kistunePawnMoves = consequences.filter(move => isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsunePawn)(move))
+                .map(move => (move as MoveItem<number, MaterialType, LocationType>));
 
             // Then
             expect(consequences).toHaveLength(expectedNumberOfKitsunePawnMoves + 1);

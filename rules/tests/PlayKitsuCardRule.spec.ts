@@ -1,10 +1,22 @@
-import { isMoveItemType, ItemMoveType, MoveItem, MoveKind, RuleMoveType, StartPlayerTurn, } from '@gamepark/rules-api';
+import {
+    isMoveItemType,
+    isStartRule,
+    ItemMoveType,
+    MoveItem,
+    MoveKind,
+    RuleMoveType,
+    StartPlayerTurn, StartRule,
+} from '@gamepark/rules-api';
 import { KitsuCard } from '../src/material/KitsuCard';
 import { LocationType } from '../src/material/LocationType';
 import { MaterialType } from '../src/material/MaterialType';
 import { PlayKitsuCardRule } from '../src/rules/PlayKitsuCardRule';
 import { RuleId } from '../src/rules/RuleId';
-import { create2PlayersGameBuilderWithCardsInPlayerHand, create2PlayersGameState } from './utils/MaterialGameTestUtils';
+import {
+    create2PlayersGameBuilder,
+    create2PlayersGameBuilderWithCardsInPlayerHand,
+    create2PlayersGameState
+} from './utils/MaterialGameTestUtils';
 
 describe('PlayKitsuCardRule tests', () => {
     describe('2 players tests', () => {
@@ -185,6 +197,40 @@ describe('PlayKitsuCardRule tests', () => {
 
 
         });
+
+        test("Given a move indicating a Katana card was just played, afterItemMove() should return an array of moves with a single rule move to the SelectKatanaTarget rule", () => {
+            // Given
+            const gameBuilder = create2PlayersGameBuilder();
+            gameBuilder.setRule(RuleId.PlayKitsuCard, 1);
+            const katanaCard = gameBuilder.material(MaterialType.KitsuCard).id<KitsuCard>(KitsuCard.Katana_2);
+            katanaCard.moveItem({
+                type: LocationType.PlayedKitsuCardSpot,
+                player: 1,
+            });
+            const game = gameBuilder.build();
+            const rule = new PlayKitsuCardRule(game);
+            const katanaMove: MoveItem<number, MaterialType, LocationType> = {
+                kind: MoveKind.ItemMove,
+                type: ItemMoveType.Move,
+                itemIndex: katanaCard.getIndex(),
+                itemType: MaterialType.KitsuCard,
+                location: {
+                    type: LocationType.PlayedKitsuCardSpot,
+                    player: 1
+                }
+            };
+
+            // When
+            const consequences = rule.afterItemMove(katanaMove);
+            const ruleMoves = consequences.filter(move => isStartRule<number, MaterialType, LocationType>(move))
+                .map(move => move as StartRule<RuleId>)
+
+            // Then
+            expect(consequences).toHaveLength(1);
+            expect(ruleMoves).toHaveLength(1);
+            expect(ruleMoves[0]).toBe(consequences[0]);
+            expect(ruleMoves[0].id).toBe(RuleId.SelectKatanaTarget);
+        })
 
         test('given an invalid move, afterItemMove() should return an empty array', () => {
             // Given
