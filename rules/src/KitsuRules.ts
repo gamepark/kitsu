@@ -10,6 +10,7 @@ import {
     TimeLimit
 } from '@gamepark/rules-api';
 import { CustomMoveType } from './material/CustomMoveType';
+import { hideToTOthersWhenRotatedFaceDown } from './material/HideToTOthersWhenRotatedFaceDown';
 import { LocationType } from './material/LocationType';
 import { MaterialType } from './material/MaterialType';
 import { PlayKitsuCardRule } from './rules/PlayKitsuCardRule';
@@ -51,7 +52,8 @@ export class KitsuRules extends SecretMaterialRules<number, MaterialType, Locati
         [MaterialType.KitsuCard]: {
             [LocationType.KitsuCardDeckSpotOnWisdomBoard]: hideItemId,
             [LocationType.KitsuCardDiscardSpotOnWisdomBoard]: hideItemId,
-            [LocationType.PlayerHand]: hideItemIdToOthers
+            [LocationType.PlayerHand]: hideItemIdToOthers,
+            [LocationType.PlayedKitsuCardSpot]: hideToTOthersWhenRotatedFaceDown,
         }
     };
 
