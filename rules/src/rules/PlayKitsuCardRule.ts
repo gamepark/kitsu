@@ -48,7 +48,7 @@ export class PlayKitsuCardRule extends PlayerTurnRule<number, MaterialType, Loca
             && (move as MoveItem<number, MaterialType, LocationType>).location.type === LocationType.PlayedKitsuCardSpot
             && (move as MoveItem<number, MaterialType, LocationType>).location.player === this.player) {
             const cardPlayed = this.material(MaterialType.KitsuCard).getItem<KitsuCard>(move.itemIndex);
-            if (getSpecialCardType(cardPlayed.id) === KitsuCardSpecialType.Katana) {
+            if (isSpecialCard(cardPlayed.id) && getSpecialCardType(cardPlayed.id) === KitsuCardSpecialType.Katana) {
                 return [this.startRule(RuleId.SelectKatanaTarget)];
             }
             const numberOfCardsPlayed = this.material(MaterialType.KitsuCard).location(LocationType.PlayedKitsuCardSpot).length;

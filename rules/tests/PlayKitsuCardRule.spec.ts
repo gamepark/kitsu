@@ -1,11 +1,13 @@
 import {
     isMoveItemType,
+    isStartPlayerTurn,
     isStartRule,
     ItemMoveType,
     MoveItem,
     MoveKind,
     RuleMoveType,
-    StartPlayerTurn, StartRule,
+    StartPlayerTurn,
+    StartRule,
 } from '@gamepark/rules-api';
 import { KitsuCard } from '../src/material/KitsuCard';
 import { LocationType } from '../src/material/LocationType';
@@ -15,6 +17,7 @@ import { RuleId } from '../src/rules/RuleId';
 import {
     create2PlayersGameBuilder,
     create2PlayersGameBuilderWithCardsInPlayerHand,
+    create2PlayersGameBuilderWithPlayedCards,
     create2PlayersGameState
 } from './utils/MaterialGameTestUtils';
 
@@ -350,5 +353,35 @@ describe('PlayKitsuCardRule tests', () => {
         });
     });
 
+    describe("non-regression tests:", () => {
+        test("Bug #32: Numeral 3 card shouldn't trigger a start SelectKatanaTarget rule", () => {
+            // Given
+            const gameBuilder = create2PlayersGameBuilderWithPlayedCards([{player: 1 as (1 | 2), playedCardIds: [KitsuCard.Zenko3_1]}]);
+            const zenko3Index = gameBuilder.material(MaterialType.KitsuCard).id<KitsuCard>(KitsuCard.Zenko3_1).getIndex();
+            gameBuilder.setRule(RuleId.PlayKitsuCard, 1);
+            const game = gameBuilder.build();
+            const rule = new PlayKitsuCardRule(game);
+            const numeral3Move: MoveItem<number, MaterialType, LocationType> = {
+                kind: MoveKind.ItemMove,
+                type: ItemMoveType.Move,
+                itemIndex: zenko3Index,
+                itemType: MaterialType.KitsuCard,
+                location: {
+                    type: LocationType.PlayedKitsuCardSpot,
+                    player: 1
+                }
+            }
+
+            // When
+            const consequences = rule.afterItemMove(numeral3Move);
+            const ruleMoves = consequences.filter(move => isStartPlayerTurn<number, MaterialType, LocationType>(move))
+                .map(move => move as StartPlayerTurn<number, RuleId>);
+
+            // Then
+            expect(ruleMoves).toHaveLength(1);
+            expect(ruleMoves[0].id).toEqual(RuleId.PlayKitsuCard);
+            expect(ruleMoves[0].player).toEqual(2);
+        })
+    });
 
 });
