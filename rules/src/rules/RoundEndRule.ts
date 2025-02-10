@@ -27,6 +27,7 @@ export class RoundEndRule extends PlayerTurnRule<number, MaterialType, LocationT
             }
 
             return [
+                this.material(MaterialType.KitsuCard).moveItemsAtOnce({type: LocationType.KitsuCardDeckSpotOnWisdomBoard}),
                 this.material(MaterialType.VictoryCard).createItem({
                     id: victoriousPawn.id,
                     location: {

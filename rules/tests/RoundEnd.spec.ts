@@ -5,9 +5,9 @@ import {
     isCreateItemType,
     isCustomMoveType,
     isEndGame,
-    isMoveItemType,
+    isMoveItemType, isMoveItemTypeAtOnce,
     isStartPlayerTurn,
-    MoveItem,
+    MoveItem, MoveItemsAtOnce,
     MoveKind,
     RuleMoveType,
     StartPlayerTurn,
@@ -85,17 +85,22 @@ describe('RoundEnd rule tests', () => {
 
             // When
             const consequences = rule.onRuleStart(previousRuleMove);
+            const kitsuCardMoves = consequences.filter(move => isMoveItemTypeAtOnce<number, MaterialType, LocationType>(MaterialType.KitsuCard)(move))
+                .map(move => move as MoveItemsAtOnce<number, MaterialType, LocationType>);
             const victoryCardMoves = consequences.filter(move => isCreateItemType<number, MaterialType, LocationType>(MaterialType.VictoryCard)(move))
                 .map(move => move as CreateItem<number, MaterialType, LocationType>);
             const customMoves = consequences.filter(move => isCustomMoveType<CustomMoveType>(CustomMoveType.PickRandomPlayer)(move))
                 .map(move => move as CustomMove<CustomMoveType>);
 
             // Then
-            expect(consequences).toHaveLength(2);
+            expect(consequences).toHaveLength(3);
+            expect(kitsuCardMoves).toHaveLength(1)
             expect(victoryCardMoves).toHaveLength(1);
             expect(customMoves).toHaveLength(1);
-            expect(victoryCardMoves[0]).toBe(consequences[0]);
-            expect(customMoves[0]).toBe(consequences[1]);
+            expect(kitsuCardMoves[0]).toBe(consequences[0]);
+            expect(kitsuCardMoves[0].location.type).toBe(LocationType.KitsuCardDeckSpotOnWisdomBoard);
+            expect(victoryCardMoves[0]).toBe(consequences[1]);
+            expect(customMoves[0]).toBe(consequences[2]);
             expect(victoryCardMoves[0].item.id).toEqual(expectedVictoryCardId);
             expect(victoryCardMoves[0].item.location.type).toEqual(LocationType.VictoryCardsSpot);
             expect(customMoves[0].data).toBeUndefined();
@@ -137,11 +142,11 @@ describe('RoundEnd rule tests', () => {
                 .map(move => move as CustomMove<CustomMoveType>);
 
             // Then
-            expect(consequences).toHaveLength(2);
+            expect(consequences).toHaveLength(3);
             expect(victoryCardMoves).toHaveLength(1);
             expect(customMoves).toHaveLength(1);
-            expect(victoryCardMoves[0]).toBe(consequences[0]);
-            expect(customMoves[0]).toBe(consequences[1]);
+            expect(victoryCardMoves[0]).toBe(consequences[1]);
+            expect(customMoves[0]).toBe(consequences[2]);
             expect(victoryCardMoves[0].item.id).toEqual(expectedVictoryCardId);
             expect(victoryCardMoves[0].item.location.type).toEqual(LocationType.VictoryCardsSpot);
             expect(customMoves[0].data).toBeUndefined();
