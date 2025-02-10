@@ -13,10 +13,17 @@ import { CustomMoveType } from './material/CustomMoveType';
 import { hideToTOthersWhenRotatedFaceDown } from './material/HideToTOthersWhenRotatedFaceDown';
 import { LocationType } from './material/LocationType';
 import { MaterialType } from './material/MaterialType';
+import { EndOfTrickDecideEndOfRoundRule } from './rules/EndOfTrickDecideEndOfRoundRule';
+import { EndOfTrickDiscardCardsRule } from './rules/EndOfTrickDiscardCardsRule';
+import { EndOfTrickKitsunePawnMoveRule } from './rules/EndOfTrickKitsunePawnMoveRule';
+import { EndOfTrickMoveLeaderTokenRule } from './rules/EndOfTrickMoveLeaderTokenRule';
+import { EndOfTrickPickCardsRule } from './rules/EndOfTrickPickCardsRule';
 import { PlayKitsuCardRule } from './rules/PlayKitsuCardRule';
+import { RoundEndRule } from './rules/RoundEndRule';
 import { RoundSetupDealCardsRule } from './rules/RoundSetupDealCardsRule';
 import { RoundSetupMoveKitsunePawnsRule } from './rules/RoundSetupMoveKitsunePawnsRule';
 import { RuleId } from './rules/RuleId';
+import { SelectKatanaTargetRule } from './rules/SelectKatanaTargetRule';
 
 
 /**
@@ -29,6 +36,13 @@ export class KitsuRules extends SecretMaterialRules<number, MaterialType, Locati
         [RuleId.RoundSetupMoveKitsunePawns]: RoundSetupMoveKitsunePawnsRule,
         [RuleId.RoundSetupDealCards]: RoundSetupDealCardsRule,
         [RuleId.PlayKitsuCard]: PlayKitsuCardRule,
+        [RuleId.SelectKatanaTarget]: SelectKatanaTargetRule,
+        [RuleId.EndOfTrickKistunePawnMove]: EndOfTrickKitsunePawnMoveRule,
+        [RuleId.EndOfTrickDiscardCards]: EndOfTrickDiscardCardsRule,
+        [RuleId.EndOfTrickDecideEndOfRound]: EndOfTrickDecideEndOfRoundRule,
+        [RuleId.EndOfTrickMoveLeaderToken]: EndOfTrickMoveLeaderTokenRule,
+        [RuleId.EndOfTrickPickCards]: EndOfTrickPickCardsRule,
+        [RuleId.RoundEnd]: RoundEndRule,
     };
 
     locationsStrategies = {
