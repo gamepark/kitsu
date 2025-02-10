@@ -1,4 +1,11 @@
-import { MaterialItem, MaterialMove, PlayerTurnRule, PlayMoveContext, RuleMove, RuleStep } from '@gamepark/rules-api';
+import {
+    Material,
+    MaterialMove,
+    PlayerTurnRule,
+    PlayMoveContext,
+    RuleMove,
+    RuleStep
+} from '@gamepark/rules-api';
 import {
     getKitsuCardValue,
     getSpecialCardType,
@@ -8,6 +15,7 @@ import {
     KitsuCard,
     KitsuCardSpecialType
 } from '../material/KitsuCard';
+import { KitsuCardRotation } from '../material/KitsuCardRotation';
 import { LocationType } from '../material/LocationType';
 import { MaterialType } from '../material/MaterialType';
 import { TeamColor } from '../TeamColor';
@@ -16,10 +24,8 @@ import { RuleId } from './RuleId';
 export class EndOfTrickKitsunePawnMoveRule extends PlayerTurnRule<number, MaterialType, LocationType> {
     onRuleStart(_move: RuleMove<number, RuleId>, _previousRule?: RuleStep, _context?: PlayMoveContext): MaterialMove<number, MaterialType, LocationType>[] {
         const playedCards = this.material(MaterialType.KitsuCard)
-            .location(LocationType.PlayedKitsuCardSpot)
-            .getItems<KitsuCard>();
-        const numberOfWhiteKitsunePlayed = this.material(MaterialType.KitsuCard)
-            .location(LocationType.PlayedKitsuCardSpot)
+            .location(LocationType.PlayedKitsuCardSpot);
+        const numberOfWhiteKitsunePlayed = playedCards
             .id<KitsuCard>(id => isSpecialCard(id) && getSpecialCardType(id) === KitsuCardSpecialType.WhiteKitsune)
             .length;
         const invertColors = numberOfWhiteKitsunePlayed % 2 === 1;
@@ -49,10 +55,13 @@ export class EndOfTrickKitsunePawnMoveRule extends PlayerTurnRule<number, Materi
 
     }
 
-    private getScore(playedCards: MaterialItem<number, LocationType, KitsuCard>[], team: TeamColor) {
+    private getScore(playedCards: Material<number, MaterialType, LocationType>, team: TeamColor) {
         const filteringFunction = team === TeamColor.Zenko ? isZenkoCard : isYakoCard;
-        return playedCards.filter((card) => filteringFunction(card.id)).reduce(
-            (score, card) => score + getKitsuCardValue(card.id), 0
-        );
+        return playedCards.id<KitsuCard>(id => filteringFunction(id))
+            .getItems<KitsuCard>(item => item.location.rotation !== KitsuCardRotation.FaceDown)
+            .reduce(
+                (score, card) => score + getKitsuCardValue(card.id),
+                0
+            );
     }
 }
