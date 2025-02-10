@@ -1,16 +1,31 @@
-import { MaterialItem, MaterialMove, PlayerTurnRule, PlayMoveContext, RuleMove, RuleStep } from "@gamepark/rules-api";
-import { MaterialType } from "../material/MaterialType";
-import { LocationType } from "../material/LocationType";
-import { RuleId } from "./RuleId";
-import { getKitsuCardValue, isYakoCard, isZenkoCard } from "../material/KitsuCard";
-import { TeamColor } from "../TeamColor";
+import { MaterialItem, MaterialMove, PlayerTurnRule, PlayMoveContext, RuleMove, RuleStep } from '@gamepark/rules-api';
+import {
+    getKitsuCardValue,
+    getSpecialCardType,
+    isSpecialCard,
+    isYakoCard,
+    isZenkoCard,
+    KitsuCard,
+    KitsuCardSpecialType
+} from '../material/KitsuCard';
+import { LocationType } from '../material/LocationType';
+import { MaterialType } from '../material/MaterialType';
+import { TeamColor } from '../TeamColor';
+import { RuleId } from './RuleId';
 
 export class EndOfTrickKitsunePawnMoveRule extends PlayerTurnRule<number, MaterialType, LocationType> {
     onRuleStart(_move: RuleMove<number, RuleId>, _previousRule?: RuleStep, _context?: PlayMoveContext): MaterialMove<number, MaterialType, LocationType>[] {
-        const playedCards = this.material(MaterialType.KitsuCard).location(LocationType.PlayedKitsuCardSpot).getItems();
+        const playedCards = this.material(MaterialType.KitsuCard)
+            .location(LocationType.PlayedKitsuCardSpot)
+            .getItems<KitsuCard>();
+        const numberOfWhiteKitsunePlayed = this.material(MaterialType.KitsuCard)
+            .location(LocationType.PlayedKitsuCardSpot)
+            .id<KitsuCard>(id => isSpecialCard(id) && getSpecialCardType(id) === KitsuCardSpecialType.WhiteKitsune)
+            .length;
+        const invertColors = numberOfWhiteKitsunePlayed % 2 === 1;
 
-        const yakoScore = this.getScore(playedCards, TeamColor.Yako);
-        const zenkoScore = this.getScore(playedCards, TeamColor.Zenko);
+        const yakoScore = this.getScore(playedCards, invertColors ? TeamColor.Zenko : TeamColor.Yako);
+        const zenkoScore = this.getScore(playedCards, invertColors ? TeamColor.Yako : TeamColor.Zenko);
         const scoreDifference = Math.abs(yakoScore - zenkoScore);
         const winningTeam = scoreDifference === 0
             ? undefined
@@ -34,8 +49,8 @@ export class EndOfTrickKitsunePawnMoveRule extends PlayerTurnRule<number, Materi
 
     }
 
-    private getScore(playedCards: MaterialItem<number, LocationType, any>[], team: TeamColor) {
-        const filteringFunction = team === TeamColor.Zenko ? isZenkoCard : isYakoCard
+    private getScore(playedCards: MaterialItem<number, LocationType, KitsuCard>[], team: TeamColor) {
+        const filteringFunction = team === TeamColor.Zenko ? isZenkoCard : isYakoCard;
         return playedCards.filter((card) => filteringFunction(card.id)).reduce(
             (score, card) => score + getKitsuCardValue(card.id), 0
         );

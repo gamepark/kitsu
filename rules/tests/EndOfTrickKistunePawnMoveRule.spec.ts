@@ -4,7 +4,8 @@ import {
     MoveItem,
     MoveKind,
     RuleMoveType,
-    StartPlayerTurn, StartRule
+    StartPlayerTurn,
+    StartRule
 } from '@gamepark/rules-api';
 import { KitsuCard } from '../src/material/KitsuCard';
 import { LocationType } from '../src/material/LocationType';
@@ -12,7 +13,10 @@ import { MaterialType } from '../src/material/MaterialType';
 import { EndOfTrickKitsunePawnMoveRule } from '../src/rules/EndOfTrickKitsunePawnMoveRule';
 import { RuleId } from '../src/rules/RuleId';
 import { TeamColor, teamColors } from '../src/TeamColor';
-import { create2PlayersGameStateWithPlayedCards } from './utils/MaterialGameTestUtils';
+import {
+    create2PlayersGameBuilderWithPlayedCards,
+    create2PlayersGameStateWithPlayedCards
+} from './utils/MaterialGameTestUtils';
 
 describe('End of trick - kitsune pawn move rule', () => {
     describe('2 players tests', () => {
@@ -196,6 +200,90 @@ describe('End of trick - kitsune pawn move rule', () => {
                 type: RuleMoveType.StartRule,
                 id: RuleId.EndOfTrickDiscardCards,
             });
+        });
+
+        test.each([
+            {
+                givenPlayedCards: [{
+                    player: (1 as 1 | 2),
+                    playedCardIds: [KitsuCard.Zenko6, KitsuCard.Zenko2_1]
+                }, {player: (2 as 1 | 2), playedCardIds: [KitsuCard.WhiteKitsune_2, KitsuCard.Yako3_1]}],
+                givenKitsunePawnSpots: {[TeamColor.Zenko]: 0, [TeamColor.Yako]: 0},
+                expectedWinningTeam: TeamColor.Yako,
+                expectedNumberOfKitsunePawnMoves: 5,
+                expectedKitsunePawnReachedSpot: 5
+            }, {
+                givenPlayedCards: [{
+                    player: (1 as 1 | 2),
+                    playedCardIds: [KitsuCard.Yako3_1, KitsuCard.Yako4]
+                }, {player: (2 as 1 | 2), playedCardIds: [KitsuCard.WhiteKitsune_1, KitsuCard.Yako2_1]}],
+                givenKitsunePawnSpots: {[TeamColor.Zenko]: 2, [TeamColor.Yako]: 5},
+                expectedWinningTeam: TeamColor.Zenko,
+                expectedNumberOfKitsunePawnMoves: 9,
+                expectedKitsunePawnReachedSpot: 11
+            }, {
+                givenPlayedCards: [{
+                    player: (1 as 1 | 2),
+                    playedCardIds: [KitsuCard.Zenko5, KitsuCard.WhiteKitsune_2]
+                }, {player: (2 as 1 | 2), playedCardIds: [KitsuCard.Yako3_1, KitsuCard.WhiteKitsune_1]}],
+                givenKitsunePawnSpots: {[TeamColor.Zenko]: 10, [TeamColor.Yako]: 11},
+                expectedWinningTeam: TeamColor.Zenko,
+                expectedNumberOfKitsunePawnMoves: 2,
+                expectedKitsunePawnReachedSpot: 12
+            }, {
+                givenPlayedCards: [{
+                    player: (1 as 1 | 2),
+                    playedCardIds: [KitsuCard.WhiteKitsune_1, KitsuCard.Yako6]
+                }, {player: (2 as 1 | 2), playedCardIds: [KitsuCard.WhiteKitsune_2, KitsuCard.Yako2_2]}],
+                givenKitsunePawnSpots: {[TeamColor.Zenko]: 10, [TeamColor.Yako]: 5},
+                expectedWinningTeam: TeamColor.Yako,
+                expectedNumberOfKitsunePawnMoves: 8,
+                expectedKitsunePawnReachedSpot: 13
+            }, {
+                givenPlayedCards: [{
+                    player: (1 as 1 | 2),
+                    playedCardIds: [KitsuCard.Zenko4, KitsuCard.WhiteKitsune_1]
+                }, {player: (2 as 1 | 2), playedCardIds: [KitsuCard.Yako6, KitsuCard.WhiteKitsune_2]}],
+                givenKitsunePawnSpots: {[TeamColor.Zenko]: 12, [TeamColor.Yako]: 10},
+                expectedWinningTeam: TeamColor.Yako,
+                expectedNumberOfKitsunePawnMoves: 2,
+                expectedKitsunePawnReachedSpot: 12
+            },
+        ])('Given played cards with white kitsune cards played, onRuleStart() should return an array of moves with the ' +
+            'relevant number of kitsune pawn moves', ({
+                                                          givenPlayedCards,
+                                                          givenKitsunePawnSpots,
+                                                          expectedWinningTeam,
+                                                          expectedNumberOfKitsunePawnMoves,
+                                                          expectedKitsunePawnReachedSpot
+                                                      }) => {
+            // Given
+            const gameBuilder = create2PlayersGameBuilderWithPlayedCards(givenPlayedCards);
+            gameBuilder.setRule(RuleId.EndOfTrickKistunePawnMove, 2);
+            teamColors.forEach(color => gameBuilder.material(MaterialType.KitsunePawn).id(color).moveItem({
+                type: LocationType.KitsunePawnSpotOnWisdomBoard,
+                id: givenKitsunePawnSpots[color],
+            }));
+            const game = gameBuilder.build();
+            const winningTeamPawnId = game.items[MaterialType.KitsunePawn]?.findIndex(pawn => pawn.id === expectedWinningTeam)!;
+            const rule = new EndOfTrickKitsunePawnMoveRule(game);
+            const previousRuleMove: StartPlayerTurn<number, RuleId> = {
+                kind: MoveKind.RulesMove,
+                type: RuleMoveType.StartPlayerTurn,
+                id: RuleId.EndOfTrickKistunePawnMove,
+                player: 1,
+            }
+
+            // When
+            const consequences = rule.onRuleStart(previousRuleMove);
+            const kistunePawnMoves = consequences.filter(move => isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsunePawn)(move))
+                .map(move => move as MoveItem<number, MaterialType, LocationType>)
+
+            // Then
+            expect(consequences).toHaveLength(expectedNumberOfKitsunePawnMoves + 1);
+            expect(kistunePawnMoves).toHaveLength(expectedNumberOfKitsunePawnMoves);
+            expect(kistunePawnMoves.every(move => move.itemIndex === winningTeamPawnId)).toBe(true);
+            expect(kistunePawnMoves[expectedNumberOfKitsunePawnMoves - 1].location.id).toBe(expectedKitsunePawnReachedSpot);
         });
     });
 });
