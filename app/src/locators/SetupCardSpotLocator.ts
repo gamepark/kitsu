@@ -1,11 +1,13 @@
+import { LocationType } from '@gamepark/kitsu/material/LocationType';
+import { MaterialType } from '@gamepark/kitsu/material/MaterialType';
 import { Locator, MaterialContext } from "@gamepark/react-game";
 import { Location } from "@gamepark/rules-api";
 import { TeamColor } from "@gamepark/kitsu/TeamColor";
 import { Memorize } from "@gamepark/kitsu/Memorize";
 
-class SetupCardSpotLocator extends Locator {
+class SetupCardSpotLocator extends Locator<number, MaterialType, LocationType> {
     coordinates = { x: 0, y: 0 }
-    getRotateZ(_location: Location<number, number>, context: MaterialContext<number, number, number>): number {
+    getRotateZ(_location: Location<number, LocationType, number, number>, context: MaterialContext<number, MaterialType, LocationType>): number {
         const numberOfPlayers = context.rules.players.length;
         const playerPointOfView = (context.player === undefined) ? 1 : context.player;
         const teamPlayer = context.rules.remind<TeamColor>(Memorize.Team, playerPointOfView);

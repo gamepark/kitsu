@@ -1,3 +1,5 @@
+import { KitsunePawn } from '@gamepark/kitsu/material/KitsunePawn';
+import { LocationType } from '@gamepark/kitsu/material/LocationType';
 import { ItemContext, ListLocator, MaterialContext } from "@gamepark/react-game";
 import { MaterialType } from "@gamepark/kitsu/material/MaterialType";
 import { Coordinates, Location, MaterialItem } from "@gamepark/rules-api";
@@ -19,17 +21,17 @@ const spotsCoordinates = [
     { x: 9.70, y: -3.07 }
 ];
 
-class KitsunePawnSpotOnWisdomBoardLocator extends ListLocator {
+class KitsunePawnSpotOnWisdomBoardLocator extends ListLocator<number, MaterialType, LocationType> {
     parentItemType = MaterialType.WisdomBoard
 
-    getCoordinates(location: Location<number, number>, _context: MaterialContext<number, number, number>): Partial<Coordinates> {
+    getCoordinates(location: Location<number, LocationType, number, number>, _context: MaterialContext<number, MaterialType, LocationType>): Partial<Coordinates> {
         return {
-            x: spotsCoordinates[location.id].x,
-            y: spotsCoordinates[location.id].y - 0.7
+            x: spotsCoordinates[location.id!].x,
+            y: spotsCoordinates[location.id!].y - 0.7
         }
     }
 
-    getItemCoordinates(item: MaterialItem<number, number>, context: ItemContext<number, number, number>): Partial<Coordinates> {
+    getItemCoordinates(item: MaterialItem<number, LocationType, KitsunePawn>, context: ItemContext<number, MaterialType, LocationType>): Partial<Coordinates> {
         const numberOfItems = this.countListItems(item.location, context);
         const coordinates = super.getItemCoordinates(item, context);
         if (numberOfItems === 2 && typeof coordinates.x !== 'undefined') {

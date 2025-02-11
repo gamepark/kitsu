@@ -1,12 +1,13 @@
+import { LocationType } from '@gamepark/kitsu/material/LocationType';
 import { ItemContext, Locator } from "@gamepark/react-game";
 import { MaterialType } from "@gamepark/kitsu/material/MaterialType";
 import { Coordinates, MaterialItem } from "@gamepark/rules-api";
 import { PowerToken } from "@gamepark/kitsu/material/PowerToken";
 
-class PowerTokenSpotOnWisdomBoardLocator extends Locator {
+class PowerTokenSpotOnWisdomBoardLocator extends Locator<number, MaterialType, LocationType> {
     parentItemType = MaterialType.WisdomBoard
 
-    getItemCoordinates(item: MaterialItem<number, number>, _context: ItemContext<number, number, number>): Partial<Coordinates> {
+    getItemCoordinates(item: MaterialItem<number, LocationType, PowerToken>, _context: ItemContext<number, MaterialType, LocationType>): Partial<Coordinates> {
         switch (item.id) {
             case PowerToken.ColourExchange:
                 return { x: -8.25, y: 5.9 }
@@ -18,8 +19,6 @@ class PowerTokenSpotOnWisdomBoardLocator extends Locator {
                 return { x: 3.75, y: 5.9 }
             case  PowerToken.Plus3:
                 return { x: 7.75, y: 5.9 }
-            default:
-                throw new Error("If you see this message, then may the Force be with you.")
         }
     }
 }
