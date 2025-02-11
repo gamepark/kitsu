@@ -1,4 +1,4 @@
-import { OptionsSpec } from '@gamepark/rules-api'
+import { OptionsSpec, OptionsValidationError } from '@gamepark/rules-api';
 import { TFunction } from 'i18next'
 import { TeamColor, teamColors } from "./TeamColor";
 
@@ -6,7 +6,7 @@ import { TeamColor, teamColors } from "./TeamColor";
  * This is the options for each player in the game.
  */
 type PlayerOptions = {
-  team: TeamColor
+  team: TeamColor | undefined
 }
 
 /**
@@ -28,14 +28,22 @@ export const KitsuOptionsSpec: OptionsSpec<KitsuOptions> = {
       values: teamColors,
       valueSpec: color => ({ label: t => getTeamName(color, t) }),
     }
+  },
+  validate: (options, t) => {
+    if ((options.players?.filter(playerOption => playerOption.team === TeamColor.Yako) ?? 0) != Math.floor((options.players?.length ?? 0 )/ 2))
+    {
+      throw new OptionsValidationError(t('invalid.team.attribution'), ['players.team'])
+    }
   }
 }
 
-export function getTeamName (color: TeamColor, t: TFunction) {
+export function getTeamName (color: TeamColor | undefined, t: TFunction) {
   switch (color) {
     case TeamColor.Zenko:
       return t('Zenko (blue) team');
     case TeamColor.Yako:
       return t('Yako (orange) team');
+    case undefined:
+      return t('Random team')
   }
 }
