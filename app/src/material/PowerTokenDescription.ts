@@ -1,3 +1,5 @@
+import { LocationType } from '@gamepark/kitsu/material/LocationType';
+import { MaterialType } from '@gamepark/kitsu/material/MaterialType';
 import { TokenDescription } from '@gamepark/react-game';
 import { PowerToken } from '@gamepark/kitsu/material/PowerToken';
 import ColourExchangeToken from '../images/Tokens/PowerColourExchangeToken.png'
@@ -7,7 +9,7 @@ import Plus3YakoToken from '../images/Tokens/PowerPlus3YakoToken.png'
 import Plus3ZenkoToken from '../images/Tokens/PowerPlus3ZenkoToken.png'
 import ProtectionToken from '../images/Tokens/PowerProtectionToken.png'
 
-class PowerTokenDescription extends TokenDescription {
+class PowerTokenDescription extends TokenDescription<number, MaterialType, LocationType, Partial<Record<"front" | "back", PowerToken>>> {
     width = 3.00
     height = 2.94
     images = {
