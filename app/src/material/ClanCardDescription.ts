@@ -13,8 +13,8 @@ import ClanCardZenko4Front from '../images/Cards/ClanCardZenko4Front.jpg';
 import ClanCardZenko6Front from '../images/Cards/ClanCardZenko6Front.jpg';
 
 class ClanCardDescription extends CardDescription<number, MaterialType, LocationType, ClanCard> {
-    width = 6.30
-    height = 8.80
+    width = 6.30;
+    height = 8.80;
     images = {
         [ClanCard.Yako2Players]: ClanCardYako2Front,
         [ClanCard.Yako4Players]: ClanCardYako4Front,
@@ -22,7 +22,7 @@ class ClanCardDescription extends CardDescription<number, MaterialType, Location
         [ClanCard.Zenko2Players]: ClanCardZenko2Front,
         [ClanCard.Zenko4Players]: ClanCardZenko4Front,
         [ClanCard.Zenko6Players]: ClanCardZenko6Front,
-    }
+    };
 
     getStaticItems(context: MaterialContext<number, MaterialType, LocationType>): MaterialItem<number, LocationType, ClanCard>[] {
         const numberOfPlayers = context.rules.players.length;
@@ -34,7 +34,7 @@ class ClanCardDescription extends CardDescription<number, MaterialType, Location
                     type: LocationType.ClanCardSpot,
                     player: player,
                 }
-            }
+            };
         });
     }
 
@@ -47,9 +47,9 @@ class ClanCardDescription extends CardDescription<number, MaterialType, Location
             case 6:
                 return playerTeam === TeamColor.Yako ? ClanCard.Yako6Players : ClanCard.Zenko6Players;
             default:
-                throw new Error("Invalid number of players");
+                throw new Error('Invalid number of players');
         }
     }
 }
 
-export const clanCardDescription = new ClanCardDescription()
+export const clanCardDescription = new ClanCardDescription();

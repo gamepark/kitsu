@@ -6,10 +6,10 @@ import {
     PlayMoveContext,
     RuleMove,
     RuleStep
-} from "@gamepark/rules-api";
-import { MaterialType } from "../material/MaterialType";
-import { LocationType } from "../material/LocationType";
-import { RuleId } from "./RuleId";
+} from '@gamepark/rules-api';
+import { MaterialType } from '../material/MaterialType';
+import { LocationType } from '../material/LocationType';
+import { RuleId } from './RuleId';
 
 export class EndOfTrickDiscardCardsRule extends PlayerTurnRule<number, MaterialType, LocationType> {
     onRuleStart(_move: RuleMove<number, RuleId>, _previousRule?: RuleStep, _context?: PlayMoveContext): MaterialMove<number, MaterialType, LocationType>[] {

@@ -1,3 +1,3 @@
-import { MaterialGameAnimations } from '@gamepark/react-game'
+import { MaterialGameAnimations } from '@gamepark/react-game';
 
-export const gameAnimations = new MaterialGameAnimations()
+export const gameAnimations = new MaterialGameAnimations();

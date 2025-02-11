@@ -11,6 +11,7 @@ import { CustomMoveType } from '../material/CustomMoveType';
 import { KitsunePawn } from '../material/KitsunePawn';
 import { LocationType } from '../material/LocationType';
 import { MaterialType } from '../material/MaterialType';
+import { VictoryCard } from '../material/VictoryCard';
 import { Memorize } from '../Memorize';
 import { TeamColor } from '../TeamColor';
 import { RuleId } from './RuleId';
@@ -20,7 +21,7 @@ export class RoundEndRule extends PlayerTurnRule<number, MaterialType, LocationT
         const victoriousPawn = this.material(MaterialType.KitsunePawn).location(LocationType.KitsunePawnSpotOnWisdomBoard).locationId(13).getItem();
 
         if (victoriousPawn !== undefined) {
-            const victoryCard = this.material(MaterialType.VictoryCard).location(LocationType.VictoryCardsSpot);
+            const victoryCard = this.material(MaterialType.VictoryCard).location(LocationType.VictoryCardsSpot).id(victoriousPawn.id === KitsunePawn.Yako ? VictoryCard.Yako : VictoryCard.Zenko);
 
             if (victoryCard.length === 1 && victoryCard.getItem()!.id === victoriousPawn.id) {
                 return [this.endGame()];

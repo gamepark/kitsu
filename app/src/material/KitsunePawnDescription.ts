@@ -6,12 +6,12 @@ import ZenkoPawn from '../images/Tokens/ZenkoKitsuneToken.png';
 import { KitsunePawn } from '@gamepark/kitsu/material/KitsunePawn';
 
 class KitsunePawnDescription extends TokenDescription<number, MaterialType, LocationType, KitsunePawn> {
-    width = 2.16
-    height = 2.54
+    width = 2.16;
+    height = 2.54;
     images = {
         [KitsunePawn.Yako]: YakoPawn,
         [KitsunePawn.Zenko]: ZenkoPawn,
-    }
+    };
 }
 
-export const kitsunePawnDescription = new KitsunePawnDescription()
+export const kitsunePawnDescription = new KitsunePawnDescription();

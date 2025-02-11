@@ -1,4 +1,4 @@
-import { getEnumValues } from "@gamepark/rules-api";
+import { getEnumValues } from '@gamepark/rules-api';
 
 export enum KitsunePawn {
     Yako = 1,
