@@ -1,9 +1,13 @@
 {
   "name": "@gamepark/kitsu-app",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": true,
   "description": "The user interface of Kitsu adaptation for Game Park",
   "author": "Romain Fromi <romain@game-park.com> (https://game-park.com/)",
+  "contributors": [
+    "SwHawk <swhawk.gameparkdev@swhawk.eu>",
+    "Kuppo <mathieu.guerry@hotmail.fr>"
+  ],
   "license": "ISC",
   "dependencies": {
     "@dnd-kit/core": "^6.0.8",

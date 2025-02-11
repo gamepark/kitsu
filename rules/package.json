@@ -1,6 +1,6 @@
 {
   "name": "@gamepark/kitsu",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "The rules of Kitsu adapted for Game Park",
   "sideEffects": false,
   "main": "dist/index.js",
@@ -9,6 +9,10 @@
     "dist"
   ],
   "author": "Romain Fromi <romain@game-park.com> (https://game-park.com/)",
+  "contributors": [
+    "SwHawk <swhawk.gameparkdev@swhawk.eu>",
+    "Kuppo <mathieu.guerry@hotmail.fr>"
+  ],
   "license": "ISC",
   "publishConfig": {
     "access": "public"
