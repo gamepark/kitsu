@@ -1,2 +1,2 @@
 // Radius of the table game
-export const RADIUS: number = 25
+export const RADIUS: number = 25;

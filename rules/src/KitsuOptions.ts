@@ -1,12 +1,12 @@
 import { OptionsSpec, OptionsValidationError } from '@gamepark/rules-api';
-import { TFunction } from 'i18next'
-import { TeamColor, teamColors } from "./TeamColor";
+import { TFunction } from 'i18next';
+import { TeamColor, teamColors } from './TeamColor';
 
 /**
  * This is the options for each player in the game.
  */
 type PlayerOptions = {
-  team: TeamColor | undefined
+    team: TeamColor | undefined
 }
 
 /**
@@ -14,7 +14,7 @@ type PlayerOptions = {
  * The first generic parameter, "{}", can be changed to include game options like variants or expansions.
  */
 export type KitsuOptions = {
-  players: PlayerOptions[]
+    players: PlayerOptions[]
 }
 
 /**
@@ -22,28 +22,27 @@ export type KitsuOptions = {
  * (forms for friendly games, or forms for matchmaking preferences, for instance).
  */
 export const KitsuOptionsSpec: OptionsSpec<KitsuOptions> = {
-  players: {
-    team: {
-      label: t => t('Team color'),
-      values: teamColors,
-      valueSpec: color => ({ label: t => getTeamName(color, t) }),
+    players: {
+        team: {
+            label: t => t('Team color'),
+            values: teamColors,
+            valueSpec: color => ({label: t => getTeamName(color, t)}),
+        }
+    },
+    validate: (options, t) => {
+        if ((options.players?.filter(playerOption => playerOption.team === TeamColor.Yako) ?? 0) != Math.floor((options.players?.length ?? 0) / 2)) {
+            throw new OptionsValidationError(t('invalid.team.attribution'), ['players.team']);
+        }
     }
-  },
-  validate: (options, t) => {
-    if ((options.players?.filter(playerOption => playerOption.team === TeamColor.Yako) ?? 0) != Math.floor((options.players?.length ?? 0 )/ 2))
-    {
-      throw new OptionsValidationError(t('invalid.team.attribution'), ['players.team'])
-    }
-  }
-}
+};
 
-export function getTeamName (color: TeamColor | undefined, t: TFunction) {
-  switch (color) {
-    case TeamColor.Zenko:
-      return t('Zenko (blue) team');
-    case TeamColor.Yako:
-      return t('Yako (orange) team');
-    case undefined:
-      return t('Random team')
-  }
+export function getTeamName(color: TeamColor | undefined, t: TFunction) {
+    switch (color) {
+        case TeamColor.Zenko:
+            return t('Zenko (blue) team');
+        case TeamColor.Yako:
+            return t('Yako (orange) team');
+        case undefined:
+            return t('Random team');
+    }
 }

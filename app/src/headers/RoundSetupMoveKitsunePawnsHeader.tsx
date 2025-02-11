@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
 
 export const RoundSetupMoveKitsunePawnsHeader = () => {
-  return <>Setting up the round...</>
-}
+    return <>Setting up the round...</>;
+};
