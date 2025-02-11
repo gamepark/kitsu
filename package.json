@@ -5,6 +5,10 @@
     "app"
   ],
   "author": "Romain Fromi <romain@game-park.com> (https://game-park.com/)",
+  "contributors": [
+    "SwHawk <swhawk.gameparkdev@swhawk.eu>",
+    "Kuppo <mathieu.guerry@hotmail.fr>"
+  ],
   "license": "ISC",
   "devDependencies": {
     "lerna": "^8.1.8",
