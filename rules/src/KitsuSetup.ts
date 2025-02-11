@@ -1,14 +1,14 @@
-import { MaterialGameSetup } from '@gamepark/rules-api'
-import { KitsuOptions } from './KitsuOptions'
-import { KitsuRules } from './KitsuRules'
-import { LocationType } from './material/LocationType'
-import { MaterialType } from './material/MaterialType'
-import { RuleId } from './rules/RuleId'
-import { Memorize } from "./Memorize";
-import { TeamColor } from "./TeamColor";
-import { kitsunePawnIds } from "./material/KitsunePawn";
-import { kitsuCardIds, last24PlayersKitsuCardEnumValueIndex } from "./material/KitsuCard";
-import { powerToken } from "./material/PowerToken";
+import { MaterialGameSetup } from '@gamepark/rules-api';
+import { KitsuOptions } from './KitsuOptions';
+import { KitsuRules } from './KitsuRules';
+import { kitsuCardIds, last24PlayersKitsuCardEnumValueIndex } from './material/KitsuCard';
+import { kitsunePawnIds } from './material/KitsunePawn';
+import { LocationType } from './material/LocationType';
+import { MaterialType } from './material/MaterialType';
+import { powerToken } from './material/PowerToken';
+import { Memorize } from './Memorize';
+import { RuleId } from './rules/RuleId';
+import { TeamColor } from './TeamColor';
 
 /**
  * This class creates a new Game based on the game options
@@ -48,7 +48,6 @@ export class KitsuSetup extends MaterialGameSetup<number, MaterialType, Location
   }
 
   private CreateKitsuCards() {
-    // How can we get the length of the kitsuCardsIds enum ?
     const lastCardToTake = this.players.length === 6 ? kitsuCardIds.length : last24PlayersKitsuCardEnumValueIndex;
 
     this.material(MaterialType.KitsuCard).createItems(kitsuCardIds.slice(0, lastCardToTake).map(card => ({
@@ -70,24 +69,18 @@ export class KitsuSetup extends MaterialGameSetup<number, MaterialType, Location
   }
 
   private MemorizeTeamsAndReorderPlayers(options: KitsuOptions) {
-    options.players.forEach(playerOption => {
-      if ('id' in playerOption && typeof playerOption.id === 'number') {
-        this.memorize(Memorize.Team, playerOption.team, playerOption.id)
-      }
+    const playerOptionsWithTeams = options.players.every(playerOption => playerOption.team === undefined)
+        ? this.addTeamToPlayerOptions(options.players)
+        : options.players as {id? : number, team: TeamColor}[];
+    const playerOptionsWithIds = playerOptionsWithTeams.map((playerOption, index) => {
+      const playerId = 'id' in playerOption && typeof playerOption.id === 'number' ? playerOption.id : index + 1;
+      this.memorize<TeamColor>(Memorize.Team, playerOption.team!, playerId);
+      return {...playerOption, id: playerId};
     });
     const firstPlayerTeam = options.players[0].team;
-    const yakoPlayers = options.players.filter(playerOption => playerOption.team === TeamColor.Yako).map(playerOption => {
-      if ('id' in playerOption && typeof playerOption.id === 'number') {
-        return playerOption.id;
-      }
-      return NaN;
-    });
-    const zenkoPlayers = options.players.filter(playerOption => playerOption.team === TeamColor.Zenko).map(playerOption => {
-      if ('id' in playerOption && typeof playerOption.id === 'number') {
-        return playerOption.id;
-      }
-      return NaN;
-    });
+    const yakoPlayers = this.getTeamMemberIds(playerOptionsWithIds, TeamColor.Yako)
+    const zenkoPlayers = playerOptionsWithIds.filter(playerOption => playerOption.team === TeamColor.Zenko)
+        .map(playerOption => playerOption.id);
     this.game.players = Array(yakoPlayers.length).fill(1).flatMap((_, index) => {
       return firstPlayerTeam === TeamColor.Yako
           ? [yakoPlayers[index], zenkoPlayers[index]]
@@ -95,12 +88,22 @@ export class KitsuSetup extends MaterialGameSetup<number, MaterialType, Location
     });
   }
 
-  /*private extractTeamPlayers(options: KitsuOptions, team: TeamColor) {
-    return options.players.filter(playerOption => playerOption.team === team).map(playerOption => {
-          if ('id' in playerOption && typeof playerOption.id === 'number') {
-            return playerOption.id;
-          }
-          return NaN;
-        });
-  }*/
+  private getTeamMemberIds(playerOptionsWithIds: {id: number, team: TeamColor}[], team: TeamColor): number[] {
+
+    return playerOptionsWithIds.filter(playerOption => playerOption.team === team)
+        .map(playerOption => playerOption.id);
+  }
+
+  private getRandomTeamsForPlayers(numberOfPlayers: number): TeamColor[] {
+    const teams = Array(numberOfPlayers).fill(0).map((_, index) => index % 2 === 0 ? TeamColor.Yako : TeamColor.Zenko);
+    return Array(numberOfPlayers).fill(0).flatMap(_ => {
+      const randomIndex = Math.floor(Math.random() * teams.length)
+      return teams.splice(randomIndex, 1);
+    })
+  }
+
+  private addTeamToPlayerOptions(playerOptions: { id?: number, team: TeamColor | undefined }[]): { id?: number, team: TeamColor }[] {
+    const playerTeam = this.getRandomTeamsForPlayers(playerOptions.length);
+    return playerOptions.map((playerOption, index) => ({...playerOption, team: playerTeam[index] }))
+  }
 }
