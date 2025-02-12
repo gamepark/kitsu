@@ -99,7 +99,7 @@ export class KitsuSetup extends MaterialGameSetup<number, MaterialType, Location
         return shuffle(Array(numberOfPlayers).fill(0).map((_, index) => index % 2 === 0 ? TeamColor.Yako : TeamColor.Zenko));
     }
 
-    private addTeamToPlayerOptions(playerOptions: { id?: number, team: TeamColor | undefined }[]): {
+    private addTeamToPlayerOptions(playerOptions: { id?: number, team?: TeamColor }[]): {
         id?: number,
         team: TeamColor
     }[] {

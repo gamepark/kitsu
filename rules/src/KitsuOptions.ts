@@ -1,12 +1,13 @@
-import { OptionsSpec, OptionsValidationError } from '@gamepark/rules-api';
-import { TFunction } from 'i18next';
-import { TeamColor, teamColors } from './TeamColor';
+import { OptionsSpec, OptionsValidationError } from '@gamepark/rules-api'
+import { TFunction } from 'i18next'
+import { sumBy } from 'lodash'
+import { TeamColor, teamColors } from './TeamColor'
 
 /**
  * This is the options for each player in the game.
  */
 type PlayerOptions = {
-    team: TeamColor | undefined
+    team?: TeamColor
 }
 
 /**
@@ -24,14 +25,21 @@ export type KitsuOptions = {
 export const KitsuOptionsSpec: OptionsSpec<KitsuOptions> = {
     players: {
         team: {
-            label: t => t('Team color'),
+            label: t => t('clan'),
             values: teamColors,
             valueSpec: color => ({label: t => getTeamName(color, t)}),
         }
     },
     validate: (options, t) => {
-        if ((options.players?.filter(playerOption => playerOption.team === TeamColor.Yako) ?? 0) != Math.floor((options.players?.length ?? 0) / 2)) {
-            throw new OptionsValidationError(t('invalid.team.attribution'), ['players.team']);
+        if (options.players) {
+            if (options.players.length % 2 === 1) {
+                throw new OptionsValidationError(t('invalid.player.count'), ['players.team'])
+            }
+            const zenko = sumBy(options.players, p => p.team === TeamColor.Zenko ? 1 : 0)
+            const yako = sumBy(options.players, p => p.team === TeamColor.Yako ? 1 : 0)
+            if (zenko > options.players.length / 2 || yako > options.players.length / 2) {
+                throw new OptionsValidationError(t('invalid.teams'), ['players.team']);
+            }
         }
     }
 };
@@ -39,10 +47,10 @@ export const KitsuOptionsSpec: OptionsSpec<KitsuOptions> = {
 export function getTeamName(color: TeamColor | undefined, t: TFunction) {
     switch (color) {
         case TeamColor.Zenko:
-            return t('Zenko (blue) team');
+            return t('clan.zenko');
         case TeamColor.Yako:
-            return t('Yako (orange) team');
-        case undefined:
-            return t('Random team');
+            return t('clan.yako');
+        default:
+            return '';
     }
 }
