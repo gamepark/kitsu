@@ -7,14 +7,7 @@ import { RADIUS } from './Radius';
 const LOCATOR_RADIUS = RADIUS + 8;
 
 class PlayerHandLocator extends HandLocator<number, MaterialType, LocationType> {
-    getCoordinates(location: Location<number, LocationType, number, number>, context: MaterialContext<number, MaterialType, LocationType>): Partial<Coordinates> {
-        const numberOfPlayers = context.rules.players.length;
-        const numberOfSectors = numberOfPlayers / 2;
-        return {
-            x: LOCATOR_RADIUS * Math.sin(-Math.PI * getRelativePlayerIndex(context, location.player) / numberOfSectors),
-            y: LOCATOR_RADIUS * Math.cos(-Math.PI * getRelativePlayerIndex(context, location.player) / numberOfSectors),
-        };
-    }
+    radius = 100;
 
     getBaseAngle(location: Location<number, LocationType, number, number>, context: MaterialContext<number, MaterialType, LocationType>): number {
         const numberOfPlayers = context.rules.players.length;
@@ -23,10 +16,18 @@ class PlayerHandLocator extends HandLocator<number, MaterialType, LocationType> 
         return 180 * getRelativePlayerIndex(context, location.player) / numberOfSectors;
     }
 
-    radius = 100;
     maxAngle = 15;
     gapMaxAngle = 3;
     clockwise = true;
+
+    getCoordinates(location: Location<number, LocationType, number, number>, context: MaterialContext<number, MaterialType, LocationType>): Partial<Coordinates> {
+        const numberOfPlayers = context.rules.players.length;
+        const numberOfSectors = numberOfPlayers / 2;
+        return {
+            x: LOCATOR_RADIUS * Math.sin(-Math.PI * getRelativePlayerIndex(context, location.player) / numberOfSectors),
+            y: LOCATOR_RADIUS * Math.cos(-Math.PI * getRelativePlayerIndex(context, location.player) / numberOfSectors),
+        };
+    }
 }
 
 export const playerHandLocator = new PlayerHandLocator();

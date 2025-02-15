@@ -1,19 +1,19 @@
 import { LocationType } from '@gamepark/kitsu/material/LocationType';
 import { MaterialType } from '@gamepark/kitsu/material/MaterialType';
 import { Locator } from '@gamepark/react-game';
-import { kitsuCardDiscardSpotOnWisdomBoardLocator } from './KitsuCardDiscardSpotOnWisdomBoardLocator';
-import { wisdomBoardSpotLocator } from './WisdomBoardSpotLocator';
 import { clanCardSpotLocator } from './ClanCardSpotLocator';
-import { setupCardSpotLocator } from './SetupCardSpotLocator';
-import { playerHandLocator } from './PlayerHandLocator';
+import { discardedPowerTokenAreaOnWisdomBoardLocator } from './DiscardedPowerTokenAreaOnWisdomBoardLocator';
 import { kitsuCardDeckSpotOnWisdomBoardLocator } from './KitsuCardDeckSpotOnWisdomBoardLocator';
+import { kitsuCardDiscardSpotOnWisdomBoardLocator } from './KitsuCardDiscardSpotOnWisdomBoardLocator';
 import { kitsunePawnSpotOnWisdomBoardLocator } from './KitsunePawnSpotOnWisdomBoardLocator';
 import { leaderTokenSpotOnClanCardLocator } from './LeaderTokenSpotOnClanCardLocator';
+import { playedKitsuCardSpotLocator } from './PlayedKitsuCardSpotLocator';
+import { playerHandLocator } from './PlayerHandLocator';
 import { powerTokenSpotOnClanCardLocator } from './PowerTokenSpotOnClanCardLocator';
 import { powerTokenSpotOnWisdomBoardLocator } from './PowerTokenSpotOnWisdomBoardLocator';
-import { discardedPowerTokenAreaOnWisdomBoardLocator } from './DiscardedPowerTokenAreaOnWisdomBoardLocator';
-import { playedKitsuCardSpotLocator } from './PlayedKitsuCardSpotLocator';
+import { setupCardSpotLocator } from './SetupCardSpotLocator';
 import { victoryCardSpotLocator } from './VictoyCardSpotLocator';
+import { wisdomBoardSpotLocator } from './WisdomBoardSpotLocator';
 
 export const Locators: Partial<Record<LocationType, Locator<number, MaterialType, LocationType>>> = {
     [LocationType.WisdomBoardSpot]: wisdomBoardSpotLocator,

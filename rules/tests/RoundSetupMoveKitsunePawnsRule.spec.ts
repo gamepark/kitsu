@@ -1,14 +1,16 @@
-import { RoundSetupMoveKitsunePawnsRule } from "../src/rules/RoundSetupMoveKitsunePawnsRule";
 import {
-    isMoveItemTypeAtOnce, isStartRule,
+    isMoveItemTypeAtOnce,
+    isStartRule,
     MoveItemsAtOnce,
     MoveKind,
-    RuleMoveType, StartRule,
-} from "@gamepark/rules-api";
-import { RuleId } from "../src/rules/RuleId";
-import { MaterialType } from "../src/material/MaterialType";
-import { LocationType } from "../src/material/LocationType";
-import { create2PlayersGameState } from "./utils/MaterialGameTestUtils";
+    RuleMoveType,
+    StartRule,
+} from '@gamepark/rules-api';
+import { LocationType } from '../src/material/LocationType';
+import { MaterialType } from '../src/material/MaterialType';
+import { RoundSetupMoveKitsunePawnsRule } from '../src/rules/RoundSetupMoveKitsunePawnsRule';
+import { RuleId } from '../src/rules/RuleId';
+import { create2PlayersGameState } from './utils/MaterialGameTestUtils';
 
 describe('Round setup - move kitsune pawns rule tests', () => {
     describe('Given a game with 2 players', () => {
@@ -18,13 +20,18 @@ describe('Round setup - move kitsune pawns rule tests', () => {
             const roundSetupRule = new RoundSetupMoveKitsunePawnsRule(gameState);
 
             // When
-            const moves = roundSetupRule.onRuleStart({type: RuleMoveType.StartPlayerTurn, player: 1, id: RuleId.RoundSetupMoveKitsunePawns, kind: MoveKind.RulesMove})
+            const moves = roundSetupRule.onRuleStart({
+                type: RuleMoveType.StartPlayerTurn,
+                player: 1,
+                id: RuleId.RoundSetupMoveKitsunePawns,
+                kind: MoveKind.RulesMove
+            });
             const kitsuneTokenMoves = moves.filter(move => isMoveItemTypeAtOnce<number, MaterialType, LocationType>(MaterialType.KitsunePawn)(move))
                 .map(move => move as MoveItemsAtOnce<number, MaterialType, LocationType>);
 
             // Then
             expect(kitsuneTokenMoves).toHaveLength(1);
-            expect(kitsuneTokenMoves[0].location.type).toEqual(LocationType.KitsunePawnSpotOnWisdomBoard)
+            expect(kitsuneTokenMoves[0].location.type).toEqual(LocationType.KitsunePawnSpotOnWisdomBoard);
             expect(kitsuneTokenMoves[0].location.id).toBe(0);
         });
 
@@ -34,7 +41,12 @@ describe('Round setup - move kitsune pawns rule tests', () => {
             const roundSetupRule = new RoundSetupMoveKitsunePawnsRule(gameState);
 
             // When
-            const moves = roundSetupRule.onRuleStart({type: RuleMoveType.StartPlayerTurn, player: 1, id: RuleId.RoundSetupMoveKitsunePawns, kind: MoveKind.RulesMove})
+            const moves = roundSetupRule.onRuleStart({
+                type: RuleMoveType.StartPlayerTurn,
+                player: 1,
+                id: RuleId.RoundSetupMoveKitsunePawns,
+                kind: MoveKind.RulesMove
+            });
             const ruleMoves = moves.filter(move => isStartRule<number, MaterialType, LocationType>(move))
                 .map(move => move as StartRule<RuleId>);
 
@@ -43,6 +55,6 @@ describe('Round setup - move kitsune pawns rule tests', () => {
             expect(ruleMoves).toHaveLength(1);
             expect(ruleMoves[0]).toBe(moves[1]);
             expect(ruleMoves[0].id).toBe(RuleId.RoundSetupDealCards);
-        })
+        });
     });
 });

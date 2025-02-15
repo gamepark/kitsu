@@ -1,7 +1,7 @@
 import { KitsunePawn } from '@gamepark/kitsu/material/KitsunePawn';
 import { LocationType } from '@gamepark/kitsu/material/LocationType';
-import { ItemContext, ListLocator, MaterialContext } from '@gamepark/react-game';
 import { MaterialType } from '@gamepark/kitsu/material/MaterialType';
+import { ItemContext, ListLocator, MaterialContext } from '@gamepark/react-game';
 import { Coordinates, Location, MaterialItem } from '@gamepark/rules-api';
 
 const spotsCoordinates = [
@@ -31,6 +31,9 @@ class KitsunePawnSpotOnWisdomBoardLocator extends ListLocator<number, MaterialTy
         };
     }
 
+    gap = {x: 1, y: 0};
+    maxCount = 2;
+
     getItemCoordinates(item: MaterialItem<number, LocationType, KitsunePawn>, context: ItemContext<number, MaterialType, LocationType>): Partial<Coordinates> {
         const numberOfItems = this.countListItems(item.location, context);
         const coordinates = super.getItemCoordinates(item, context);
@@ -39,9 +42,6 @@ class KitsunePawnSpotOnWisdomBoardLocator extends ListLocator<number, MaterialTy
         }
         return coordinates;
     }
-
-    gap = {x: 1, y: 0};
-    maxCount = 2;
 }
 
 export const kitsunePawnSpotOnWisdomBoardLocator = new KitsunePawnSpotOnWisdomBoardLocator();

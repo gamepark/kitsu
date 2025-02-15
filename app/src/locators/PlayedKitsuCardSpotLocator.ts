@@ -18,8 +18,8 @@ import { RADIUS } from './Radius';
 const LOCATOR_RADIUS = RADIUS - 11;
 
 class PlayedKitsuCardSpotLocationDescription extends DropAreaDescription<number, MaterialType, LocationType, KitsuCard> {
-    width = 6.3;
     height = 8.8;
+    width = 6.3;
     image = GenericCardFront;
     extraCss = css`
         opacity: 0.5;`;
@@ -30,6 +30,13 @@ class PlayedKitsuCardSpotLocationDescription extends DropAreaDescription<number,
 }
 
 class PlayedKitsuCardSpotLocator extends ListLocator<number, MaterialType, LocationType> {
+    gap = {x: 7};
+    locationDescription = new PlayedKitsuCardSpotLocationDescription();
+
+    public getLocations(context: MaterialContext<number, MaterialType, LocationType>): Partial<Location<number, LocationType, number, number>>[] {
+        return context.rules.players.map(player => ({type: LocationType.PlayedKitsuCardSpot, player: player}));
+    }
+
     public getCoordinates(location: Location<number, LocationType, number, number>, context: MaterialContext<number, MaterialType, LocationType>): Partial<Coordinates> {
         const numberOfPlayers = context.rules.players.length;
         const numberOfSectors = numberOfPlayers / 2;
@@ -53,13 +60,6 @@ class PlayedKitsuCardSpotLocator extends ListLocator<number, MaterialType, Locat
         }
         return  item.location.rotation === KitsuCardRotation.FaceDown ? 180 : 0;
     }
-
-    public getLocations(context: MaterialContext<number, MaterialType, LocationType>): Partial<Location<number, LocationType, number, number>>[] {
-        return context.rules.players.map(player => ({type: LocationType.PlayedKitsuCardSpot, player: player}));
-    }
-
-    locationDescription = new PlayedKitsuCardSpotLocationDescription();
-    gap = {x: 7};
 }
 
 export const playedKitsuCardSpotLocator = new PlayedKitsuCardSpotLocator();

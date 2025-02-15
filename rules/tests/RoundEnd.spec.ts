@@ -5,9 +5,11 @@ import {
     isCreateItemType,
     isCustomMoveType,
     isEndGame,
-    isMoveItemType, isMoveItemTypeAtOnce,
+    isMoveItemType,
+    isMoveItemTypeAtOnce,
     isStartPlayerTurn,
-    MoveItem, MoveItemsAtOnce,
+    MoveItem,
+    MoveItemsAtOnce,
     MoveKind,
     RuleMoveType,
     StartPlayerTurn,
@@ -94,7 +96,7 @@ describe('RoundEnd rule tests', () => {
 
             // Then
             expect(consequences).toHaveLength(3);
-            expect(kitsuCardMoves).toHaveLength(1)
+            expect(kitsuCardMoves).toHaveLength(1);
             expect(victoryCardMoves).toHaveLength(1);
             expect(customMoves).toHaveLength(1);
             expect(kitsuCardMoves[0]).toBe(consequences[0]);

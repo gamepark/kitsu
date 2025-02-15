@@ -7,11 +7,12 @@ import {
     RuleMove,
     RuleStep
 } from '@gamepark/rules-api';
-import { MaterialType } from '../material/MaterialType';
 import { LocationType } from '../material/LocationType';
+import { MaterialType } from '../material/MaterialType';
 import { RuleId } from './RuleId';
 
 export class EndOfTrickDiscardCardsRule extends PlayerTurnRule<number, MaterialType, LocationType> {
+
     onRuleStart(_move: RuleMove<number, RuleId>, _previousRule?: RuleStep, _context?: PlayMoveContext): MaterialMove<number, MaterialType, LocationType>[] {
         return [
             this.material(MaterialType.KitsuCard).location(LocationType.PlayedKitsuCardSpot).moveItemsAtOnce({

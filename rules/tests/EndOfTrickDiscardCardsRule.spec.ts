@@ -15,7 +15,8 @@ import { EndOfTrickDiscardCardsRule } from '../src/rules/EndOfTrickDiscardCardsR
 import { RuleId } from '../src/rules/RuleId';
 import {
     create2PlayersGameState,
-    create2PlayersGameStateWithDiscardedCards, create2PlayersGameStateWithDiscardedCardsAndCardsInPlayersHands,
+    create2PlayersGameStateWithDiscardedCards,
+    create2PlayersGameStateWithDiscardedCardsAndCardsInPlayersHands,
     create2PlayersGameStateWithPlayedCards
 } from './utils/MaterialGameTestUtils';
 

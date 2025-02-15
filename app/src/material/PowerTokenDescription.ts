@@ -1,7 +1,7 @@
 import { LocationType } from '@gamepark/kitsu/material/LocationType';
 import { MaterialType } from '@gamepark/kitsu/material/MaterialType';
-import { TokenDescription } from '@gamepark/react-game';
 import { PowerToken } from '@gamepark/kitsu/material/PowerToken';
+import { TokenDescription } from '@gamepark/react-game';
 import ColourExchangeToken from '../images/Tokens/PowerColourExchangeToken.png';
 import NoAdvanceToken from '../images/Tokens/PowerNoAdvanceToken.png';
 import PickDiscardedToken from '../images/Tokens/PowerPickDiscardedToken.png';
@@ -10,8 +10,8 @@ import Plus3ZenkoToken from '../images/Tokens/PowerPlus3ZenkoToken.png';
 import ProtectionToken from '../images/Tokens/PowerProtectionToken.png';
 
 class PowerTokenDescription extends TokenDescription<number, MaterialType, LocationType, Partial<Record<'front' | 'back', PowerToken>>> {
-    width = 3.00;
     height = 2.94;
+    width = 3.00;
     images = {
         [PowerToken.ColourExchange]: ColourExchangeToken,
         [PowerToken.NoAdvance]: NoAdvanceToken,

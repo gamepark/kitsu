@@ -4,7 +4,8 @@ import {
     MoveItem,
     MoveKind,
     RuleMoveType,
-    StartPlayerTurn, StartRule
+    StartPlayerTurn,
+    StartRule
 } from '@gamepark/rules-api';
 import { KitsuCard } from '../src/material/KitsuCard';
 import { LocationType } from '../src/material/LocationType';

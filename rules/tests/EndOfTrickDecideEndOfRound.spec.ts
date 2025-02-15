@@ -1,9 +1,4 @@
-import {
-    isStartRule,
-    MoveKind,
-    RuleMoveType,
-    StartRule
-} from '@gamepark/rules-api';
+import { isStartRule, MoveKind, RuleMoveType, StartRule } from '@gamepark/rules-api';
 import { LocationType } from '../src/material/LocationType';
 import { MaterialType } from '../src/material/MaterialType';
 import { EndOfTrickDecideEndOfRoundRule } from '../src/rules/EndOfTrickDecideEndOfRoundRule';

@@ -1,10 +1,10 @@
-import { KitsuSetup } from "../src";
-import { TeamColor } from "../src/TeamColor";
-import { MaterialType } from "../src/material/MaterialType";
-import { LocationType } from "../src/material/LocationType";
-import { getEnumValues } from "@gamepark/rules-api";
-import { KitsuCard, last24PlayersKitsuCardEnumValueIndex } from "../src/material/KitsuCard";
-import { KitsunePawn } from "../src/material/KitsunePawn";
+import { getEnumValues } from '@gamepark/rules-api';
+import { KitsuSetup } from '../src';
+import { KitsuCard, last24PlayersKitsuCardEnumValueIndex } from '../src/material/KitsuCard';
+import { KitsunePawn } from '../src/material/KitsunePawn';
+import { LocationType } from '../src/material/LocationType';
+import { MaterialType } from '../src/material/MaterialType';
+import { TeamColor } from '../src/TeamColor';
 
 describe('Setup tests', () => {
     describe('Given a 2-player setup', () => {
@@ -12,8 +12,11 @@ describe('Setup tests', () => {
             {options: {players: [{team: TeamColor.Zenko, id: 1}, {team: TeamColor.Yako, id: 2}]}, expected: [1, 2]},
             {options: {players: [{team: TeamColor.Zenko, id: 2}, {team: TeamColor.Yako, id: 1}]}, expected: [2, 1]},
             {options: {players: [{team: TeamColor.Yako, id: 1}, {team: TeamColor.Zenko, id: 2}]}, expected: [1, 2]},
-            {options: {players: [{team: TeamColor.Yako, id: 2},  {team: TeamColor.Zenko, id: 1}]}, expected: [2, 1]},
-        ])('KistuSetup.setupNewMaterial({players: [$options.players.0, $options.players.1}) should reorder the players according to teams : $expected', ({options, expected}) => {
+            {options: {players: [{team: TeamColor.Yako, id: 2}, {team: TeamColor.Zenko, id: 1}]}, expected: [2, 1]},
+        ])('KistuSetup.setupNewMaterial({players: [$options.players.0, $options.players.1}) should reorder the players according to teams : $expected', ({
+                                                                                                                                                             options,
+                                                                                                                                                             expected
+                                                                                                                                                         }) => {
             // Given
             const setup = new KitsuSetup();
 
@@ -29,7 +32,7 @@ describe('Setup tests', () => {
             // Given
             const setup = new KitsuSetup();
             const options = {
-                players : [
+                players: [
                     {team: TeamColor.Zenko, id: 1},
                     {team: TeamColor.Yako, id: 2}
                 ]
@@ -49,7 +52,7 @@ describe('Setup tests', () => {
             // Given
             const setup = new KitsuSetup();
             const options = {
-                players : [
+                players: [
                     {team: TeamColor.Zenko, id: 1},
                     {team: TeamColor.Yako, id: 2}
                 ]
@@ -70,7 +73,7 @@ describe('Setup tests', () => {
             // Given
             const setup = new KitsuSetup();
             const options = {
-                players : [
+                players: [
                     {team: TeamColor.Zenko, id: 1},
                     {team: TeamColor.Yako, id: 2}
                 ]
@@ -88,43 +91,70 @@ describe('Setup tests', () => {
 
     describe('Given a 4-player setup', () => {
         test.each([
-            {options: {players: [
+            {
+                options: {
+                    players: [
                         {team: TeamColor.Yako, id: 1},
                         {team: TeamColor.Yako, id: 3},
                         {team: TeamColor.Zenko, id: 4},
                         {team: TeamColor.Zenko, id: 2}
-                    ]}, expected: [1, 4, 3, 2]},
-            {options: {players: [
+                    ]
+                }, expected: [1, 4, 3, 2]
+            },
+            {
+                options: {
+                    players: [
                         {team: TeamColor.Yako, id: 3},
                         {team: TeamColor.Zenko, id: 1},
                         {team: TeamColor.Yako, id: 4},
                         {team: TeamColor.Zenko, id: 2}
-                    ]}, expected: [3, 1, 4, 2]},
-            {options: {players: [
+                    ]
+                }, expected: [3, 1, 4, 2]
+            },
+            {
+                options: {
+                    players: [
                         {team: TeamColor.Yako, id: 1},
                         {team: TeamColor.Zenko, id: 3},
                         {team: TeamColor.Zenko, id: 2},
                         {team: TeamColor.Yako, id: 4}
-                    ]}, expected: [1, 3, 4, 2]},
-            {options: {players: [
+                    ]
+                }, expected: [1, 3, 4, 2]
+            },
+            {
+                options: {
+                    players: [
                         {team: TeamColor.Zenko, id: 2},
                         {team: TeamColor.Yako, id: 4},
                         {team: TeamColor.Zenko, id: 1},
                         {team: TeamColor.Yako, id: 3}
-                    ]}, expected: [2, 4, 1, 3]},
-            {options: {players: [
+                    ]
+                }, expected: [2, 4, 1, 3]
+            },
+            {
+                options: {
+                    players: [
                         {team: TeamColor.Zenko, id: 3},
                         {team: TeamColor.Yako, id: 1},
                         {team: TeamColor.Yako, id: 4},
                         {team: TeamColor.Zenko, id: 2}
-                    ]}, expected: [3, 1, 2, 4]},
-            {options: {players: [
+                    ]
+                }, expected: [3, 1, 2, 4]
+            },
+            {
+                options: {
+                    players: [
                         {team: TeamColor.Zenko, id: 4},
                         {team: TeamColor.Zenko, id: 1},
                         {team: TeamColor.Yako, id: 3},
                         {team: TeamColor.Yako, id: 2}
-                    ]}, expected: [4, 3, 1, 2]},
-        ])('KistuSetup.setupNewMaterial({players: [$options.players.0, $options.players.1, $options.players.2, $options.players.3}) should reorder the players according to teams : $expected', ({options, expected}) => {
+                    ]
+                }, expected: [4, 3, 1, 2]
+            },
+        ])('KistuSetup.setupNewMaterial({players: [$options.players.0, $options.players.1, $options.players.2, $options.players.3}) should reorder the players according to teams : $expected', ({
+                                                                                                                                                                                                     options,
+                                                                                                                                                                                                     expected
+                                                                                                                                                                                                 }) => {
             // Given
             const setup = new KitsuSetup();
 
@@ -140,7 +170,7 @@ describe('Setup tests', () => {
             // Given
             const setup = new KitsuSetup();
             const options = {
-                players : [
+                players: [
                     {team: TeamColor.Yako, id: 1},
                     {team: TeamColor.Yako, id: 3},
                     {team: TeamColor.Zenko, id: 4},
@@ -162,7 +192,7 @@ describe('Setup tests', () => {
             // Given
             const setup = new KitsuSetup();
             const options = {
-                players : [
+                players: [
                     {team: TeamColor.Yako, id: 1},
                     {team: TeamColor.Yako, id: 3},
                     {team: TeamColor.Zenko, id: 4},
@@ -185,7 +215,7 @@ describe('Setup tests', () => {
             // Given
             const setup = new KitsuSetup();
             const options = {
-                players : [
+                players: [
                     {team: TeamColor.Yako, id: 1},
                     {team: TeamColor.Yako, id: 3},
                     {team: TeamColor.Zenko, id: 4},
@@ -205,55 +235,82 @@ describe('Setup tests', () => {
 
     describe('Given a 6-player setup', () => {
         test.each([
-            {options: {players: [
+            {
+                options: {
+                    players: [
                         {team: TeamColor.Zenko, id: 3},
                         {team: TeamColor.Yako, id: 1},
                         {team: TeamColor.Yako, id: 4},
                         {team: TeamColor.Yako, id: 2},
                         {team: TeamColor.Zenko, id: 5},
                         {team: TeamColor.Zenko, id: 6}
-                    ]}, expected: [3, 1, 5, 4, 6, 2]},
-            {options: {players: [
+                    ]
+                }, expected: [3, 1, 5, 4, 6, 2]
+            },
+            {
+                options: {
+                    players: [
                         {team: TeamColor.Zenko, id: 5},
                         {team: TeamColor.Zenko, id: 1},
                         {team: TeamColor.Yako, id: 3},
                         {team: TeamColor.Yako, id: 2},
                         {team: TeamColor.Zenko, id: 4},
                         {team: TeamColor.Yako, id: 6}
-                    ]}, expected: [5, 3, 1, 2, 4, 6]},
-            {options: {players: [
+                    ]
+                }, expected: [5, 3, 1, 2, 4, 6]
+            },
+            {
+                options: {
+                    players: [
                         {team: TeamColor.Zenko, id: 1},
                         {team: TeamColor.Zenko, id: 4},
                         {team: TeamColor.Zenko, id: 3},
                         {team: TeamColor.Yako, id: 6},
                         {team: TeamColor.Yako, id: 2},
                         {team: TeamColor.Yako, id: 5}
-                    ]}, expected: [1, 6, 4, 2, 3, 5]},
-            {options: {players: [
+                    ]
+                }, expected: [1, 6, 4, 2, 3, 5]
+            },
+            {
+                options: {
+                    players: [
                         {team: TeamColor.Zenko, id: 2},
                         {team: TeamColor.Yako, id: 5},
                         {team: TeamColor.Zenko, id: 3},
                         {team: TeamColor.Yako, id: 1},
                         {team: TeamColor.Zenko, id: 6},
                         {team: TeamColor.Yako, id: 4}
-                    ]}, expected: [2, 5, 3, 1, 6, 4]},
-            {options: {players: [
+                    ]
+                }, expected: [2, 5, 3, 1, 6, 4]
+            },
+            {
+                options: {
+                    players: [
                         {team: TeamColor.Yako, id: 3},
                         {team: TeamColor.Yako, id: 1},
                         {team: TeamColor.Zenko, id: 4},
                         {team: TeamColor.Yako, id: 2},
                         {team: TeamColor.Zenko, id: 5},
                         {team: TeamColor.Zenko, id: 6}
-                    ]}, expected: [3, 4, 1, 5, 2, 6]},
-            {options: {players: [
+                    ]
+                }, expected: [3, 4, 1, 5, 2, 6]
+            },
+            {
+                options: {
+                    players: [
                         {team: TeamColor.Zenko, id: 3},
                         {team: TeamColor.Yako, id: 1},
                         {team: TeamColor.Zenko, id: 4},
                         {team: TeamColor.Yako, id: 2},
                         {team: TeamColor.Yako, id: 5},
                         {team: TeamColor.Zenko, id: 6}
-                    ]}, expected: [3, 1, 4, 2, 6, 5]},
-        ])('KistuSetup.setupNewMaterial({players: [$options.players.0, $options.players.1, $options.players.2, $options.players.3, $options.players.4, $options.players.5}) should reorder the players according to teams : $expected', ({options, expected}) => {
+                    ]
+                }, expected: [3, 1, 4, 2, 6, 5]
+            },
+        ])('KistuSetup.setupNewMaterial({players: [$options.players.0, $options.players.1, $options.players.2, $options.players.3, $options.players.4, $options.players.5}) should reorder the players according to teams : $expected', ({
+                                                                                                                                                                                                                                             options,
+                                                                                                                                                                                                                                             expected
+                                                                                                                                                                                                                                         }) => {
             // Given
             const setup = new KitsuSetup();
 
@@ -269,7 +326,7 @@ describe('Setup tests', () => {
             // Given
             const setup = new KitsuSetup();
             const options = {
-                players : [
+                players: [
                     {team: TeamColor.Zenko, id: 3},
                     {team: TeamColor.Yako, id: 1},
                     {team: TeamColor.Yako, id: 4},
@@ -294,7 +351,7 @@ describe('Setup tests', () => {
             // Given
             const setup = new KitsuSetup();
             const options = {
-                players : [
+                players: [
                     {team: TeamColor.Zenko, id: 3},
                     {team: TeamColor.Yako, id: 1},
                     {team: TeamColor.Yako, id: 4},

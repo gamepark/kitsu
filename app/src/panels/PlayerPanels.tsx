@@ -21,10 +21,10 @@ export const PlayerPanels = () => {
     );
 };
 const panelPosition = (index: number) => css`
-  position: absolute;
-  right: 1em;
-  top: ${8.5 + index * 16}em;
-  width: 28em;
+    position: absolute;
+    right: 1em;
+    top: ${8.5 + index * 16}em;
+    width: 28em;
 `;
 
 export const playerColorCode: Record<number, string> = {

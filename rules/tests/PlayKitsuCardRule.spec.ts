@@ -201,7 +201,7 @@ describe('PlayKitsuCardRule tests', () => {
 
         });
 
-        test("Given a move indicating a Katana card was just played, afterItemMove() should return an array of moves with a single rule move to the SelectKatanaTarget rule", () => {
+        test('Given a move indicating a Katana card was just played, afterItemMove() should return an array of moves with a single rule move to the SelectKatanaTarget rule', () => {
             // Given
             const gameBuilder = create2PlayersGameBuilder();
             gameBuilder.setRule(RuleId.PlayKitsuCard, 1);
@@ -226,14 +226,14 @@ describe('PlayKitsuCardRule tests', () => {
             // When
             const consequences = rule.afterItemMove(katanaMove);
             const ruleMoves = consequences.filter(move => isStartRule<number, MaterialType, LocationType>(move))
-                .map(move => move as StartRule<RuleId>)
+                .map(move => move as StartRule<RuleId>);
 
             // Then
             expect(consequences).toHaveLength(1);
             expect(ruleMoves).toHaveLength(1);
             expect(ruleMoves[0]).toBe(consequences[0]);
             expect(ruleMoves[0].id).toBe(RuleId.SelectKatanaTarget);
-        })
+        });
 
         test('given an invalid move, afterItemMove() should return an empty array', () => {
             // Given
@@ -289,7 +289,7 @@ describe('PlayKitsuCardRule tests', () => {
                     type: LocationType.PlayedKitsuCardSpot,
                     player: givenActivePlayer === 1 ? 2 : 1,
                     x: 0
-                })
+                });
                 gameBuilder.setRule(RuleId.PlayKitsuCard, givenActivePlayer);
                 const game = gameBuilder.build();
                 const rule = new PlayKitsuCardRule(game);
@@ -329,8 +329,12 @@ describe('PlayKitsuCardRule tests', () => {
                     givenActivePlayerHand: [KitsuCard.Yako3_1, KitsuCard.Yako1_1, KitsuCard.BlackKitsune_2],
                     expectedCardIds: [KitsuCard.Yako3_1, KitsuCard.Yako1_1, KitsuCard.BlackKitsune_2]
                 },
-            ])("Given the previous player played a back kitsune card and no cards of their color in the active player " +
-                "hand, getPlayerMoves() should return other normally available cards", ({givenActivePlayer, givenActivePlayerHand, expectedCardIds}) => {
+            ])('Given the previous player played a back kitsune card and no cards of their color in the active player ' +
+                'hand, getPlayerMoves() should return other normally available cards', ({
+                                                                                            givenActivePlayer,
+                                                                                            givenActivePlayerHand,
+                                                                                            expectedCardIds
+                                                                                        }) => {
                 // Given
                 const gameBuilder = create2PlayersGameBuilderWithCardsInPlayerHand(givenActivePlayer as 1 | 2, givenActivePlayerHand);
                 gameBuilder.setRule(RuleId.PlayKitsuCard, givenActivePlayer);
@@ -341,7 +345,7 @@ describe('PlayKitsuCardRule tests', () => {
                 const allowedMoves = rule.getPlayerMoves();
                 const playableCardIds = allowedMoves.filter(move => isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard)(move))
                     .map(move => {
-                        const cardIndex= (move as MoveItem<number, MaterialType, LocationType>).itemIndex;
+                        const cardIndex = (move as MoveItem<number, MaterialType, LocationType>).itemIndex;
                         return game.items[MaterialType.KitsuCard]![cardIndex].id as KitsuCard;
                     });
 
@@ -349,14 +353,17 @@ describe('PlayKitsuCardRule tests', () => {
                 expect(allowedMoves).toHaveLength(expectedCardIds.length);
                 expect(playableCardIds).toHaveLength(expectedCardIds.length);
                 expect(playableCardIds).toEqual(expect.arrayContaining(expectedCardIds));
-            })
+            });
         });
     });
 
-    describe("non-regression tests:", () => {
-        test("Bug #32: Numeral 3 card shouldn't trigger a start SelectKatanaTarget rule", () => {
+    describe('non-regression tests:', () => {
+        test('Bug #32: Numeral 3 card shouldn\'t trigger a start SelectKatanaTarget rule', () => {
             // Given
-            const gameBuilder = create2PlayersGameBuilderWithPlayedCards([{player: 1 as (1 | 2), playedCardIds: [KitsuCard.Zenko3_1]}]);
+            const gameBuilder = create2PlayersGameBuilderWithPlayedCards([{
+                player: 1 as (1 | 2),
+                playedCardIds: [KitsuCard.Zenko3_1]
+            }]);
             const zenko3Index = gameBuilder.material(MaterialType.KitsuCard).id<KitsuCard>(KitsuCard.Zenko3_1).getIndex();
             gameBuilder.setRule(RuleId.PlayKitsuCard, 1);
             const game = gameBuilder.build();
@@ -370,7 +377,7 @@ describe('PlayKitsuCardRule tests', () => {
                     type: LocationType.PlayedKitsuCardSpot,
                     player: 1
                 }
-            }
+            };
 
             // When
             const consequences = rule.afterItemMove(numeral3Move);
@@ -381,7 +388,7 @@ describe('PlayKitsuCardRule tests', () => {
             expect(ruleMoves).toHaveLength(1);
             expect(ruleMoves[0].id).toEqual(RuleId.PlayKitsuCard);
             expect(ruleMoves[0].player).toEqual(2);
-        })
+        });
     });
 
 });

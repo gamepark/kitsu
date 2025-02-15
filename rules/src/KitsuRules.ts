@@ -71,6 +71,13 @@ export class KitsuRules extends SecretMaterialRules<number, MaterialType, Locati
         }
     };
 
+    public randomize(move: MaterialMove<number, MaterialType, LocationType>, player?: number): MaterialMove<number, MaterialType, LocationType> & MaterialMoveRandomized<number, MaterialType, LocationType> {
+        if (isCustomMoveType<CustomMoveType>(CustomMoveType.PickRandomPlayer)(move)) {
+            return {...move, data: Math.floor(Math.random() * Math.floor(this.players.length / 2))};
+        }
+        return super.randomize(move, player);
+    }
+
     giveTime(): number {
         return 60;
     }
@@ -79,10 +86,5 @@ export class KitsuRules extends SecretMaterialRules<number, MaterialType, Locati
         return super.isUnpredictableMove(move, player) || isCustomMoveType<CustomMoveType>(CustomMoveType.PickRandomPlayer)(move);
     }
 
-    public randomize(move: MaterialMove<number, MaterialType, LocationType>, player?: number): MaterialMove<number, MaterialType, LocationType> & MaterialMoveRandomized<number, MaterialType, LocationType> {
-        if (isCustomMoveType<CustomMoveType>(CustomMoveType.PickRandomPlayer)(move)) {
-            return {...move, data: Math.floor(Math.random() * Math.floor(this.players.length / 2))};
-        }
-        return super.randomize(move, player);
-    }
+
 }

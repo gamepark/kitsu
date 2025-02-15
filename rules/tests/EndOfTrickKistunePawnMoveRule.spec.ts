@@ -274,12 +274,12 @@ describe('End of trick - kitsune pawn move rule', () => {
                 type: RuleMoveType.StartPlayerTurn,
                 id: RuleId.EndOfTrickKistunePawnMove,
                 player: 1,
-            }
+            };
 
             // When
             const consequences = rule.onRuleStart(previousRuleMove);
             const kistunePawnMoves = consequences.filter(move => isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsunePawn)(move))
-                .map(move => move as MoveItem<number, MaterialType, LocationType>)
+                .map(move => move as MoveItem<number, MaterialType, LocationType>);
 
             // Then
             expect(consequences).toHaveLength(expectedNumberOfKitsunePawnMoves + 1);
@@ -320,8 +320,8 @@ describe('End of trick - kitsune pawn move rule', () => {
                 expectedNumberOfKitsunePawnMoves: 1,
                 expectedKitsunePawnReachedSpot: 12
             },
-        ])("Given played cards with rotated face down cards, onRuleStart() should return an array of moves containing" +
-            "the relevant number of kitsune pawn moves for the winning team", ({
+        ])('Given played cards with rotated face down cards, onRuleStart() should return an array of moves containing' +
+            'the relevant number of kitsune pawn moves for the winning team', ({
                                                                                    givenPlayedCards,
                                                                                    givenRotatedFaceDownCardId,
                                                                                    givenKitsunePawnSpots,

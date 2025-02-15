@@ -1,11 +1,4 @@
-import {
-    Material,
-    MaterialMove,
-    PlayerTurnRule,
-    PlayMoveContext,
-    RuleMove,
-    RuleStep
-} from '@gamepark/rules-api';
+import { Material, MaterialMove, PlayerTurnRule, PlayMoveContext, RuleMove, RuleStep } from '@gamepark/rules-api';
 import {
     getKitsuCardValue,
     getSpecialCardType,
