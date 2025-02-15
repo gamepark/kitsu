@@ -1,5 +1,6 @@
 import {
     isMoveItemType,
+    isStartPlayerTurn,
     isStartRule,
     MoveItem,
     MoveKind,
@@ -144,17 +145,12 @@ describe('End of trick - kitsune pawn move rule', () => {
             {
                 givenPlayedCards: [{
                     player: (1 as 1 | 2),
-                    playedCardIds: [KitsuCard.Zenko5, KitsuCard.Zenko3_1]
-                }, {player: (2 as 1 | 2), playedCardIds: [KitsuCard.Yako2_1, KitsuCard.Yako2_2]}],
-                givenKitsunePawnSpots: {[TeamColor.Zenko]: 5, [TeamColor.Yako]: 2},
-                expectedConsequencesLength: 5,
-            }, {
-                givenPlayedCards: [{
-                    player: (1 as 1 | 2),
                     playedCardIds: [KitsuCard.Zenko4, KitsuCard.Zenko3_1]
                 }, {player: (2 as 1 | 2), playedCardIds: [KitsuCard.Yako6, KitsuCard.Zenko5]}],
                 givenKitsunePawnSpots: {[TeamColor.Zenko]: 12, [TeamColor.Yako]: 10},
                 expectedConsequencesLength: 2,
+                expectedRuleMoveType: RuleMoveType.StartRule,
+                expectedRuleId: RuleId.EndOfTrickDiscardCards
             }, {
                 givenPlayedCards: [{
                     player: (1 as 1 | 2),
@@ -162,6 +158,8 @@ describe('End of trick - kitsune pawn move rule', () => {
                 }, {player: (2 as 1 | 2), playedCardIds: [KitsuCard.Zenko5, KitsuCard.Zenko1_3]}],
                 givenKitsunePawnSpots: {[TeamColor.Zenko]: 1, [TeamColor.Yako]: 4},
                 expectedConsequencesLength: 1,
+                expectedRuleMoveType: RuleMoveType.StartRule,
+                expectedRuleId: RuleId.EndOfTrickDiscardCards
             }, {
                 givenPlayedCards: [{
                     player: (1 as 1 | 2),
@@ -169,11 +167,42 @@ describe('End of trick - kitsune pawn move rule', () => {
                 }, {player: (2 as 1 | 2), playedCardIds: [KitsuCard.Zenko2_2, KitsuCard.Zenko1_2]}],
                 givenKitsunePawnSpots: {[TeamColor.Zenko]: 7, [TeamColor.Yako]: 5},
                 expectedConsequencesLength: 1,
-            }
+                expectedRuleMoveType: RuleMoveType.StartRule,
+                expectedRuleId: RuleId.EndOfTrickDiscardCards
+            }, {
+                givenPlayedCards: [{
+                    player: (1 as 1 | 2),
+                    playedCardIds: [KitsuCard.Zenko5, KitsuCard.Zenko3_1]
+                }, {player: (2 as 1 | 2), playedCardIds: [KitsuCard.Yako2_1, KitsuCard.Yako2_2]}],
+                givenKitsunePawnSpots: {[TeamColor.Zenko]: 5, [TeamColor.Yako]: 2},
+                expectedConsequencesLength: 5,
+                expectedRuleMoveType: RuleMoveType.StartPlayerTurn,
+                expectedRuleId: RuleId.EndOfTrickPickAvailablePowerToken
+            }, {
+                givenPlayedCards: [{
+                    player: (1 as 1 | 2),
+                    playedCardIds: [KitsuCard.Zenko5, KitsuCard.Zenko6]
+                }, {player: (2 as 1 | 2), playedCardIds: [KitsuCard.Yako1_3, KitsuCard.Yako2_2]}],
+                givenKitsunePawnSpots: {[TeamColor.Zenko]: 5, [TeamColor.Yako]: 2},
+                expectedConsequencesLength: 9,
+                expectedRuleMoveType: RuleMoveType.StartPlayerTurn,
+                expectedRuleId: RuleId.EndOfTrickPickAvailablePowerToken
+            }, {
+                givenPlayedCards: [{
+                    player: (1 as 1 | 2),
+                    playedCardIds: [KitsuCard.Zenko5, KitsuCard.Zenko4]
+                }, {player: (2 as 1 | 2), playedCardIds: [KitsuCard.Yako1_1, KitsuCard.BlackKitsune_1]}],
+                givenKitsunePawnSpots: {[TeamColor.Zenko]: 5, [TeamColor.Yako]: 2},
+                expectedConsequencesLength: 9,
+                expectedRuleMoveType: RuleMoveType.StartPlayerTurn,
+                expectedRuleId: RuleId.EndOfTrickPickAvailablePowerToken
+            },
         ])('Given played cards, onRuleStart() should return an array of move, the last being a rule move to the next rule', ({
                                                                                                                                  givenPlayedCards,
                                                                                                                                  givenKitsunePawnSpots,
-                                                                                                                                 expectedConsequencesLength
+                                                                                                                                 expectedConsequencesLength,
+                                                                                                                                 expectedRuleMoveType,
+                                                                                                                                 expectedRuleId,
                                                                                                                              }) => {
             // Given
             const game = create2PlayersGameStateWithPlayedCards(givenPlayedCards);
@@ -190,18 +219,15 @@ describe('End of trick - kitsune pawn move rule', () => {
 
             // When
             const consequences = rule.onRuleStart(previousRuleMove);
-            const ruleMoves = consequences.filter(move => isStartRule<number, MaterialType, LocationType>(move))
-                .map(move => (move as StartRule<RuleId>));
+            const ruleMoves = consequences.filter(move => isStartRule<number, MaterialType, LocationType>(move) || isStartPlayerTurn<number, MaterialType, LocationType>(move))
+                .map(move => (move as StartRule<RuleId> ?? move as StartPlayerTurn<number, RuleId>));
 
             // Then
             expect(consequences).toHaveLength(expectedConsequencesLength);
             expect(ruleMoves).toHaveLength(1);
             expect(consequences[consequences.length - 1]).toBe(ruleMoves[0]);
-            expect(ruleMoves[0]).toEqual({
-                kind: MoveKind.RulesMove,
-                type: RuleMoveType.StartRule,
-                id: RuleId.EndOfTrickDiscardCards,
-            });
+            expect(ruleMoves[0].type).toEqual(expectedRuleMoveType);
+            expect(ruleMoves[0].id).toEqual(expectedRuleId);
         });
 
         test.each([

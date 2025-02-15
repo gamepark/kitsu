@@ -5,6 +5,7 @@ export enum RuleId {
     SelectKatanaTarget,
     EndOfTrickDiscardCards,
     EndOfTrickKistunePawnMove,
+    EndOfTrickPickAvailablePowerToken,
     EndOfTrickDecideEndOfRound,
     EndOfTrickMoveLeaderToken,
     EndOfTrickPickCards,
