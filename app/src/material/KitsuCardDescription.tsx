@@ -1,10 +1,17 @@
+/** @jsxImportSource @emotion/react */
+
+import { css, Interpolation, Theme } from '@emotion/react';
+import { faArrowRotateRight, faHandPointer } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { KitsuCard } from '@gamepark/kitsu/material/KitsuCard';
+import { KitsuCardRotation } from '@gamepark/kitsu/material/KitsuCardRotation';
 import { LocationType } from '@gamepark/kitsu/material/LocationType';
 import { MaterialType } from '@gamepark/kitsu/material/MaterialType';
 import { RuleId } from '@gamepark/kitsu/rules/RuleId';
 import { CardDescription, ItemContext, ItemMenuButton } from '@gamepark/react-game';
-import { isMoveItemType, MaterialItem, MaterialMove } from '@gamepark/rules-api';
+import { isMoveItemType, MaterialItem, MaterialMove, MoveItem } from '@gamepark/rules-api';
 import React from 'react';
+import { Trans } from 'react-i18next';
 import KitsuCardBack from '../images/Cards/KitsuCardBack.jpg';
 import KitsuCardBlackKistsuneFront from '../images/Cards/KitsuCardBlackKitsuneFront.jpg';
 import KitsuCardKatanaFront from '../images/Cards/KitsuCardKatanaFront.jpg';
@@ -59,27 +66,87 @@ class KitsuCardDescription extends CardDescription<number, MaterialType, Locatio
         [KitsuCard.Katana_2]: KitsuCardKatanaFront,
     };
 
+    public canDrag(move: MaterialMove<number, MaterialType, LocationType>, context: ItemContext<number, MaterialType, LocationType>): boolean {
+        if (context.rules.game.rule?.id !== RuleId.SelectKatanaTarget) {
+            return super.canDrag(move, context);
+        }
+        return false;
+    }
+
+    public isMenuAlwaysVisible(item: MaterialItem<number, LocationType>, context: ItemContext<number, MaterialType, LocationType>): boolean {
+        if (context.rules.game.rule?.id !== RuleId.SelectKatanaTarget) {
+            return super.isMenuAlwaysVisible(item, context);
+        }
+        return true;
+    }
+
+    public getItemExtraCss(item: MaterialItem<number, LocationType>, context: ItemContext<number, MaterialType, LocationType>): Interpolation<Theme> {
+        if (context.player !== item.location.player || (context.rules.game.rule?.id && ![RuleId.PlayKitsuCard, RuleId.SelectKatanaTarget].includes(context.rules.game.rule?.id))) {
+            return super.getItemExtraCss(item, context);
+        }
+        return item.location.rotation === KitsuCardRotation.FaceDown
+            ? css`
+                    opacity: 0.5;`
+            : css``;
+    }
+
     public getItemMenu(item: MaterialItem<number, LocationType>, context: ItemContext<number, MaterialType, LocationType>, legalMoves: MaterialMove<number, MaterialType, LocationType>[]): React.ReactNode {
         if (context.player === undefined) {
             return;
         }
-        if (context.rules.game.rule?.id !== RuleId.SelectKatanaTarget) {
-            return;
+        if (context.rules.game.rule?.id === RuleId.SelectKatanaTarget && item.location.type === LocationType.PlayedKitsuCardSpot) {
+            return this.getSelectKatanaTargetItemMenu(item, context, legalMoves);
         }
-        if (item.location.type !== LocationType.PlayedKitsuCardSpot) {
-            return;
+        if (context.rules.game.rule?.id === RuleId.PlayKitsuCard && item.location.type === LocationType.PlayerHand && item.location.player === context.player) {
+            return this.getPlayerHandItemMenu(context, item, legalMoves);
         }
+        return;
+    }
+
+    private getPlayerHandItemMenu(context: ItemContext<number, MaterialType, LocationType>, item: MaterialItem<number, LocationType>, legalMoves: MaterialMove<number, MaterialType, LocationType>[]): React.ReactNode {
         const currentItemIndex = context.rules.material(MaterialType.KitsuCard).id<KitsuCard>(item.id).getIndex();
-        if (!legalMoves.map(move => isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard)(move) ? move.itemIndex : undefined).includes(currentItemIndex)) {
+        const movesForThisCard = legalMoves.filter(move => isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard)(move) && move.itemIndex === currentItemIndex);
+        return (<>
+            {movesForThisCard.map((move, index) => (
+                <ItemMenuButton key={`playKistuCard-${context.player}-${index}`} move={move}
+                                label={<Trans defaults="buttons.card.play"/>}
+                >
+                    <FontAwesomeIcon icon={faHandPointer} size="lg"/>
+                </ItemMenuButton>
+            ))}
+            {this.getHelpButton(item, context, {
+                label: <Trans defaults="buttons.card.help"/>,
+                angle: 0,
+                radius: 0.5,
+            })}
+        </>);
+    }
+
+    private getSelectKatanaTargetItemMenu(item: MaterialItem<number, LocationType>, context: ItemContext<number, MaterialType, LocationType>, legalMoves: MaterialMove<number, MaterialType, LocationType>[]): React.ReactNode {
+        const currentItemIndex = context.rules.material(MaterialType.KitsuCard).id<KitsuCard>(item.id).getIndex();
+        const moveItemIndexesForOtherPlayers = legalMoves.filter(move => isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard)(move))
+            .map(move => (move as MoveItem<number, MaterialType, LocationType>).itemIndex);
+        if (!moveItemIndexesForOtherPlayers.includes(currentItemIndex)) {
             return;
         }
-        const movesToThisLocation = legalMoves.filter(move => isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard)(move) && move.location.type == LocationType.PlayedKitsuCardSpot && move.itemIndex == currentItemIndex);
-        return <>
+        const movesToThisLocation = legalMoves.filter(move => isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard)(move) && move.location.type === LocationType.PlayedKitsuCardSpot && move.itemIndex === currentItemIndex);
+        return (<>
             {movesToThisLocation.map((move, index) => (
                 <ItemMenuButton key={`selectKatanaTarget-${context.player}-${index}`} move={move}
-                                label={'Select this card'}/>)
+                                label={<Trans defaults="buttons.card.flip"/>}
+                                labelPosition={(item.location.x ?? 0) === 0 ? 'right' : 'left'}>
+                    <span className="fa-flip-vertical">
+                        <FontAwesomeIcon icon={faArrowRotateRight} rotation={90} size="lg"/>
+                    </span>
+                </ItemMenuButton>)
             )}
-        </>;
+            {this.getHelpButton(item, context, {
+                labelPosition: (item.location.x ?? 0) === 0 ? 'right' : 'left',
+                label: <Trans defaults="buttons.card.help"/>,
+                radius: 0.5,
+                angle: 0
+            })}
+        </>);
     }
 }
 

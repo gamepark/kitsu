@@ -188,7 +188,7 @@ describe('SelectKatanaTarget rule tests', () => {
                 playedCardIds: [KitsuCard.Yako2_2, KitsuCard.Yako5]
             }],
             givenActivePlayer: 1,
-            expectedCardIds: [KitsuCard.Zenko4, KitsuCard.Yako2_2, KitsuCard.Yako5]
+            expectedCardIds: [KitsuCard.Yako2_2, KitsuCard.Yako5]
         }, {
             givenPlayedCards: [{
                 player: 1 as 1 | 2,
@@ -198,7 +198,7 @@ describe('SelectKatanaTarget rule tests', () => {
                 playedCardIds: [KitsuCard.BlackKitsune_1, KitsuCard.Zenko2_2]
             }],
             givenActivePlayer: 1,
-            expectedCardIds: [KitsuCard.Zenko2_2, KitsuCard.Yako3_1]
+            expectedCardIds: [KitsuCard.Zenko2_2]
         }, {
             givenPlayedCards: [{
                 player: 1 as 1 | 2,

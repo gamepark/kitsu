@@ -17,7 +17,8 @@ export class SelectKatanaTargetRule extends PlayerTurnRule<number, MaterialType,
 
     public onRuleStart(_move: RuleMove<number, RuleId>, _previousRule?: RuleStep, _context?: PlayMoveContext): MaterialMove<number, MaterialType, LocationType>[] {
         const cardsPlayed = this.material(MaterialType.KitsuCard).location(LocationType.PlayedKitsuCardSpot);
-        const numeralCardsPlayed = cardsPlayed.id<KitsuCard>(id => !isSpecialCard(id));
+        const cardsPlayedByOthers = cardsPlayed.player(player => player !== this.player);
+        const numeralCardsPlayed = cardsPlayedByOthers.id<KitsuCard>(id => !isSpecialCard(id));
         if (numeralCardsPlayed.length > 0) {
             return [];
         }
@@ -29,6 +30,7 @@ export class SelectKatanaTargetRule extends PlayerTurnRule<number, MaterialType,
     public getPlayerMoves(): MaterialMove<number, MaterialType, LocationType>[] {
         return this.material(MaterialType.KitsuCard)
             .location(LocationType.PlayedKitsuCardSpot)
+            .player(player => player !== this.player)
             .id<KitsuCard>(id => !isSpecialCard(id))
             .moveItems(item => ({
                 type: LocationType.PlayedKitsuCardSpot,
