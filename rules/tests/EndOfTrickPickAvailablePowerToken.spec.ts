@@ -63,8 +63,7 @@ describe('End fo trick - pick available power token tests', () => {
 
         // When
         const consequences = rule.onRuleStart(previousRuleMove);
-        const ruleMoves = consequences.filter(isStartPlayerTurn<number, MaterialType, LocationType>)
-            .map(move => move as StartPlayerTurn<number, RuleId>);
+        const ruleMoves = consequences.filter(isStartPlayerTurn<number, MaterialType, LocationType>);
 
         // Then
         expect(consequences).toHaveLength(1);
@@ -94,8 +93,7 @@ describe('End fo trick - pick available power token tests', () => {
 
         // When
         const legalMoves = rule.getPlayerMoves();
-        const powerTokenMoves = legalMoves.filter(isMoveItemType<number, MaterialType, LocationType>(MaterialType.PowerToken))
-            .map(move => move as MoveItem<number, MaterialType, LocationType>);
+        const powerTokenMoves = legalMoves.filter(isMoveItemType<number, MaterialType, LocationType>(MaterialType.PowerToken));
         const powerTokenIdFromMoves = powerTokenMoves.map(move => game.items[MaterialType.PowerToken]![move.itemIndex].id);
 
         // Then

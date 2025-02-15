@@ -7,7 +7,6 @@ import {
     MoveKind,
     RuleMoveType,
     StartPlayerTurn,
-    StartRule,
 } from '@gamepark/rules-api';
 import { KitsuCard } from '../src/material/KitsuCard';
 import { LocationType } from '../src/material/LocationType';
@@ -78,9 +77,9 @@ describe('PlayKitsuCardRule tests', () => {
         });
 
         test.each([{
-            alreadyPlayedCards: [{player: 1, cards: [KitsuCard.Yako1_1] as KitsuCard[]}, {
-                player: 2,
-                cards: [] as KitsuCard[]
+            alreadyPlayedCards: [{player: 1 as (1 | 2), playedCardIds: [KitsuCard.Yako1_1] as KitsuCard[]}, {
+                player: 2 as (1 | 2),
+                playedCardIds: [] as KitsuCard[]
             }],
             move: {
                 kind: MoveKind.ItemMove,
@@ -96,9 +95,9 @@ describe('PlayKitsuCardRule tests', () => {
                 player: 2
             } as StartPlayerTurn<number, RuleId>,
         }, {
-            alreadyPlayedCards: [{player: 1, cards: [KitsuCard.Yako1_1] as KitsuCard[]}, {
-                player: 2,
-                cards: [KitsuCard.Yako4] as KitsuCard[]
+            alreadyPlayedCards: [{player: 1 as (1 | 2), playedCardIds: [KitsuCard.Yako1_1] as KitsuCard[]}, {
+                player: 2 as (1 | 2),
+                playedCardIds: [KitsuCard.Yako4] as KitsuCard[]
             }],
             move: {
                 kind: MoveKind.ItemMove,
@@ -115,9 +114,9 @@ describe('PlayKitsuCardRule tests', () => {
             } as StartPlayerTurn<number, RuleId>,
         }, {
             alreadyPlayedCards: [{
-                player: 1,
-                cards: [KitsuCard.Yako1_1, KitsuCard.Zenko6] as KitsuCard[]
-            }, {player: 2, cards: [KitsuCard.Yako5] as KitsuCard[]}],
+                player: 1 as (1 | 2),
+                playedCardIds: [KitsuCard.Yako1_1, KitsuCard.Zenko6] as KitsuCard[]
+            }, {player: 2 as (1 | 2), playedCardIds: [KitsuCard.Yako5] as KitsuCard[]}],
             move: {
                 kind: MoveKind.ItemMove,
                 type: ItemMoveType.Move,
@@ -139,16 +138,9 @@ describe('PlayKitsuCardRule tests', () => {
                                              expectedConsequence
                                          }) => {
             // Given
-            const game = create2PlayersGameState();
-            alreadyPlayedCards.forEach(item => {
-                item.cards.forEach((cardId) => {
-                    game.items[MaterialType.KitsuCard]!.find(card => card.id === cardId)!.location = {
-                        type: LocationType.PlayedKitsuCardSpot,
-                        player: item.player
-                    };
-                });
-            });
-            game.rule!.player = move.location.player;
+            const gameBuilder = create2PlayersGameBuilderWithPlayedCards(alreadyPlayedCards);
+            gameBuilder.setRule(RuleId.PlayKitsuCard, move.location.player)
+            const game = gameBuilder.build();
             const rule = new PlayKitsuCardRule(game);
 
             // When
@@ -161,22 +153,9 @@ describe('PlayKitsuCardRule tests', () => {
 
         test('Given 4 cards already played, afterItemMove() should return consequences containing only a rule move for the end of trick rule', () => {
             // Given
-            const game = create2PlayersGameState();
-            [{player: 1, cards: [KitsuCard.Yako5, KitsuCard.Yako1_1] as KitsuCard[]}, {
-                player: 2,
-                cards: [KitsuCard.Zenko4, KitsuCard.Yako2_1] as KitsuCard[]
-            }].forEach(item => {
-                item.cards.forEach((cardId) => {
-                    game.items[MaterialType.KitsuCard]!.find(card => card.id === cardId)!.location = {
-                        type: LocationType.PlayedKitsuCardSpot,
-                        player: item.player
-                    };
-                });
-            });
-            game.rule = {
-                id: RuleId.PlayKitsuCard,
-                player: 1
-            };
+            const gameBuilder = create2PlayersGameBuilderWithPlayedCards([{player: 1, playedCardIds: [KitsuCard.Yako5, KitsuCard.Yako1_1] as KitsuCard[]}, {player: 2, playedCardIds: [KitsuCard.Zenko4, KitsuCard.Yako2_1] as KitsuCard[]}])
+            gameBuilder.setRule(RuleId.PlayKitsuCard, 1);
+            const game = gameBuilder.build();
             const rule = new PlayKitsuCardRule(game);
             const itemMove: MoveItem<number, MaterialType, LocationType> = {
                 kind: MoveKind.ItemMove,
@@ -197,8 +176,6 @@ describe('PlayKitsuCardRule tests', () => {
                 id: RuleId.EndOfTrickKistunePawnMove,
                 player: 2
             });
-
-
         });
 
         test('Given a move indicating a Katana card was just played, afterItemMove() should return an array of moves with a single rule move to the SelectKatanaTarget rule', () => {
@@ -225,8 +202,7 @@ describe('PlayKitsuCardRule tests', () => {
 
             // When
             const consequences = rule.afterItemMove(katanaMove);
-            const ruleMoves = consequences.filter(move => isStartRule<number, MaterialType, LocationType>(move))
-                .map(move => move as StartRule<RuleId>);
+            const ruleMoves = consequences.filter(isStartRule<number, MaterialType, LocationType>);
 
             // Then
             expect(consequences).toHaveLength(1);
@@ -381,8 +357,7 @@ describe('PlayKitsuCardRule tests', () => {
 
             // When
             const consequences = rule.afterItemMove(numeral3Move);
-            const ruleMoves = consequences.filter(move => isStartPlayerTurn<number, MaterialType, LocationType>(move))
-                .map(move => move as StartPlayerTurn<number, RuleId>);
+            const ruleMoves = consequences.filter(isStartPlayerTurn<number, MaterialType, LocationType>);
 
             // Then
             expect(ruleMoves).toHaveLength(1);

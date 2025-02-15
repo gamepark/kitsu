@@ -30,8 +30,7 @@ describe('End of trick - decide end of round tests', () => {
 
         // When
         const consequences = rule.onRuleStart(previousRuleMove);
-        const ruleMoves = consequences.filter(move => isStartRule<number, MaterialType, LocationType>(move))
-            .map(move => move as StartRule<RuleId>);
+        const ruleMoves = consequences.filter(isStartRule<number, MaterialType, LocationType>);
 
         // Then
         expect(consequences).toHaveLength(1);
@@ -59,8 +58,7 @@ describe('End of trick - decide end of round tests', () => {
 
         // When
         const consequences = rule.onRuleStart(previousRuleMove);
-        const ruleMoves = consequences.filter(move => isStartRule<number, MaterialType, LocationType>(move))
-            .map(move => move as StartRule<RuleId>);
+        const ruleMoves = consequences.filter(isStartRule<number, MaterialType, LocationType>);
 
         // Then
         expect(consequences).toHaveLength(1);

@@ -1,18 +1,13 @@
 import {
-    CreateItem,
     CustomMove,
-    EndGame,
     isCreateItemType,
     isCustomMoveType,
     isEndGame,
     isMoveItemType,
     isMoveItemTypeAtOnce,
     isStartPlayerTurn,
-    MoveItem,
-    MoveItemsAtOnce,
     MoveKind,
     RuleMoveType,
-    StartPlayerTurn,
     StartRule
 } from '@gamepark/rules-api';
 import { CustomMoveType } from '../src/material/CustomMoveType';
@@ -53,8 +48,7 @@ describe('RoundEnd rule tests', () => {
 
         // When
         const consequences = rule.onRuleStart(previousRuleMove);
-        const ruleMoves = consequences.filter(move => isEndGame<number, MaterialType, LocationType>(move))
-            .map(move => move as EndGame);
+        const ruleMoves = consequences.filter(isEndGame<number, MaterialType, LocationType>)
 
         // Then
         expect(consequences).toHaveLength(1);
@@ -87,12 +81,9 @@ describe('RoundEnd rule tests', () => {
 
             // When
             const consequences = rule.onRuleStart(previousRuleMove);
-            const kitsuCardMoves = consequences.filter(move => isMoveItemTypeAtOnce<number, MaterialType, LocationType>(MaterialType.KitsuCard)(move))
-                .map(move => move as MoveItemsAtOnce<number, MaterialType, LocationType>);
-            const victoryCardMoves = consequences.filter(move => isCreateItemType<number, MaterialType, LocationType>(MaterialType.VictoryCard)(move))
-                .map(move => move as CreateItem<number, MaterialType, LocationType>);
-            const customMoves = consequences.filter(move => isCustomMoveType<CustomMoveType>(CustomMoveType.PickRandomPlayer)(move))
-                .map(move => move as CustomMove<CustomMoveType>);
+            const kitsuCardMoves = consequences.filter(isMoveItemTypeAtOnce<number, MaterialType, LocationType>(MaterialType.KitsuCard));
+            const victoryCardMoves = consequences.filter(isCreateItemType<number, MaterialType, LocationType>(MaterialType.VictoryCard));
+            const customMoves = consequences.filter(isCustomMoveType<CustomMoveType>(CustomMoveType.PickRandomPlayer));
 
             // Then
             expect(consequences).toHaveLength(3);
@@ -138,10 +129,8 @@ describe('RoundEnd rule tests', () => {
 
             // When
             const consequences = rule.onRuleStart(previousRuleMove);
-            const victoryCardMoves = consequences.filter(move => isCreateItemType<number, MaterialType, LocationType>(MaterialType.VictoryCard)(move))
-                .map(move => move as CreateItem<number, MaterialType, LocationType>);
-            const customMoves = consequences.filter(move => isCustomMoveType<CustomMoveType>(CustomMoveType.PickRandomPlayer)(move))
-                .map(move => move as CustomMove<CustomMoveType>);
+            const victoryCardMoves = consequences.filter(isCreateItemType<number, MaterialType, LocationType>(MaterialType.VictoryCard));
+            const customMoves = consequences.filter(isCustomMoveType<CustomMoveType>(CustomMoveType.PickRandomPlayer));
 
             // Then
             expect(consequences).toHaveLength(3);
@@ -183,10 +172,8 @@ describe('RoundEnd rule tests', () => {
 
             // When
             const consequences = rule.onCustomMove(previousCustomMove);
-            const leaderTokenMoves = consequences.filter(move => isMoveItemType<number, MaterialType, LocationType>(MaterialType.LeaderToken)(move))
-                .map(move => move as MoveItem<number, MaterialType, LocationType>);
-            const ruleMoves = consequences.filter(move => isStartPlayerTurn<number, MaterialType, LocationType>(move))
-                .map(move => move as StartPlayerTurn<number, RuleId>);
+            const leaderTokenMoves = consequences.filter(isMoveItemType<number, MaterialType, LocationType>(MaterialType.LeaderToken));
+            const ruleMoves = consequences.filter(isStartPlayerTurn<number, MaterialType, LocationType>);
 
             // Then
             expect(consequences).toHaveLength(2);

@@ -2,7 +2,6 @@ import {
     isMoveItemType,
     isStartPlayerTurn,
     isStartRule,
-    MoveItem,
     MoveKind,
     RuleMoveType,
     StartPlayerTurn,
@@ -94,8 +93,7 @@ describe('End of trick - kitsune pawn move rule', () => {
 
             // When
             const consequences = rule.onRuleStart(previousRuleMove);
-            const kistunePawnMoves = consequences.filter(move => isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsunePawn)(move))
-                .map(move => (move as MoveItem<number, MaterialType, LocationType>));
+            const kistunePawnMoves = consequences.filter(isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsunePawn));
 
             // Then
             expect(consequences).toHaveLength(expectedNumberOfKitsunePawnMoves + 1);
@@ -134,7 +132,7 @@ describe('End of trick - kitsune pawn move rule', () => {
 
             // When
             const consequences = rule.onRuleStart(previousRuleMove);
-            const kitsunePawnMoves = consequences.filter(move => isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard)(move));
+            const kitsunePawnMoves = consequences.filter(isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard));
 
             // Then
             expect(consequences).toHaveLength(1);
@@ -304,8 +302,7 @@ describe('End of trick - kitsune pawn move rule', () => {
 
             // When
             const consequences = rule.onRuleStart(previousRuleMove);
-            const kistunePawnMoves = consequences.filter(move => isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsunePawn)(move))
-                .map(move => move as MoveItem<number, MaterialType, LocationType>);
+            const kistunePawnMoves = consequences.filter(isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsunePawn));
 
             // Then
             expect(consequences).toHaveLength(expectedNumberOfKitsunePawnMoves + 1);
@@ -377,8 +374,7 @@ describe('End of trick - kitsune pawn move rule', () => {
 
             // When
             const consequences = rule.onRuleStart(previousRuleMove);
-            const kistunePawnMoves = consequences.filter(move => isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsunePawn)(move))
-                .map(move => (move as MoveItem<number, MaterialType, LocationType>));
+            const kistunePawnMoves = consequences.filter(isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsunePawn));
 
             // Then
             expect(consequences).toHaveLength(expectedNumberOfKitsunePawnMoves + 1);

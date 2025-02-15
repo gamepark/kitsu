@@ -1,7 +1,6 @@
 import {
     isMoveItemType,
     isStartPlayerTurn,
-    MoveItem,
     MoveKind,
     RuleMoveType,
     StartPlayerTurn
@@ -33,10 +32,8 @@ describe('End of trick - Pick cards', () => {
 
             // When
             const consequences = rule.onRuleStart(previousRuleMove);
-            const dealCardMoves = consequences.filter(move => isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard)(move))
-                .map(move => move as MoveItem<number, MaterialType, LocationType>);
-            const ruleMoves = consequences.filter(move => isStartPlayerTurn<number, MaterialType, LocationType>(move))
-                .map(move => move as StartPlayerTurn<number, RuleId>);
+            const dealCardMoves = consequences.filter(isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard));
+            const ruleMoves = consequences.filter(isStartPlayerTurn<number, MaterialType, LocationType>);
 
             // Then
             expect(consequences).toHaveLength(5);
@@ -61,8 +58,7 @@ describe('End of trick - Pick cards', () => {
 
             // When
             const consequences = rule.onRuleStart(previousRuleMove);
-            const ruleMoves = consequences.filter(move => isStartPlayerTurn<number, MaterialType, LocationType>(move))
-                .map(move => move as StartPlayerTurn<number, RuleId>);
+            const ruleMoves = consequences.filter(isStartPlayerTurn<number, MaterialType, LocationType>);
 
             // Then
             expect(consequences).toHaveLength(1);

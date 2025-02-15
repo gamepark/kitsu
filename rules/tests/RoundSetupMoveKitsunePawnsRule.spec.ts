@@ -1,10 +1,8 @@
 import {
     isMoveItemTypeAtOnce,
     isStartRule,
-    MoveItemsAtOnce,
     MoveKind,
     RuleMoveType,
-    StartRule,
 } from '@gamepark/rules-api';
 import { LocationType } from '../src/material/LocationType';
 import { MaterialType } from '../src/material/MaterialType';
@@ -26,8 +24,7 @@ describe('Round setup - move kitsune pawns rule tests', () => {
                 id: RuleId.RoundSetupMoveKitsunePawns,
                 kind: MoveKind.RulesMove
             });
-            const kitsuneTokenMoves = moves.filter(move => isMoveItemTypeAtOnce<number, MaterialType, LocationType>(MaterialType.KitsunePawn)(move))
-                .map(move => move as MoveItemsAtOnce<number, MaterialType, LocationType>);
+            const kitsuneTokenMoves = moves.filter(isMoveItemTypeAtOnce<number, MaterialType, LocationType>(MaterialType.KitsunePawn));
 
             // Then
             expect(kitsuneTokenMoves).toHaveLength(1);
@@ -47,8 +44,7 @@ describe('Round setup - move kitsune pawns rule tests', () => {
                 id: RuleId.RoundSetupMoveKitsunePawns,
                 kind: MoveKind.RulesMove
             });
-            const ruleMoves = moves.filter(move => isStartRule<number, MaterialType, LocationType>(move))
-                .map(move => move as StartRule<RuleId>);
+            const ruleMoves = moves.filter(isStartRule<number, MaterialType, LocationType>);
 
             // Then
             expect(moves).toHaveLength(2);

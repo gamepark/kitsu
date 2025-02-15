@@ -6,7 +6,6 @@ import {
     MoveKind,
     RuleMoveType,
     Shuffle,
-    StartRule
 } from '@gamepark/rules-api';
 import { LocationType } from '../src/material/LocationType';
 import { MaterialType } from '../src/material/MaterialType';
@@ -74,7 +73,7 @@ describe('Round setup - deal card rule tests', () => {
                 id: RuleId.RoundSetupMoveKitsunePawns,
                 kind: MoveKind.RulesMove
             });
-            const ruleMoves = moves.filter(move => isStartRule<number, MaterialType, LocationType>(move)).map(move => move as StartRule<RuleId>);
+            const ruleMoves = moves.filter(isStartRule<number, MaterialType, LocationType>);
 
             // Expect
             expect(ruleMoves).toHaveLength(1);
