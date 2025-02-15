@@ -3,6 +3,7 @@
 import { css, Interpolation, Theme } from '@emotion/react';
 import { faArrowRotateRight, faHandPointer } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { isPlayCardAndTokenCustomMove } from '@gamepark/kitsu/material/CustomMoveType';
 import { KitsuCard } from '@gamepark/kitsu/material/KitsuCard';
 import { KitsuCardRotation } from '@gamepark/kitsu/material/KitsuCardRotation';
 import { LocationType } from '@gamepark/kitsu/material/LocationType';
@@ -97,7 +98,7 @@ class KitsuCardDescription extends CardDescription<number, MaterialType, Locatio
         if (context.rules.game.rule?.id === RuleId.SelectKatanaTarget && item.location.type === LocationType.PlayedKitsuCardSpot) {
             return this.getSelectKatanaTargetItemMenu(item, context, legalMoves);
         }
-        if (context.rules.game.rule?.id === RuleId.PlayKitsuCard && item.location.type === LocationType.PlayerHand && item.location.player === context.player) {
+        if (context.rules.game.rule?.id === RuleId.PlayKitsuCard && context.rules.game.rule.player === context.player && item.location.type === LocationType.PlayerHand && item.location.player === context.player) {
             return this.getPlayerHandItemMenu(context, item, legalMoves);
         }
         return;
@@ -106,6 +107,7 @@ class KitsuCardDescription extends CardDescription<number, MaterialType, Locatio
     private getPlayerHandItemMenu(context: ItemContext<number, MaterialType, LocationType>, item: MaterialItem<number, LocationType>, legalMoves: MaterialMove<number, MaterialType, LocationType>[]): React.ReactNode {
         const currentItemIndex = context.rules.material(MaterialType.KitsuCard).id<KitsuCard>(item.id).getIndex();
         const movesForThisCard = legalMoves.filter(move => isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard)(move) && move.itemIndex === currentItemIndex);
+        const powerTokenMovesWithThisCard = legalMoves.filter(move => isPlayCardAndTokenCustomMove(move) && move.data.cardIndex === currentItemIndex);
         return (<>
             {movesForThisCard.map((move, index) => (
                 <ItemMenuButton key={`playKistuCard-${context.player}-${index}`} move={move}
@@ -114,10 +116,15 @@ class KitsuCardDescription extends CardDescription<number, MaterialType, Locatio
                     <FontAwesomeIcon icon={faHandPointer} size="lg"/>
                 </ItemMenuButton>
             ))}
+            {powerTokenMovesWithThisCard.map((move, index) => (
+                <ItemMenuButton key={`playKistuCardWithToken-${context.player}-${index}`} move={move} radius={0.5}
+                                angle={0}
+                                label={<Trans defaults="buttons.card.playWithToken"/>} >
+                </ItemMenuButton>
+            ))}
             {this.getHelpButton(item, context, {
-                label: <Trans defaults="buttons.card.help"/>,
                 angle: 0,
-                radius: 0.5,
+                radius: powerTokenMovesWithThisCard.length > 0 ? -2 : 0.5,
             })}
         </>);
     }

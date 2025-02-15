@@ -1,10 +1,12 @@
 /** @jsxImportSource @emotion/react */
+
 import { RuleId } from '@gamepark/kitsu/rules/RuleId';
 import { ComponentType } from 'react';
 import { EndOfTrickDecideEndOfRoundHeader } from './EndOfTrickDecideEndOfRoundHeader';
 import { EndOfTrickDiscardCardsHeader } from './EndOfTrickDiscardCardsHeader';
 import { EndOfTrickKitsunePawnMoveHeader } from './EndOfTrickKitsunePawnMoveHeader';
 import { EndOfTrickMoveLeaderTokenHeader } from './EndOfTrickMoveLeaderTokenHeader';
+import { EndOfTrickPickAvailablePowerTokenHeader } from './EndOfTrickPickAvailablePowerTokenHeader';
 import { EndOfTrickPickCardsHeader } from './EndOfTrickPickCardsHeader';
 import { PlayKitsuCardHeader } from './PlayKitsuCardHeader';
 import { RoundEndHeader } from './RoundEndHeader';
@@ -17,6 +19,7 @@ export const Headers: Partial<Record<RuleId, ComponentType>> = {
     [RuleId.PlayKitsuCard]: PlayKitsuCardHeader,
     [RuleId.SelectKatanaTarget]: SelectKatanaTargetHeader,
     [RuleId.EndOfTrickKistunePawnMove]: EndOfTrickKitsunePawnMoveHeader,
+    [RuleId.EndOfTrickPickAvailablePowerToken]: EndOfTrickPickAvailablePowerTokenHeader,
     [RuleId.EndOfTrickDiscardCards]: EndOfTrickDiscardCardsHeader,
     [RuleId.EndOfTrickDecideEndOfRound]: EndOfTrickDecideEndOfRoundHeader,
     [RuleId.EndOfTrickMoveLeaderToken]: EndOfTrickMoveLeaderTokenHeader,
