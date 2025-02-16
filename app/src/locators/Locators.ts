@@ -10,6 +10,7 @@ import { leaderTokenSpotOnClanCardLocator } from './LeaderTokenSpotOnClanCardLoc
 import { playedKitsuCardSpotLocator } from './PlayedKitsuCardSpotLocator';
 import { playerHandLocator } from './PlayerHandLocator';
 import { powerTokenSpotOnClanCardLocator } from './PowerTokenSpotOnClanCardLocator';
+import { powerTokenSpotOnKitsuCardLocator } from './PowerTokenSpotOnKitsuCardLocator';
 import { powerTokenSpotOnWisdomBoardLocator } from './PowerTokenSpotOnWisdomBoardLocator';
 import { setupCardSpotLocator } from './SetupCardSpotLocator';
 import { victoryCardSpotLocator } from './VictoyCardSpotLocator';
@@ -29,4 +30,5 @@ export const Locators: Partial<Record<LocationType, Locator<number, MaterialType
     [LocationType.DiscardedPowerTokenAreaOnWisdomBoard]: discardedPowerTokenAreaOnWisdomBoardLocator,
     [LocationType.PlayedKitsuCardSpot]: playedKitsuCardSpotLocator,
     [LocationType.VictoryCardsSpot]: victoryCardSpotLocator,
+    [LocationType.PowerTokenSportOnKitsuCard]: powerTokenSpotOnKitsuCardLocator,
 };

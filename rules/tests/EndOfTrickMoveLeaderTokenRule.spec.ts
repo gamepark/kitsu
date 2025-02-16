@@ -1,11 +1,9 @@
 import {
     isMoveItemType,
     isStartRule,
-    MoveItem,
     MoveKind,
     RuleMoveType,
     StartPlayerTurn,
-    StartRule
 } from '@gamepark/rules-api';
 import { KitsuCard } from '../src/material/KitsuCard';
 import { LocationType } from '../src/material/LocationType';
@@ -49,10 +47,8 @@ describe('End of trick - Move leader token rule tests', () => {
 
             // When
             const consequences = rule.onRuleStart(previousRuleMove);
-            const leaderTokenMoves = consequences.filter(move => isMoveItemType<number, MaterialType, LocationType>(MaterialType.LeaderToken)(move))
-                .map(move => move as MoveItem<number, MaterialType, LocationType>);
-            const ruleMoves = consequences.filter(move => isStartRule<number, MaterialType, LocationType>(move))
-                .map(move => move as StartRule<RuleId>);
+            const leaderTokenMoves = consequences.filter(isMoveItemType<number, MaterialType, LocationType>(MaterialType.LeaderToken));
+            const ruleMoves = consequences.filter(isStartRule<number, MaterialType, LocationType>);
 
             // Then
             expect(consequences).toHaveLength(2);
@@ -76,10 +72,8 @@ describe('End of trick - Move leader token rule tests', () => {
 
             // When
             const consequences = rule.onRuleStart(previousRuleMove);
-            const leaderTokenMoves = consequences.filter(move => isMoveItemType<number, MaterialType, LocationType>(MaterialType.LeaderToken)(move))
-                .map(move => move as MoveItem<number, MaterialType, LocationType>);
-            const ruleMoves = consequences.filter(move => isStartRule<number, MaterialType, LocationType>(move))
-                .map(move => move as StartRule<RuleId>);
+            const leaderTokenMoves = consequences.filter(isMoveItemType<number, MaterialType, LocationType>(MaterialType.LeaderToken));
+            const ruleMoves = consequences.filter(isStartRule<number, MaterialType, LocationType>);
 
             // Then
             expect(consequences).toHaveLength(2);

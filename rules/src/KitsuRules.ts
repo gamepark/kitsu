@@ -17,6 +17,7 @@ import { EndOfTrickDecideEndOfRoundRule } from './rules/EndOfTrickDecideEndOfRou
 import { EndOfTrickDiscardCardsRule } from './rules/EndOfTrickDiscardCardsRule';
 import { EndOfTrickKitsunePawnMoveRule } from './rules/EndOfTrickKitsunePawnMoveRule';
 import { EndOfTrickMoveLeaderTokenRule } from './rules/EndOfTrickMoveLeaderTokenRule';
+import { EndOfTrickPickAvailablePowerToken } from './rules/EndOfTrickPickAvailablePowerToken';
 import { EndOfTrickPickCardsRule } from './rules/EndOfTrickPickCardsRule';
 import { PlayKitsuCardRule } from './rules/PlayKitsuCardRule';
 import { RoundEndRule } from './rules/RoundEndRule';
@@ -38,6 +39,7 @@ export class KitsuRules extends SecretMaterialRules<number, MaterialType, Locati
         [RuleId.PlayKitsuCard]: PlayKitsuCardRule,
         [RuleId.SelectKatanaTarget]: SelectKatanaTargetRule,
         [RuleId.EndOfTrickKistunePawnMove]: EndOfTrickKitsunePawnMoveRule,
+        [RuleId.EndOfTrickPickAvailablePowerToken]: EndOfTrickPickAvailablePowerToken,
         [RuleId.EndOfTrickDiscardCards]: EndOfTrickDiscardCardsRule,
         [RuleId.EndOfTrickDecideEndOfRound]: EndOfTrickDecideEndOfRoundRule,
         [RuleId.EndOfTrickMoveLeaderToken]: EndOfTrickMoveLeaderTokenRule,

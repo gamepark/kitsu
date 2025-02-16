@@ -5,7 +5,6 @@ import {
     MoveItem,
     MoveKind,
     RuleMoveType,
-    StartPlayerTurn,
     StartRule
 } from '@gamepark/rules-api';
 import { KitsuCard } from '../src/material/KitsuCard';
@@ -66,8 +65,7 @@ describe('SelectKatanaTarget rule tests', () => {
 
         // When
         const consequences = rule.onRuleStart(previousRuleMove);
-        const ruleMoves = consequences.filter(move => isStartPlayerTurn<number, MaterialType, LocationType>(move))
-            .map(move => move as StartPlayerTurn<number, RuleId>);
+        const ruleMoves = consequences.filter(isStartPlayerTurn<number, MaterialType, LocationType>);
 
         // Then
         expect(consequences).toHaveLength(1);
@@ -116,8 +114,7 @@ describe('SelectKatanaTarget rule tests', () => {
 
         // When
         const consequences = rule.onRuleStart(previousRuleMove);
-        const ruleMoves = consequences.filter(move => isStartPlayerTurn<number, MaterialType, LocationType>(move))
-            .map(move => move as StartPlayerTurn<number, RuleId>);
+        const ruleMoves = consequences.filter(isStartPlayerTurn<number, MaterialType, LocationType>);
 
         // Then
         expect(consequences).toHaveLength(1);
@@ -224,9 +221,9 @@ describe('SelectKatanaTarget rule tests', () => {
 
         // When
         const allowedMoves = rule.getPlayerMoves();
-        const allowedCardIds = allowedMoves.filter(move => isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard)(move))
+        const allowedCardIds = allowedMoves.filter(isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard))
             .map(move => {
-                const cardIndex = (move as MoveItem<number, MaterialType, LocationType>).itemIndex;
+                const cardIndex = move.itemIndex;
                 return game.items[MaterialType.KitsuCard]![cardIndex].id;
             });
 
@@ -282,8 +279,7 @@ describe('SelectKatanaTarget rule tests', () => {
 
         // When
         const consequences = rule.afterItemMove(itemMove);
-        const ruleMoves = consequences.filter(move => isStartPlayerTurn<number, MaterialType, LocationType>(move))
-            .map(move => move as StartPlayerTurn<number, RuleId>);
+        const ruleMoves = consequences.filter(isStartPlayerTurn<number, MaterialType, LocationType>);
 
         // Then
         expect(consequences).toHaveLength(1);
@@ -337,8 +333,7 @@ describe('SelectKatanaTarget rule tests', () => {
 
         // When
         const consequences = rule.afterItemMove(itemMove);
-        const ruleMoves = consequences.filter(move => isStartPlayerTurn<number, MaterialType, LocationType>(move))
-            .map(move => move as StartPlayerTurn<number, RuleId>);
+        const ruleMoves = consequences.filter(isStartPlayerTurn<number, MaterialType, LocationType>);
 
         // Then
         expect(consequences).toHaveLength(1);
