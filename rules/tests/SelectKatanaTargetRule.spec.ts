@@ -257,8 +257,12 @@ describe('SelectKatanaTarget rule tests', () => {
             givenActivePlayer: 2,
             givenRotatedCardId: KitsuCard.Zenko4
         },
-    ])("Given a move to rotate face down one of the played cards and not all cards played, afterItemMove() should" +
-        " return an array containing only a rule move to start the PlayKitsuCard rule for the next player", ({givenPlayedCards, givenActivePlayer, givenRotatedCardId}) => {
+    ])('Given a move to rotate face down one of the played cards and not all cards played, afterItemMove() should' +
+        ' return an array containing only a rule move to start the PlayKitsuCard rule for the next player', ({
+                                                                                                                 givenPlayedCards,
+                                                                                                                 givenActivePlayer,
+                                                                                                                 givenRotatedCardId
+                                                                                                             }) => {
         // Given
         const gameBuilder = create2PlayersGameBuilderWithPlayedCards(givenPlayedCards);
         gameBuilder.setRule(RuleId.SelectKatanaTarget, givenActivePlayer);
@@ -274,12 +278,12 @@ describe('SelectKatanaTarget rule tests', () => {
                 player: givenActivePlayer,
                 rotation: KitsuCardRotation.FaceDown
             }
-        }
+        };
 
         // When
         const consequences = rule.afterItemMove(itemMove);
         const ruleMoves = consequences.filter(move => isStartPlayerTurn<number, MaterialType, LocationType>(move))
-            .map(move => move as StartPlayerTurn<number, RuleId>)
+            .map(move => move as StartPlayerTurn<number, RuleId>);
 
         // Then
         expect(consequences).toHaveLength(1);
@@ -311,9 +315,9 @@ describe('SelectKatanaTarget rule tests', () => {
             givenActivePlayer: 1,
             givenRotatedCardId: KitsuCard.Zenko2_3
         }
-    ])("Given a move to rotate face down one of the played cards played and players all played their cards for the " +
-        "trick, afterItemMove() should return an array containing only a rule move to start the EndOfTrickKitsunePawnMove" +
-        " rule for the next player", ({givenPlayedCards, givenActivePlayer, givenRotatedCardId}) => {
+    ])('Given a move to rotate face down one of the played cards played and players all played their cards for the ' +
+        'trick, afterItemMove() should return an array containing only a rule move to start the EndOfTrickKitsunePawnMove' +
+        ' rule for the next player', ({givenPlayedCards, givenActivePlayer, givenRotatedCardId}) => {
         // Given
         const gameBuilder = create2PlayersGameBuilderWithPlayedCards(givenPlayedCards);
         gameBuilder.setRule(RuleId.SelectKatanaTarget, givenActivePlayer);
@@ -329,12 +333,12 @@ describe('SelectKatanaTarget rule tests', () => {
                 player: givenActivePlayer,
                 rotation: KitsuCardRotation.FaceDown
             }
-        }
+        };
 
         // When
-        const consequences =  rule.afterItemMove(itemMove);
+        const consequences = rule.afterItemMove(itemMove);
         const ruleMoves = consequences.filter(move => isStartPlayerTurn<number, MaterialType, LocationType>(move))
-            .map(move => move as StartPlayerTurn<number, RuleId>)
+            .map(move => move as StartPlayerTurn<number, RuleId>);
 
         // Then
         expect(consequences).toHaveLength(1);
@@ -342,5 +346,5 @@ describe('SelectKatanaTarget rule tests', () => {
         expect(ruleMoves[0]).toEqual(consequences[0]);
         expect(ruleMoves[0].id).toEqual(RuleId.EndOfTrickKistunePawnMove);
         expect(ruleMoves[0].player).toEqual(givenActivePlayer === 1 ? 2 : 1);
-    })
+    });
 });

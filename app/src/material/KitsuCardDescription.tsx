@@ -30,9 +30,8 @@ import KitsuCardZenko5Front from '../images/Cards/KitsuCardZenko5Front.jpg';
 import KitsuCardZenko6Front from '../images/Cards/KitsuCardZenko6Front.jpg';
 
 class KitsuCardDescription extends CardDescription<number, MaterialType, LocationType, KitsuCard> {
-    width = 6.30;
     height = 8.80;
-    backImage = KitsuCardBack;
+    width = 6.30;
     images = {
         [KitsuCard.Yako1_1]: KitsuCardYako1Front,
         [KitsuCard.Yako1_2]: KitsuCardYako1Front,
@@ -65,6 +64,7 @@ class KitsuCardDescription extends CardDescription<number, MaterialType, Locatio
         [KitsuCard.Katana_1]: KitsuCardKatanaFront,
         [KitsuCard.Katana_2]: KitsuCardKatanaFront,
     };
+    backImage = KitsuCardBack;
 
     public canDrag(move: MaterialMove<number, MaterialType, LocationType>, context: ItemContext<number, MaterialType, LocationType>): boolean {
         if (context.rules.game.rule?.id !== RuleId.SelectKatanaTarget) {

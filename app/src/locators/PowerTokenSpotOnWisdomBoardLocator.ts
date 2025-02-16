@@ -1,8 +1,8 @@
 import { LocationType } from '@gamepark/kitsu/material/LocationType';
-import { ItemContext, Locator } from '@gamepark/react-game';
 import { MaterialType } from '@gamepark/kitsu/material/MaterialType';
-import { Coordinates, MaterialItem } from '@gamepark/rules-api';
 import { PowerToken } from '@gamepark/kitsu/material/PowerToken';
+import { ItemContext, Locator } from '@gamepark/react-game';
+import { Coordinates, MaterialItem } from '@gamepark/rules-api';
 
 class PowerTokenSpotOnWisdomBoardLocator extends Locator<number, MaterialType, LocationType> {
     parentItemType = MaterialType.WisdomBoard;

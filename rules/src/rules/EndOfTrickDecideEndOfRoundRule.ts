@@ -1,6 +1,6 @@
 import { MaterialMove, PlayerTurnRule, PlayMoveContext, RuleMove, RuleStep } from '@gamepark/rules-api';
-import { MaterialType } from '../material/MaterialType';
 import { LocationType } from '../material/LocationType';
+import { MaterialType } from '../material/MaterialType';
 import { RuleId } from './RuleId';
 
 export class EndOfTrickDecideEndOfRoundRule extends PlayerTurnRule<number, MaterialType, LocationType> {

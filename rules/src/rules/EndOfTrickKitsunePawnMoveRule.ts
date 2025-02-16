@@ -1,11 +1,4 @@
-import {
-    Material,
-    MaterialMove,
-    PlayerTurnRule,
-    PlayMoveContext,
-    RuleMove,
-    RuleStep
-} from '@gamepark/rules-api';
+import { Material, MaterialMove, PlayerTurnRule, PlayMoveContext, RuleMove, RuleStep } from '@gamepark/rules-api';
 import {
     getKitsuCardValue,
     getSpecialCardType,
@@ -36,22 +29,27 @@ export class EndOfTrickKitsunePawnMoveRule extends PlayerTurnRule<number, Materi
         const winningTeam = scoreDifference === 0
             ? undefined
             : (yakoScore > zenkoScore ? TeamColor.Yako : TeamColor.Zenko);
-        const ruleMove = this.startRule(RuleId.EndOfTrickDiscardCards);
+        const discardCardsRuleMove = this.startRule(RuleId.EndOfTrickDiscardCards);
 
         if (winningTeam === undefined) {
-            return [ruleMove];
+            return [discardCardsRuleMove];
         }
 
         const currentKitsuneSpotId = this.material(MaterialType.KitsunePawn).id(winningTeam).getItem()!.location.id;
         const finalKitsuneSpotId = Math.min(currentKitsuneSpotId + scoreDifference, 13);
         const kitsuneSpotMaterial = this.material(MaterialType.KitsunePawn).id(winningTeam);
-        return [
-            ...Array(finalKitsuneSpotId - currentKitsuneSpotId).fill(1).map((_, index) => kitsuneSpotMaterial.moveItem({
-                type: LocationType.KitsunePawnSpotOnWisdomBoard,
-                id: currentKitsuneSpotId + 1 + index,
-            })),
-            ruleMove
-        ];
+        const moves: MaterialMove<number, MaterialType, LocationType>[] = [...Array(finalKitsuneSpotId - currentKitsuneSpotId).fill(1).map((_, index) => kitsuneSpotMaterial.moveItem({
+            type: LocationType.KitsunePawnSpotOnWisdomBoard,
+            id: currentKitsuneSpotId + 1 + index,
+        }))];
+        if (finalKitsuneSpotId - currentKitsuneSpotId >= 4) {
+            const currentLeader = this.material(MaterialType.LeaderToken).getItem()!.location.player!;
+            const loosingTeamNextLeader = this.game.players[(this.game.players.indexOf(currentLeader) + 1) % this.game.players.length];
+            moves.push(this.startPlayerTurn<number, RuleId>(RuleId.EndOfTrickPickAvailablePowerToken, loosingTeamNextLeader));
+        } else {
+            moves.push(discardCardsRuleMove);
+        }
+        return moves;
 
     }
 

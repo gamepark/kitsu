@@ -1,4 +1,5 @@
 import { ItemMove, Material, MaterialGame, MaterialMutator, RuleStep } from '@gamepark/rules-api';
+
 export class MaterialGameBuilder<Player extends number, MaterialType extends number, LocationType extends number, RuleId extends number> {
     private game: MaterialGame<Player, MaterialType, LocationType>;
 
@@ -43,8 +44,7 @@ export class MaterialGameBuilder<Player extends number, MaterialType extends num
         if (this.game.memory[key] === undefined) {
             this.game.memory[key] = {};
         }
-        if (player)
-        {
+        if (player) {
             this.game.memory[key][player] = typeof value === 'function' ? (value as (lastValue: T) => T)(this.game.memory[key][player] ?? {}) : value;
         } else {
             this.game.memory[key] = typeof value === 'function' ? (value as (lastValue: T) => T)(this.game.memory[key] ?? {}) : value;
@@ -53,11 +53,9 @@ export class MaterialGameBuilder<Player extends number, MaterialType extends num
 
     setRule(ruleId: RuleId, player?: Player, players?: Player[]) {
         this.game.rule!.id = ruleId;
-        if (player)
-        {
+        if (player) {
             this.game.rule!.player = player;
-        } else if (players)
-        {
+        } else if (players) {
             this.game.rule!.players = players;
         }
     }

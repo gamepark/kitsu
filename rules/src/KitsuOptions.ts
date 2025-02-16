@@ -1,7 +1,7 @@
-import { OptionsSpec, OptionsValidationError } from '@gamepark/rules-api'
-import { TFunction } from 'i18next'
-import { sumBy } from 'lodash'
-import { TeamColor, teamColors } from './TeamColor'
+import { OptionsSpec, OptionsValidationError } from '@gamepark/rules-api';
+import { TFunction } from 'i18next';
+import { sumBy } from 'lodash';
+import { TeamColor, teamColors } from './TeamColor';
 
 /**
  * This is the options for each player in the game.
@@ -33,10 +33,10 @@ export const KitsuOptionsSpec: OptionsSpec<KitsuOptions> = {
     validate: (options, t) => {
         if (options.players) {
             if (options.players.length % 2 === 1) {
-                throw new OptionsValidationError(t('invalid.player.count'), ['players.team'])
+                throw new OptionsValidationError(t('invalid.player.count'), ['players.team']);
             }
-            const zenko = sumBy(options.players, p => p.team === TeamColor.Zenko ? 1 : 0)
-            const yako = sumBy(options.players, p => p.team === TeamColor.Yako ? 1 : 0)
+            const zenko = sumBy(options.players, p => p.team === TeamColor.Zenko ? 1 : 0);
+            const yako = sumBy(options.players, p => p.team === TeamColor.Yako ? 1 : 0);
             if (zenko > options.players.length / 2 || yako > options.players.length / 2) {
                 throw new OptionsValidationError(t('invalid.teams'), ['players.team']);
             }

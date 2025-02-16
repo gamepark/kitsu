@@ -34,9 +34,9 @@ describe('HideToOthersWhenRotatedFaceDown strategy tests', () => {
             }, givenPlayer: 1
         },
     ])('given a face down Kitsu card owned by the player, hideToOthersWhenRotatedFaceDown should return an empty array', ({
-                                                                                                                    givenItem,
-                                                                                                                    givenPlayer
-                                                                                                                }) => {
+                                                                                                                              givenItem,
+                                                                                                                              givenPlayer
+                                                                                                                          }) => {
         // When
         const hiddenProperties = hideToTOthersWhenRotatedFaceDown(givenItem, givenPlayer);
 
@@ -73,7 +73,10 @@ describe('HideToOthersWhenRotatedFaceDown strategy tests', () => {
                 },
             }, givenPlayer: 2
         },
-    ])("Given a face down Kitsu card owner by another player, hideToToOthersWhenRotatedFaceDown should return an array containing only the 'id' string", ({givenItem, givenPlayer}) => {
+    ])('Given a face down Kitsu card owner by another player, hideToToOthersWhenRotatedFaceDown should return an array containing only the \'id\' string', ({
+                                                                                                                                                              givenItem,
+                                                                                                                                                              givenPlayer
+                                                                                                                                                          }) => {
         // When
         const hiddenProperties = hideToTOthersWhenRotatedFaceDown(givenItem, givenPlayer);
 
@@ -120,11 +123,14 @@ describe('HideToOthersWhenRotatedFaceDown strategy tests', () => {
                 },
             }, givenPlayer: 1
         },
-    ])("Given a face up Kitsu card owned by anyone, hideToOthersWhenRotatedFaceDown should return an empty array", ({givenItem, givenPlayer}) => {
+    ])('Given a face up Kitsu card owned by anyone, hideToOthersWhenRotatedFaceDown should return an empty array', ({
+                                                                                                                        givenItem,
+                                                                                                                        givenPlayer
+                                                                                                                    }) => {
         // When
         const hiddenProperties = hideToTOthersWhenRotatedFaceDown(givenItem, givenPlayer);
 
         // Then
         expect(hiddenProperties).toHaveLength(0);
-    })
+    });
 });

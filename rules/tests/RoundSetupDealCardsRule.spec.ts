@@ -7,22 +7,27 @@ import {
     RuleMoveType,
     Shuffle,
     StartRule
-} from "@gamepark/rules-api";
-import { RuleId } from "../src/rules/RuleId";
-import { MaterialType } from "../src/material/MaterialType";
-import { LocationType } from "../src/material/LocationType";
-import { create2PlayersGameBuilder, create2PlayersGameState } from "./utils/MaterialGameTestUtils";
-import { RoundSetupDealCardsRule } from "../src/rules/RoundSetupDealCardsRule";
+} from '@gamepark/rules-api';
+import { LocationType } from '../src/material/LocationType';
+import { MaterialType } from '../src/material/MaterialType';
+import { RoundSetupDealCardsRule } from '../src/rules/RoundSetupDealCardsRule';
+import { RuleId } from '../src/rules/RuleId';
+import { create2PlayersGameBuilder, create2PlayersGameState } from './utils/MaterialGameTestUtils';
 
-describe("Round setup - deal card rule tests", () => {
-    describe("2-players tests", () => {
+describe('Round setup - deal card rule tests', () => {
+    describe('2-players tests', () => {
         test('onRuleStart() should return an array of moves with the first item being a shuffle move of 24 cards', () => {
             // Given
             const gameState = create2PlayersGameState();
             const roundSetupRule = new RoundSetupDealCardsRule(gameState);
 
             // When
-            const moves = roundSetupRule.onRuleStart({type: RuleMoveType.StartPlayerTurn, player: 1, id: RuleId.RoundSetupMoveKitsunePawns, kind: MoveKind.RulesMove});
+            const moves = roundSetupRule.onRuleStart({
+                type: RuleMoveType.StartPlayerTurn,
+                player: 1,
+                id: RuleId.RoundSetupMoveKitsunePawns,
+                kind: MoveKind.RulesMove
+            });
             const shuffleMove = moves[0];
 
             // Then
@@ -37,9 +42,14 @@ describe("Round setup - deal card rule tests", () => {
             const roundSetupRule = new RoundSetupDealCardsRule(gameStateBuilder.build());
 
             // When
-            const moves = roundSetupRule.onRuleStart({type: RuleMoveType.StartPlayerTurn, player: 1, id: RuleId.RoundSetupMoveKitsunePawns, kind: MoveKind.RulesMove})
+            const moves = roundSetupRule.onRuleStart({
+                type: RuleMoveType.StartPlayerTurn,
+                player: 1,
+                id: RuleId.RoundSetupMoveKitsunePawns,
+                kind: MoveKind.RulesMove
+            });
             const dealCardMoves = moves.filter(move => isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard)(move)
-                && (move as MoveItem).location.type === LocationType.PlayerHand)
+                    && (move as MoveItem).location.type === LocationType.PlayerHand)
                 .map((move, index) => ({index: index, move: move as MoveItem}));
             const firstPlayerMoves = dealCardMoves.filter(({move}) => move.location.player === 1);
             const secondPlayerMoves = dealCardMoves.filter(({move}) => move.location.player === 2);
@@ -58,7 +68,12 @@ describe("Round setup - deal card rule tests", () => {
             const roundSetupRule = new RoundSetupDealCardsRule(gameState);
 
             // When
-            const moves = roundSetupRule.onRuleStart({type: RuleMoveType.StartPlayerTurn, player: 1, id: RuleId.RoundSetupMoveKitsunePawns, kind: MoveKind.RulesMove})
+            const moves = roundSetupRule.onRuleStart({
+                type: RuleMoveType.StartPlayerTurn,
+                player: 1,
+                id: RuleId.RoundSetupMoveKitsunePawns,
+                kind: MoveKind.RulesMove
+            });
             const ruleMoves = moves.filter(move => isStartRule<number, MaterialType, LocationType>(move)).map(move => move as StartRule<RuleId>);
 
             // Expect
@@ -66,5 +81,5 @@ describe("Round setup - deal card rule tests", () => {
             expect(moves.indexOf(ruleMoves[0])).toBe(moves.length - 1);
             expect(ruleMoves[0].id).toBe(RuleId.PlayKitsuCard);
         });
-    })
-})
+    });
+});
