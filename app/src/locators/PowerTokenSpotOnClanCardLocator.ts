@@ -14,6 +14,8 @@ class PowerTokenSpotOnClanCardLocator extends Locator<number, MaterialType, Loca
 
     coordinates = {x: -0.55, y: 1.69};
     rotateZ = -90;
+    height = 2.94;
+    width = 3.00;
 }
 
 export const powerTokenSpotOnClanCardLocator = new PowerTokenSpotOnClanCardLocator();

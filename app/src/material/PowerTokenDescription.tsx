@@ -7,9 +7,10 @@ import { MaterialType } from '@gamepark/kitsu/material/MaterialType';
 import { PowerToken } from '@gamepark/kitsu/material/PowerToken';
 import { RuleId } from '@gamepark/kitsu/rules/RuleId';
 import { ItemContext, ItemMenuButton, TokenDescription } from '@gamepark/react-game';
-import { isSelectItemType, MaterialItem, MaterialMove } from '@gamepark/rules-api';
+import { isMoveItemType, isSelectItemType, MaterialItem, MaterialMove } from '@gamepark/rules-api';
 import React from 'react';
 import { Trans } from 'react-i18next';
+import { GivePowerTokenItemMenuButton } from '../components/ItemMenuButton/GivePowerTokenItemMenuButton';
 import ColourExchangeToken from '../images/Tokens/PowerColourExchangeToken.png';
 import NoAdvanceToken from '../images/Tokens/PowerNoAdvanceToken.png';
 import PickDiscardedToken from '../images/Tokens/PowerPickDiscardedToken.png';
@@ -36,25 +37,17 @@ class PowerTokenDescription extends TokenDescription<number, MaterialType, Locat
     };
 
     public getItemMenu(item: MaterialItem<number, LocationType>, context: ItemContext<number, MaterialType, LocationType>, legalMoves: MaterialMove<number, MaterialType, LocationType>[]): React.ReactNode {
-        if (context.player === undefined || context.rules.game.rule?.id !== RuleId.PlayKitsuCard || item.location.type !== LocationType.PowerTokenSpotOnClanCard || item.location.player !== context.player) {
-            return ;
-        }
-        return (<>
+        if (context.player !== undefined) {
+            if (context.rules.game.rule?.id === RuleId.EndOfTrickPickAvailablePowerToken && item.location.type === LocationType.PowerTokenSpotOnWisdomBoard)
             {
-                legalMoves.filter(isSelectItemType<number, MaterialType, LocationType>(MaterialType.PowerToken)).map((move, index) => (
-                    <ItemMenuButton key={`powerToken-button-${index}`}
-                                    move={move} radius={3.5} angle={0}
-                                    label={item.selected === true
-                                        ? <Trans defaults='button.powerToken.unselect' />
-                                        : <Trans defaults='button.powerToken.select' />}>
-                        <FontAwesomeIcon icon={faHandPointer} size="sm"/>
-                </ItemMenuButton>))
+                return this.getItemMenuButtonsForEndOfTrickPickAvailablePowerTokenRule(item, context, legalMoves);
             }
-            { this.getHelpButton(item, context, {
-                radius: 1,
-                angle: 0,
-            })}
-            </>)
+            if (context.rules.game.rule?.id === RuleId.PlayKitsuCard && item.location.type === LocationType.PowerTokenSpotOnClanCard)
+            {
+                return this.getItemMenuButtonsForPlayKitsuCardRule(item, context, legalMoves);
+            }
+        }
+        return ;
     }
 
     public isMenuAlwaysVisible(item: MaterialItem<number, LocationType>, context: ItemContext<number, MaterialType, LocationType>): boolean {
@@ -62,6 +55,44 @@ class PowerTokenDescription extends TokenDescription<number, MaterialType, Locat
             return super.isMenuAlwaysVisible(item, context);
         }
         return true;
+    }
+
+    private getItemMenuButtonsForPlayKitsuCardRule(item: MaterialItem<number, LocationType>, context: ItemContext<number, MaterialType, LocationType>, legalMoves: MaterialMove<number, MaterialType, LocationType>[]): React.ReactNode {
+        const selectTokenMoves = legalMoves.filter(isSelectItemType<number, MaterialType, LocationType>(MaterialType.PowerToken));
+        return (<>
+            {selectTokenMoves && selectTokenMoves.map((move, index) => (
+                <ItemMenuButton key={`powerToken-button-${index}`}
+                                move={move} radius={3.5} angle={0}
+                                label={item.selected === true
+                                    ? <Trans defaults="button.powerToken.unselect"/>
+                                    : <Trans defaults="button.powerToken.select"/>}>
+                    <FontAwesomeIcon icon={faHandPointer} size="sm"/>
+                </ItemMenuButton>))
+            }
+            {this.getHelpButton(item, context, {
+                radius: 1,
+                angle: 0,
+            })
+            }
+        </>);
+    }
+
+    private getItemMenuButtonsForEndOfTrickPickAvailablePowerTokenRule(item: MaterialItem<number, LocationType>, context: ItemContext<number, MaterialType, LocationType>, legalMoves: MaterialMove<number, MaterialType, LocationType>[]): React.ReactNode {
+        const currentItemIndex = context.rules.material(MaterialType.PowerToken).id<PowerToken>(item.id).getIndex();
+        const giveTokenMoves = legalMoves.filter(isMoveItemType<number, MaterialType, LocationType>(MaterialType.PowerToken))
+            .filter(move => move.itemIndex === currentItemIndex);
+        return (<>
+            {giveTokenMoves.map((move, index) => (
+                <GivePowerTokenItemMenuButton move={move} y={3 * (index - 0.5)} x={2} playerId={move.location.player}
+                                              key={`powerToken-button-give-${move.location.player}-${index}`}>
+                    <FontAwesomeIcon icon={faHandPointer} size="sm"/>
+                </GivePowerTokenItemMenuButton>
+            ))}
+            {this.getHelpButton(item, context, {
+                y: 3 * (giveTokenMoves.length - 0.5),
+                x: 2
+            })}
+        </>);
     }
 
 }

@@ -11,9 +11,11 @@ import {
 import { KitsuCard, kitsuCardIds } from '../src/material/KitsuCard';
 import { LocationType } from '../src/material/LocationType';
 import { MaterialType } from '../src/material/MaterialType';
+import { PowerToken } from '../src/material/PowerToken';
 import { EndOfTrickDiscardCardsRule } from '../src/rules/EndOfTrickDiscardCardsRule';
 import { RuleId } from '../src/rules/RuleId';
 import {
+    create2PlayersGameBuilderWithPlayedCards,
     create2PlayersGameState,
     create2PlayersGameStateWithDiscardedCards,
     create2PlayersGameStateWithDiscardedCardsAndCardsInPlayersHands,
@@ -97,6 +99,72 @@ describe('End of trick - Discard cards rule ', () => {
             expect(moves[1]).toBe(ruleMoves[0]);
             expect(ruleMoves[0].id).toBe(RuleId.EndOfTrickDecideEndOfRound);
         });
+
+        test.each([
+            {
+                cards: [{
+                    player: (1 as 1 | 2),
+                    playedCardIds: [KitsuCard.Zenko4, KitsuCard.Zenko1_1]
+                }, {player: (2 as 1 | 2), playedCardIds: [KitsuCard.Yako2_1, KitsuCard.Zenko2_2]}],
+                playedPowerTokens: [{player: 1 as (1 | 2), powerToken: PowerToken.ColourExchange, parentIndex: 9}],
+                expectedCardIndexes: [15, 9, 3, 13],
+                expectedTokenIndexes: [0],
+            },
+            {
+                cards: [{
+                    player: (1 as 1 | 2),
+                    playedCardIds: [KitsuCard.Yako1_1, KitsuCard.Yako5]
+                }, {player: (2 as 1 | 2), playedCardIds: [KitsuCard.Zenko6, KitsuCard.Zenko2_1]}],
+                playedPowerTokens: [{player: 2 as (1 | 2), powerToken: PowerToken.NoAdvance, parentIndex: 12}],
+                expectedCardIndexes: [0, 7, 17, 12],
+                expectedTokenIndexes: [1],
+            },
+            {
+                cards: [{
+                    player: (1 as 1 | 2),
+                    playedCardIds: [KitsuCard.Yako3_1, KitsuCard.Yako4]
+                }, {player: (2 as 1 | 2), playedCardIds: [KitsuCard.Zenko5, KitsuCard.Zenko6]}],
+                playedPowerTokens: [{player: 1 as (1 | 2), powerToken: PowerToken.Protection, parentIndex: 5}, {player: 2 as (1 | 2), powerToken: PowerToken.PickDiscarded, parentIndex: 17}],
+                expectedCardIndexes: [5, 6, 16, 17],
+                expectedTokenIndexes: [4, 2],
+            },
+        ])('Given played power tokens, onRuleStart() should return an array containing 3 moves, one for the cards, one' +
+            ' for the power tokens, and one for the rule', ({cards, playedPowerTokens, expectedCardIndexes, expectedTokenIndexes}) => {
+            // Given
+            const gameBuilder = create2PlayersGameBuilderWithPlayedCards(cards);
+            gameBuilder.setRule(RuleId.EndOfTrickDiscardCards, 1);
+            playedPowerTokens.forEach(({powerToken, parentIndex}) =>
+                gameBuilder.material(MaterialType.PowerToken).id<PowerToken>(powerToken).moveItem({
+                    type: LocationType.PowerTokenSportOnKitsuCard,
+                    parent: parentIndex,
+                })
+            );
+            const game = gameBuilder.build();
+            const rule = new EndOfTrickDiscardCardsRule(game);
+            const previousRuleMove: StartRule = {
+                kind: MoveKind.RulesMove,
+                type: RuleMoveType.StartRule,
+                id: RuleId.EndOfTrickDiscardCards
+            };
+
+            // When
+            const consequences = rule.onRuleStart(previousRuleMove);
+            const kitsuCardMoves = consequences.filter(isMoveItemTypeAtOnce<number, MaterialType, LocationType>(MaterialType.KitsuCard));
+            const powerTokenMoves = consequences.filter(isMoveItemTypeAtOnce<number, MaterialType, LocationType>(MaterialType.PowerToken));
+            const ruleMoves = consequences.filter(isStartRule<number, MaterialType, LocationType>)
+
+            // Then
+            expect(consequences).toHaveLength(3);
+            expect(kitsuCardMoves).toHaveLength(1);
+            expect(kitsuCardMoves[0]).toBe(consequences[0]);
+            expect(powerTokenMoves).toHaveLength(1);
+            expect(powerTokenMoves[0]).toBe(consequences[1]);
+            expect(ruleMoves).toHaveLength(1);
+            expect(ruleMoves[0]).toBe(consequences[2]);
+            expect(kitsuCardMoves[0].indexes).toEqual(expect.arrayContaining(expectedCardIndexes));
+            expect(powerTokenMoves[0].indexes).toEqual(expect.arrayContaining(expectedTokenIndexes));
+            expect(powerTokenMoves[0].location.type).toBe(LocationType.DiscardedPowerTokenAreaOnWisdomBoard);
+        })
 
         test('given a KitsuCard move to the discard and empty player hands, afterItemMove() should return an array of' +
             ' moves, the first of which is a move at once of the discard to the deck', () => {
