@@ -18,6 +18,7 @@ export class EndOfTrickDiscardCardsRule extends PlayerTurnRule<number, MaterialT
             this.material(MaterialType.KitsuCard).location(LocationType.PlayedKitsuCardSpot).moveItemsAtOnce({
                 type: LocationType.KitsuCardDiscardSpotOnWisdomBoard,
             }),
+            ...this.getPowerTokenMove(),
             this.startRule(RuleId.EndOfTrickDecideEndOfRound)
         ];
     }
@@ -33,6 +34,18 @@ export class EndOfTrickDiscardCardsRule extends PlayerTurnRule<number, MaterialT
             }
         }
 
+        return [];
+    }
+
+    private getPowerTokenMove(): MaterialMove<number, MaterialType, LocationType>[] {
+        const playedPowerTokens = this.material(MaterialType.PowerToken).location(LocationType.PowerTokenSportOnKitsuCard);
+        if (playedPowerTokens.length > 0) {
+            return [
+                playedPowerTokens.moveItemsAtOnce({
+                    type: LocationType.DiscardedPowerTokenAreaOnWisdomBoard
+                })
+            ];
+        }
         return [];
     }
 }
