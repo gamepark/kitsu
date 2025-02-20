@@ -1,15 +1,16 @@
 import {
-    CustomMove,
     isMoveItemType,
     ItemMove,
+    Location,
     Material,
+    MaterialItem,
     MaterialMove,
     MoveItem,
     PlayerTurnRule,
     PlayMoveContext
 } from '@gamepark/rules-api';
-import { CustomMoveType, isPlayCardAndTokenCustomMove } from '../material/CustomMoveType';
 import {
+    canBePlayedWithProtectionToken,
     getKitsuCardType,
     getSpecialCardType,
     isSpecialCard,
@@ -17,8 +18,10 @@ import {
     KitsuCardSpecialType,
     KitsuCardType
 } from '../material/KitsuCard';
+import { KitsuCardRotation } from '../material/KitsuCardRotation';
 import { LocationType } from '../material/LocationType';
 import { MaterialType } from '../material/MaterialType';
+import { PowerToken } from '../material/PowerToken';
 import { Memorize } from '../Memorize';
 import { TeamColor } from '../TeamColor';
 import { RuleId } from './RuleId';
@@ -28,30 +31,23 @@ export class PlayKitsuCardRule extends PlayerTurnRule<number, MaterialType, Loca
         const previousPlayer = this.game.players[(this.game.players.indexOf(this.player) - 1 + this.game.players.length) % this.game.players.length];
         const previousPlayerTeam = this.remind<TeamColor>(Memorize.Team, previousPlayer);
         const isPreviousCardBlackKitsune = this.isPlayerPreviousCardABlackKitsune(previousPlayer);
-        const allCards = this.material(MaterialType.KitsuCard).location(LocationType.PlayerHand).player(this.player);
-        const allMoves: MaterialMove<number, MaterialType, LocationType>[] = allCards.moveItems({
-            type: LocationType.PlayedKitsuCardSpot,
-            player: this.player
-        });
-        allMoves.push(...this.getPowerTokenMoves(allCards));
-        if (isPreviousCardBlackKitsune && this.areOpposingTeamCardsInHand(allCards, previousPlayerTeam)) {
-            return this.filterMovesBecauseOfBlackKitsune(previousPlayerTeam, allCards, allMoves);
+        const protectionPowerToken = this.material(MaterialType.PowerToken)
+            .location(location => (location.type === LocationType.PowerTokenSpotOnClanCard && location.player === this.player) || (location.type === LocationType.PowerTokenSportOnKitsuCard && this.material(MaterialType.KitsuCard).index(location.parent).player(this.player).length !== 0))
+            .id<PowerToken>(PowerToken.Protection);
+        const isProtectionTokenSelected = protectionPowerToken
+            .selected(true)
+            .getItem<PowerToken>() !== undefined;
+        const allPlayableCards = this.material(MaterialType.KitsuCard)
+            .location(LocationType.PlayerHand)
+            .player(this.player)
+            .filter(kitsuCard => !isProtectionTokenSelected || canBePlayedWithProtectionToken(kitsuCard.id));
+        const cardDestinationLocation = this.getCardsDestination(isProtectionTokenSelected);
+        const allMoves: MaterialMove<number, MaterialType, LocationType>[] = allPlayableCards.moveItems(cardDestinationLocation);
+        allMoves.push(...this.getPowerTokenMoves(allPlayableCards, protectionPowerToken.getItem<PowerToken>()));
+        if (isPreviousCardBlackKitsune && this.areOpposingTeamCardsInHand(allPlayableCards, previousPlayerTeam)) {
+            return this.filterMovesBecauseOfBlackKitsune(previousPlayerTeam, allPlayableCards, allMoves);
         }
         return allMoves;
-    }
-
-    public onCustomMove(move: CustomMove, _context?: PlayMoveContext): MaterialMove<number, MaterialType, LocationType>[] {
-        if (isPlayCardAndTokenCustomMove(move))
-        {
-            return [
-                move.data.powerTokenMove,
-                this.material(MaterialType.KitsuCard).index(move.data.cardIndex).moveItem({
-                    type: LocationType.PlayedKitsuCardSpot,
-                    player: this.player,
-                }),
-            ]
-        }
-        return [];
     }
 
     public afterItemMove(move: ItemMove<number, MaterialType, LocationType>, _context?: PlayMoveContext): MaterialMove<number, MaterialType, LocationType>[] {
@@ -87,6 +83,17 @@ export class PlayKitsuCardRule extends PlayerTurnRule<number, MaterialType, Loca
         return cards.getItems(card => getKitsuCardType(card.id) === opposingTeamCardType).length !== 0;
     }
 
+    private getCardsDestination(isProtectionTokenSelected: boolean): Location<number, LocationType, any, KitsuCardRotation> {
+        const cardDestinationLocation: Location<number, LocationType, any, KitsuCardRotation> = {
+            type: LocationType.PlayedKitsuCardSpot,
+            player: this.player
+        };
+        if (isProtectionTokenSelected) {
+            cardDestinationLocation.rotation = KitsuCardRotation.FaceDown;
+        }
+        return cardDestinationLocation;
+    }
+
     private filterMovesBecauseOfBlackKitsune(previousPlayerTeam: TeamColor, allCards: Material<number, MaterialType, LocationType>, allMoves: MaterialMove<number, MaterialType, LocationType>[]): MaterialMove<number, MaterialType, LocationType>[] {
         const previousPlayerTeamCardType = previousPlayerTeam === TeamColor.Yako ? KitsuCardType.Yako : KitsuCardType.Zenko;
         const consideredCardIndexes = allCards.id((cardId: KitsuCard) => getKitsuCardType(cardId) === previousPlayerTeamCardType).getIndexes();
@@ -95,22 +102,42 @@ export class PlayKitsuCardRule extends PlayerTurnRule<number, MaterialType, Loca
             || (isMoveItemType<number, MaterialType, LocationType>(MaterialType.PowerToken)(move) && consideredCardIndexes.includes(move.location.parent!)));
     }
 
-    private getPowerTokenMoves(allCards: Material<number, MaterialType, LocationType>): MaterialMove<number, MaterialType, LocationType>[] {
-        const powerToken = this.material(MaterialType.PowerToken).location(LocationType.PowerTokenSpotOnClanCard).player(this.player);
+    private getPowerTokenMoves(allCards: Material<number, MaterialType, LocationType>, protectionPowerToken?: MaterialItem<number, LocationType, PowerToken>): MaterialMove<number, MaterialType, LocationType>[] {
+        const powerToken = this.material(MaterialType.PowerToken)
+            .location(location => (location.type === LocationType.PowerTokenSpotOnClanCard && location.player === this.player)
+                || (location.type === LocationType.PowerTokenSportOnKitsuCard
+                    && this.material(MaterialType.KitsuCard).index(location.parent).player(this.player).length === 1));
         if (powerToken.length === 1) {
             if (powerToken.selected(true).length === 1) {
                 return [powerToken.unselectItem()];
             } else {
+                const isTokenPowerToken = protectionPowerToken !== undefined;
+                const cardIndexes = allCards.filter(kitsuCard => !isTokenPowerToken || canBePlayedWithProtectionToken(kitsuCard.id))
+                    .getIndexes();
                 return [
-                    ...allCards.getIndexes()
-                        .map(index => this.customMove<CustomMoveType>(CustomMoveType.PlayCardAndToken, {cardIndex: index, powerTokenMove: powerToken.moveItem({
-                            type: LocationType.PowerTokenSportOnKitsuCard,
-                            parent: index
-                        })})),
-                    powerToken.selectItem()];
+                    ...cardIndexes.flatMap(cardIndex => this.mapIndexToTokenAndCardMoveIfNecessary(cardIndex, powerToken, isTokenPowerToken)),
+                    powerToken.selectItem()
+                ];
             }
         }
         return [];
+    }
+
+    private mapIndexToTokenAndCardMoveIfNecessary(cardIndex: number, powerToken: Material<number, MaterialType, LocationType>, isTokenPowerToken: boolean): MaterialMove<number, MaterialType, LocationType>[] {
+        const moves = [
+            powerToken.moveItem({
+                type: LocationType.PowerTokenSportOnKitsuCard,
+                parent: cardIndex
+            })
+        ];
+        if (isTokenPowerToken) {
+            moves.push(this.material(MaterialType.KitsuCard).index(cardIndex).moveItem({
+                type: LocationType.PlayedKitsuCardSpot,
+                player: this.player,
+                rotation: KitsuCardRotation.FaceDown
+            }));
+        }
+        return moves;
     }
 
     private isPlayerPreviousCardABlackKitsune(previousPlayer: number): boolean {

@@ -37,12 +37,15 @@ class PowerTokenDescription extends TokenDescription<number, MaterialType, Locat
     };
 
     public getItemMenu(item: MaterialItem<number, LocationType>, context: ItemContext<number, MaterialType, LocationType>, legalMoves: MaterialMove<number, MaterialType, LocationType>[]): React.ReactNode {
-        if (context.player !== undefined) {
-            if (context.rules.game.rule?.id === RuleId.EndOfTrickPickAvailablePowerToken && item.location.type === LocationType.PowerTokenSpotOnWisdomBoard)
+        if (context.player !== undefined && context.player === context.rules.game.rule?.player) {
+            if (context.rules.game.rule?.id === RuleId.EndOfTrickPickAvailablePowerToken
+                && item.location.type === LocationType.PowerTokenSpotOnWisdomBoard)
             {
                 return this.getItemMenuButtonsForEndOfTrickPickAvailablePowerTokenRule(item, context, legalMoves);
             }
-            if (context.rules.game.rule?.id === RuleId.PlayKitsuCard && item.location.type === LocationType.PowerTokenSpotOnClanCard)
+            if (context.rules.game.rule?.id === RuleId.PlayKitsuCard
+                && item.location.type === LocationType.PowerTokenSpotOnClanCard
+                && item.location.player === context.player)
             {
                 return this.getItemMenuButtonsForPlayKitsuCardRule(item, context, legalMoves);
             }
@@ -51,7 +54,11 @@ class PowerTokenDescription extends TokenDescription<number, MaterialType, Locat
     }
 
     public isMenuAlwaysVisible(item: MaterialItem<number, LocationType>, context: ItemContext<number, MaterialType, LocationType>): boolean {
-        if (context.player === undefined || context.rules.game.rule?.id !== RuleId.PlayKitsuCard || item.location.type !== LocationType.PowerTokenSpotOnClanCard || item.location.player !== context.player) {
+        if (context.player === undefined
+            || context.player !== context.rules.game.rule?.player
+            || context.rules.game.rule?.id !== RuleId.PlayKitsuCard
+            || item.location.type !== LocationType.PowerTokenSpotOnClanCard
+            || item.location.player !== context.player) {
             return super.isMenuAlwaysVisible(item, context);
         }
         return true;

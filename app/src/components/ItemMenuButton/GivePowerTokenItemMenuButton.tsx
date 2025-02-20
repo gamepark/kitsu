@@ -10,16 +10,15 @@ type GivePowerTokenItemMenuButtonProps = {
     move: MaterialMove<number, MaterialType, LocationType>,
     x?: number,
     y?: number,
-    key?: string,
 }
 
-export const GivePowerTokenItemMenuButton: FC<PropsWithChildren<GivePowerTokenItemMenuButtonProps>> = ({playerId, move, x, y, key, children}) => {
+export const GivePowerTokenItemMenuButton: FC<PropsWithChildren<GivePowerTokenItemMenuButtonProps>> = ({playerId, move, x, y, children}) => {
     const me = usePlayerId<number>();
     const player = usePlayerName(playerId);
     const labelComponent = playerId === me
         ? <Trans defaults='button.powerToken.takeForSelf' />
         : <Trans defaults='button.powerToken.giveToPlayer' values={{playerName: player}} />;
-    return (<ItemMenuButton move={move} x={x} y={y} label={labelComponent} key={key}>
+    return (<ItemMenuButton move={move} x={x} y={y} label={labelComponent} >
         {children}
     </ItemMenuButton>)
 }

@@ -57,6 +57,8 @@ export const isSpecialCard = (cardId: KitsuCard): boolean => getKitsuCardType(ca
 
 export const getSpecialCardType = (cardId: KitsuCard): KitsuCardSpecialType => getKitsuCardValue(cardId);
 
+export const canBePlayedWithProtectionToken = (cardId: KitsuCard): boolean => !isSpecialCard(cardId) || (isSpecialCard(cardId) && getSpecialCardType(cardId) === KitsuCardSpecialType.WhiteKitsune);
+
 export const kitsuCardIds = getEnumValues(KitsuCard);
 
 export const last24PlayersKitsuCardEnumValueIndex = kitsuCardIds.indexOf(KitsuCard.Katana_2) + 1;

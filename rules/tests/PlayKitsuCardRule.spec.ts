@@ -9,9 +9,6 @@ import {
     RuleMoveType,
     StartPlayerTurn,
 } from '@gamepark/rules-api';
-import {
-    isPlayCardAndTokenCustomMove,
-} from '../src/material/CustomMoveType';
 import { KitsuCard } from '../src/material/KitsuCard';
 import { KitsuCardRotation } from '../src/material/KitsuCardRotation';
 import { LocationType } from '../src/material/LocationType';
@@ -362,12 +359,6 @@ describe('PlayKitsuCardRule tests', () => {
                     expectedNumberOfMoves: 9
                 },
                 {
-                    givenCardIds: [KitsuCard.WhiteKitsune_2, KitsuCard.Zenko1_1, KitsuCard.Yako3_1],
-                    givenPowerToken: PowerToken.Protection,
-                    expectedCardIds: [KitsuCard.WhiteKitsune_2, KitsuCard.Zenko1_1, KitsuCard.Yako3_1],
-                    expectedNumberOfMoves: 7
-                },
-                {
                     givenCardIds: [KitsuCard.Yako6, KitsuCard.Katana_1],
                     givenPowerToken: PowerToken.ColourExchange,
                     expectedCardIds: [KitsuCard.Yako6, KitsuCard.Katana_1],
@@ -401,15 +392,15 @@ describe('PlayKitsuCardRule tests', () => {
                 const legalMoves = rule.getPlayerMoves();
                 const cardMoves = legalMoves.filter(isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard));
                 const cardIdsInMoves = cardMoves.map(move => game.items[MaterialType.KitsuCard]![move.itemIndex].id as KitsuCard);
-                const tokenMoves = legalMoves.filter(isPlayCardAndTokenCustomMove);
-                const tokenTargetCardIds = tokenMoves.map(move => game.items[MaterialType.KitsuCard]![move.data.cardIndex].id as KitsuCard);
+                const tokenMoves = legalMoves.filter(isMoveItemType<number, MaterialType, LocationType>(MaterialType.PowerToken));
+                const tokenTargetCardIds = tokenMoves.map(move => game.items[MaterialType.KitsuCard]![move.location.parent!].id as KitsuCard);
                 const selectTokenMoves = legalMoves.filter(isSelectItemType<number, MaterialType, LocationType>(MaterialType.PowerToken));
 
                 // Then
                 expect(legalMoves).toHaveLength(expectedNumberOfMoves);
                 expect(cardMoves).toHaveLength(Math.floor(expectedNumberOfMoves / 2));
                 expect(tokenMoves).toHaveLength(Math.floor(expectedNumberOfMoves / 2));
-                expect(tokenMoves.every(move => move.data.powerTokenMove.location.type === LocationType.PowerTokenSportOnKitsuCard)).toBe(true);
+                expect(tokenMoves.every(move => move.location.type === LocationType.PowerTokenSportOnKitsuCard)).toBe(true);
                 expect(cardIdsInMoves).toHaveLength(Math.floor(expectedNumberOfMoves / 2));
                 expect(cardIdsInMoves).toEqual(expect.arrayContaining(expectedCardIds));
                 expect(tokenTargetCardIds).toHaveLength(Math.floor(expectedNumberOfMoves / 2));
@@ -710,7 +701,7 @@ describe('PlayKitsuCardRule tests', () => {
                     // Given
                     const gameBuilder = create2PlayersGameBuilderWithCardsInPlayerHand(1, givenCardsInHand);
                     gameBuilder.setRule(RuleId.PlayKitsuCard, 1);
-                    const protectionPowerToken = gameBuilder.material(MaterialType.PowerToken).id<PowerToken>(PowerToken.Protection)
+                    const protectionPowerToken = gameBuilder.material(MaterialType.PowerToken).id<PowerToken>(PowerToken.Protection);
                     protectionPowerToken.moveItem({
                         type: LocationType.PowerTokenSpotOnClanCard,
                         player: 1
@@ -729,7 +720,7 @@ describe('PlayKitsuCardRule tests', () => {
                     // Then
                     expect(legalMoves).toHaveLength(expectLegalMovesNumber);
                     expect(faceDownMoves).toHaveLength(expectedFaceDownMoves);
-                    expect(faceDownIds).toHaveLength(expectedFaceDownMoves)
+                    expect(faceDownIds).toHaveLength(expectedFaceDownMoves);
                     expect(faceDownIds).toEqual(expect.arrayContaining(expectedFaceDownIds));
                     expect([...new Set(faceDownIds)]).toHaveLength(expectedFaceDownMoves);
                     expect(tokenMoves).toHaveLength(0);
