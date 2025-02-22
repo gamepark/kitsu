@@ -47,7 +47,7 @@ export class EndOfTrickKitsunePawnMoveRule extends PlayerTurnRule<number, Materi
         } = this.getWinningTeamAndScoreDifference(playedCards, invertColors, protectedCard);
 
         const discardCardsRuleMove = this.startRule(RuleId.EndOfTrickDiscardCards);
-        if (winningTeam === undefined) {
+        if (winningTeam === undefined || this.material(MaterialType.PowerToken).id<PowerToken>(PowerToken.NoAdvance).location(LocationType.PowerTokenSportOnKitsuCard).length === 1) {
             return protectedCard !== undefined
                 ? [
                     this.material(MaterialType.KitsuCard).id<KitsuCard>(protectedCard.id).rotateItem(undefined),
