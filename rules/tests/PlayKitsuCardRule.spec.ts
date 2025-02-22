@@ -9,12 +9,8 @@ import {
     RuleMoveType,
     StartPlayerTurn,
 } from '@gamepark/rules-api';
-import {
-    CustomMoveType,
-    isPlayCardAndTokenCustomMove,
-    PlayCardAndTokenCustomMove
-} from '../src/material/CustomMoveType';
 import { KitsuCard } from '../src/material/KitsuCard';
+import { KitsuCardRotation } from '../src/material/KitsuCardRotation';
 import { LocationType } from '../src/material/LocationType';
 import { MaterialType } from '../src/material/MaterialType';
 import { PowerToken } from '../src/material/PowerToken';
@@ -363,12 +359,6 @@ describe('PlayKitsuCardRule tests', () => {
                     expectedNumberOfMoves: 9
                 },
                 {
-                    givenCardIds: [KitsuCard.WhiteKitsune_2, KitsuCard.Zenko1_1, KitsuCard.Yako3_1],
-                    givenPowerToken: PowerToken.Protection,
-                    expectedCardIds: [KitsuCard.WhiteKitsune_2, KitsuCard.Zenko1_1, KitsuCard.Yako3_1],
-                    expectedNumberOfMoves: 7
-                },
-                {
                     givenCardIds: [KitsuCard.Yako6, KitsuCard.Katana_1],
                     givenPowerToken: PowerToken.ColourExchange,
                     expectedCardIds: [KitsuCard.Yako6, KitsuCard.Katana_1],
@@ -402,15 +392,15 @@ describe('PlayKitsuCardRule tests', () => {
                 const legalMoves = rule.getPlayerMoves();
                 const cardMoves = legalMoves.filter(isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard));
                 const cardIdsInMoves = cardMoves.map(move => game.items[MaterialType.KitsuCard]![move.itemIndex].id as KitsuCard);
-                const tokenMoves = legalMoves.filter(isPlayCardAndTokenCustomMove);
-                const tokenTargetCardIds = tokenMoves.map(move => game.items[MaterialType.KitsuCard]![move.data.cardIndex].id as KitsuCard);
+                const tokenMoves = legalMoves.filter(isMoveItemType<number, MaterialType, LocationType>(MaterialType.PowerToken));
+                const tokenTargetCardIds = tokenMoves.map(move => game.items[MaterialType.KitsuCard]![move.location.parent!].id as KitsuCard);
                 const selectTokenMoves = legalMoves.filter(isSelectItemType<number, MaterialType, LocationType>(MaterialType.PowerToken));
 
                 // Then
                 expect(legalMoves).toHaveLength(expectedNumberOfMoves);
                 expect(cardMoves).toHaveLength(Math.floor(expectedNumberOfMoves / 2));
                 expect(tokenMoves).toHaveLength(Math.floor(expectedNumberOfMoves / 2));
-                expect(tokenMoves.every(move => move.data.powerTokenMove.location.type === LocationType.PowerTokenSportOnKitsuCard)).toBe(true);
+                expect(tokenMoves.every(move => move.location.type === LocationType.PowerTokenSportOnKitsuCard)).toBe(true);
                 expect(cardIdsInMoves).toHaveLength(Math.floor(expectedNumberOfMoves / 2));
                 expect(cardIdsInMoves).toEqual(expect.arrayContaining(expectedCardIds));
                 expect(tokenTargetCardIds).toHaveLength(Math.floor(expectedNumberOfMoves / 2));
@@ -436,12 +426,6 @@ describe('PlayKitsuCardRule tests', () => {
                     givenPowerToken: PowerToken.Plus3,
                     expectedCardIds: [KitsuCard.Yako2_1, KitsuCard.Zenko6, KitsuCard.Zenko4, KitsuCard.Katana_2],
                     expectedNumberOfMoves: 5
-                },
-                {
-                    givenCardIds: [KitsuCard.WhiteKitsune_2, KitsuCard.Zenko1_1, KitsuCard.Yako3_1],
-                    givenPowerToken: PowerToken.Protection,
-                    expectedCardIds: [KitsuCard.WhiteKitsune_2, KitsuCard.Zenko1_1, KitsuCard.Yako3_1],
-                    expectedNumberOfMoves: 4
                 },
                 {
                     givenCardIds: [KitsuCard.Yako6, KitsuCard.Katana_1],
@@ -632,57 +616,117 @@ describe('PlayKitsuCardRule tests', () => {
                 });
             });
 
-            test('Given a correct custom move, onCustomMove() should return an array of consequences containing to' +
-                ' power token move to the card, and the card move to the PlayedKitsuCard location', () => {
-                // Given
-                const gameBuilder = create2PlayersGameBuilder();
-                gameBuilder.setRule(RuleId.PlayKitsuCard, 1);
-                const powerToken = gameBuilder.material(MaterialType.PowerToken).id<PowerToken>(PowerToken.ColourExchange);
-                powerToken.moveItem({
-                    type: LocationType.PowerTokenSpotOnClanCard,
-                    player: 1
-                });
-                const kitsuCard = gameBuilder.material(MaterialType.KitsuCard).id<KitsuCard>(KitsuCard.Yako4);
-                kitsuCard.moveItem({
-                    type: LocationType.PlayerHand,
-                    player: 1
-                });
-                const game = gameBuilder.build();
-                const rule = new PlayKitsuCardRule(game);
-                const customMove: PlayCardAndTokenCustomMove = {
-                    kind: MoveKind.CustomMove,
-                    type: CustomMoveType.PlayCardAndToken,
-                    data: {
-                        cardIndex: kitsuCard.getIndex(),
-                        powerTokenMove: {
-                            kind: MoveKind.ItemMove,
-                            type: ItemMoveType.Move,
-                            itemType: MaterialType.PowerToken,
-                            itemIndex: powerToken.getIndex(),
-                            location: {
-                                type: LocationType.PowerTokenSportOnKitsuCard,
-                                parent: 0,
-                            }
-                        } as MoveItem<number, MaterialType, LocationType>
+            describe('Protection token tests - ', () => {
+
+                test.each([
+                    {
+                        givenCardsInHand: [KitsuCard.Zenko6, KitsuCard.Yako6, KitsuCard.WhiteKitsune_1, KitsuCard.Zenko1_1],
+                        expectLegalMovesNumber: 13,
+                        expectedFaceDownMoves: 4,
+                        expectedFaceDownIds: [KitsuCard.Zenko6, KitsuCard.Yako6, KitsuCard.WhiteKitsune_1, KitsuCard.Zenko1_1],
+                    }, {
+                        givenCardsInHand: [KitsuCard.Zenko6, KitsuCard.Yako6, KitsuCard.WhiteKitsune_1, KitsuCard.BlackKitsune_1],
+                        expectLegalMovesNumber: 11,
+                        expectedFaceDownMoves: 3,
+                        expectedFaceDownIds: [KitsuCard.Zenko6, KitsuCard.Yako6, KitsuCard.WhiteKitsune_1],
+                    }, {
+                        givenCardsInHand: [KitsuCard.Zenko6, KitsuCard.Katana_1, KitsuCard.WhiteKitsune_1, KitsuCard.BlackKitsune_1],
+                        expectLegalMovesNumber: 9,
+                        expectedFaceDownMoves: 2,
+                        expectedFaceDownIds: [KitsuCard.Zenko6, KitsuCard.WhiteKitsune_1],
                     }
-                }
+                ])('Given an unselected protection token and cards in hand, getPlayerMoves() should return a move to ' +
+                    'play each card, a move to select the token, moves to play the token on the card, and moves to play ' +
+                    'relevant cards face down', ({
+                                                     givenCardsInHand,
+                                                     expectLegalMovesNumber,
+                                                     expectedFaceDownMoves,
+                                                     expectedFaceDownIds
+                                                 }) => {
+                    // Given
+                    const gameBuilder = create2PlayersGameBuilderWithCardsInPlayerHand(1, givenCardsInHand);
+                    gameBuilder.material(MaterialType.PowerToken).id(PowerToken.Protection).moveItem({
+                        type: LocationType.PowerTokenSpotOnClanCard,
+                        player: 1
+                    });
+                    gameBuilder.setRule(RuleId.PlayKitsuCard, 1);
+                    const game = gameBuilder.build();
+                    const rule = new PlayKitsuCardRule(game);
 
-                // When
-                const consequences = rule.onCustomMove(customMove);
-                const powerTokenMoves = consequences.filter(isMoveItemType<number, MaterialType, LocationType>(MaterialType.PowerToken));
-                const kitsuCardMove = consequences.filter(isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard));
+                    // When
+                    const legalMoves = rule.getPlayerMoves();
+                    const kitsuCardFaceDownMoves = legalMoves.filter(isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard)).filter(move => move.location.rotation === KitsuCardRotation.FaceDown);
+                    const faceDownIds = kitsuCardFaceDownMoves.map(move => game.items[MaterialType.KitsuCard]![move.itemIndex].id as KitsuCard);
+                    const tokenMoves = legalMoves.filter(isMoveItemType<number, MaterialType, LocationType>(MaterialType.PowerToken));
+                    const tokenMovesCardIds = tokenMoves.map(move => game.items[MaterialType.KitsuCard]![move.location.parent!].id as KitsuCard);
+                    const selectTokenMoves = legalMoves.filter(isSelectItemType<number, MaterialType, LocationType>(MaterialType.PowerToken));
 
-                // Then
-                expect(consequences).toHaveLength(2);
-                expect(powerTokenMoves).toHaveLength(1);
-                expect(powerTokenMoves[0]).toBe(consequences[0]);
-                expect(powerTokenMoves[0].location.type).toBe(LocationType.PowerTokenSportOnKitsuCard);
-                expect(powerTokenMoves[0].location.parent).toBe(powerToken.getIndex());
-                expect(kitsuCardMove).toHaveLength(1);
-                expect(kitsuCardMove[0]).toBe(consequences[1]);
-                expect(kitsuCardMove[0].location.type).toBe(LocationType.PlayedKitsuCardSpot);
-                expect(kitsuCardMove[0].location.player).toBe(1);
-            })
+                    // Then
+                    expect(legalMoves).toHaveLength(expectLegalMovesNumber);
+                    expect(kitsuCardFaceDownMoves).toHaveLength(expectedFaceDownMoves);
+                    expect(selectTokenMoves).toHaveLength(1);
+                    expect(faceDownIds).toHaveLength(expectedFaceDownMoves);
+                    expect(faceDownIds).toEqual(expect.arrayContaining(expectedFaceDownIds));
+                    expect([...new Set(faceDownIds)]).toHaveLength(expectedFaceDownMoves);
+                    expect(tokenMovesCardIds).toHaveLength(expectedFaceDownMoves);
+                    expect(tokenMovesCardIds).toEqual(expect.arrayContaining(expectedFaceDownIds));
+                    expect([...new Set(tokenMovesCardIds)]).toHaveLength(expectedFaceDownMoves);
+                });
+
+                test.each([
+                    {
+                        givenCardsInHand: [KitsuCard.Zenko6, KitsuCard.Yako6, KitsuCard.WhiteKitsune_1, KitsuCard.Zenko1_1],
+                        expectLegalMovesNumber: 5,
+                        expectedFaceDownMoves: 4,
+                        expectedFaceDownIds: [KitsuCard.Zenko6, KitsuCard.Yako6, KitsuCard.WhiteKitsune_1, KitsuCard.Zenko1_1],
+                    }, {
+                        givenCardsInHand: [KitsuCard.Zenko6, KitsuCard.Yako6, KitsuCard.WhiteKitsune_1, KitsuCard.BlackKitsune_1],
+                        expectLegalMovesNumber: 4,
+                        expectedFaceDownMoves: 3,
+                        expectedFaceDownIds: [KitsuCard.Zenko6, KitsuCard.Yako6, KitsuCard.WhiteKitsune_1],
+                    }, {
+                        givenCardsInHand: [KitsuCard.Zenko6, KitsuCard.Katana_1, KitsuCard.WhiteKitsune_1, KitsuCard.BlackKitsune_1],
+                        expectLegalMovesNumber: 3,
+                        expectedFaceDownMoves: 2,
+                        expectedFaceDownIds: [KitsuCard.Zenko6, KitsuCard.WhiteKitsune_1],
+                    }
+                ])('Given a selected protection protection token, getPlayerMoves() should return an array of moves of ' +
+                    'the power token to the relevant cards and the relevant cards to the played location and face down, ' +
+                    'and a move to unselext the power token', ({
+                                                                   givenCardsInHand,
+                                                                   expectLegalMovesNumber,
+                                                                   expectedFaceDownMoves,
+                                                                   expectedFaceDownIds
+                                                               }) => {
+                    // Given
+                    const gameBuilder = create2PlayersGameBuilderWithCardsInPlayerHand(1, givenCardsInHand);
+                    gameBuilder.setRule(RuleId.PlayKitsuCard, 1);
+                    const protectionPowerToken = gameBuilder.material(MaterialType.PowerToken).id<PowerToken>(PowerToken.Protection);
+                    protectionPowerToken.moveItem({
+                        type: LocationType.PowerTokenSpotOnClanCard,
+                        player: 1
+                    });
+                    protectionPowerToken.selectItem();
+                    const game = gameBuilder.build();
+                    const rule = new PlayKitsuCardRule(game);
+
+                    // When
+                    const legalMoves = rule.getPlayerMoves();
+                    const faceDownMoves = legalMoves.filter(isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard)).filter(move => move.location.rotation === KitsuCardRotation.FaceDown);
+                    const faceDownIds = faceDownMoves.map(move => game.items[MaterialType.KitsuCard]![move.itemIndex].id as KitsuCard);
+                    const tokenMoves = legalMoves.filter(isMoveItemType<number, MaterialType, LocationType>(MaterialType.PowerToken));
+                    const selectTokenMoves = legalMoves.filter(isSelectItemType<number, MaterialType, LocationType>(MaterialType.PowerToken));
+
+                    // Then
+                    expect(legalMoves).toHaveLength(expectLegalMovesNumber);
+                    expect(faceDownMoves).toHaveLength(expectedFaceDownMoves);
+                    expect(faceDownIds).toHaveLength(expectedFaceDownMoves);
+                    expect(faceDownIds).toEqual(expect.arrayContaining(expectedFaceDownIds));
+                    expect([...new Set(faceDownIds)]).toHaveLength(expectedFaceDownMoves);
+                    expect(tokenMoves).toHaveLength(0);
+                    expect(selectTokenMoves).toHaveLength(1);
+                });
+            });
         });
     });
 

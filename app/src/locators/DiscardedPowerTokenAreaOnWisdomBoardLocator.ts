@@ -5,8 +5,8 @@ import { PileLocator } from '@gamepark/react-game';
 class DiscardedPowerTokenAreaOnWisdomBoardLocator extends PileLocator<number, MaterialType, LocationType> {
     parentItemType = MaterialType.WisdomBoard;
     limit = 5;
-    coordinates = {x: -7.05, y: 0};
-    radius = 2;
+    coordinates = {x: 5.305, y: -2.02};
+    radius = 1.75;
     maxAngle = 180;
 }
 

@@ -2,6 +2,7 @@ import {
     hideItemId,
     hideItemIdToOthers,
     isCustomMoveType,
+    isMoveItemType,
     MaterialGame,
     MaterialMove,
     MaterialMoveRandomized,
@@ -13,6 +14,7 @@ import { CustomMoveType } from './material/CustomMoveType';
 import { hideToTOthersWhenRotatedFaceDown } from './material/HideToTOthersWhenRotatedFaceDown';
 import { LocationType } from './material/LocationType';
 import { MaterialType } from './material/MaterialType';
+import { PowerToken } from './material/PowerToken';
 import { EndOfTrickDecideEndOfRoundRule } from './rules/EndOfTrickDecideEndOfRoundRule';
 import { EndOfTrickDiscardCardsRule } from './rules/EndOfTrickDiscardCardsRule';
 import { EndOfTrickKitsunePawnMoveRule } from './rules/EndOfTrickKitsunePawnMoveRule';
@@ -85,8 +87,14 @@ export class KitsuRules extends SecretMaterialRules<number, MaterialType, Locati
     }
 
     public isUnpredictableMove(move: MaterialMove<number, MaterialType, LocationType>, player: number): boolean {
-        return super.isUnpredictableMove(move, player) || isCustomMoveType<CustomMoveType>(CustomMoveType.PickRandomPlayer)(move);
+        return super.isUnpredictableMove(move, player)
+            || isCustomMoveType<CustomMoveType>(CustomMoveType.PickRandomPlayer)(move)
+            || this.isUnpredictableMoveBecauseOfProtectionToken(move);
     }
 
-
+    private isUnpredictableMoveBecauseOfProtectionToken(move: MaterialMove<number, MaterialType, LocationType>): boolean {
+        return this.material(MaterialType.PowerToken).id<PowerToken>(PowerToken.Protection).location(LocationType.PowerTokenSportOnKitsuCard).length === 1
+            && (isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsunePawn)(move)
+                || isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard)(move))
+    }
 }

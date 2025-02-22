@@ -11,6 +11,7 @@ import { KitsuCard } from '../src/material/KitsuCard';
 import { KitsuCardRotation } from '../src/material/KitsuCardRotation';
 import { LocationType } from '../src/material/LocationType';
 import { MaterialType } from '../src/material/MaterialType';
+import { PowerToken } from '../src/material/PowerToken';
 import { RuleId } from '../src/rules/RuleId';
 import { SelectKatanaTargetRule } from '../src/rules/SelectKatanaTargetRule';
 import { create2PlayersGameBuilderWithPlayedCards } from './utils/MaterialGameTestUtils';
@@ -230,6 +231,36 @@ describe('SelectKatanaTarget rule tests', () => {
         // Then
         expect(allowedMoves).toHaveLength(expectedCardIds.length);
         expect(allowedCardIds).toEqual(expect.arrayContaining(expectedCardIds));
+    });
+
+    test('Given face down cards, getPlayerMoves() should not return moves for face down cards', () => {
+        // Given
+        const gameBuilder = create2PlayersGameBuilderWithPlayedCards([{
+            player: 1, playedCardIds: [KitsuCard.Yako1_3, KitsuCard.Katana_1]
+        }, {
+            player: 2, playedCardIds: [KitsuCard.Yako2_2, KitsuCard.Zenko6]
+        }]);
+        const yako2_2Card = gameBuilder.material(MaterialType.KitsuCard).id<KitsuCard>(KitsuCard.Yako2_2);
+        const zenko6CardIndex = gameBuilder.material(MaterialType.KitsuCard).id<KitsuCard>(KitsuCard.Zenko6).getIndex();
+        gameBuilder.material(MaterialType.PowerToken).id<PowerToken>(PowerToken.Protection).moveItem({
+            type: LocationType.PowerTokenSportOnKitsuCard,
+            parent: yako2_2Card.getIndex()
+        })
+        yako2_2Card.rotateItem(KitsuCardRotation.FaceDown);
+        gameBuilder.setRule(RuleId.SelectKatanaTarget, 1);
+        const game = gameBuilder.build();
+        const rule = new SelectKatanaTargetRule(game);
+
+        // When
+        const legalMoves = rule.getPlayerMoves();
+        const kitsuCardFaceDownMoves = legalMoves.filter(isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard))
+            .filter(move => move.location.rotation === KitsuCardRotation.FaceDown);
+
+        // Then
+        expect(legalMoves).toHaveLength(1);
+        expect(kitsuCardFaceDownMoves).toHaveLength(1);
+        expect(legalMoves[0]).toBe(kitsuCardFaceDownMoves[0]);
+        expect(kitsuCardFaceDownMoves[0].itemIndex).toBe(zenko6CardIndex);
     });
 
     test.each([
