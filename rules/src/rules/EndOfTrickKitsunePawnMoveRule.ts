@@ -11,6 +11,7 @@ import {
 import { KitsuCardRotation } from '../material/KitsuCardRotation';
 import { LocationType } from '../material/LocationType';
 import { MaterialType } from '../material/MaterialType';
+import { PowerToken } from '../material/PowerToken';
 import { TeamColor } from '../TeamColor';
 import { RuleId } from './RuleId';
 
@@ -18,10 +19,14 @@ export class EndOfTrickKitsunePawnMoveRule extends PlayerTurnRule<number, Materi
     onRuleStart(_move: RuleMove<number, RuleId>, _previousRule?: RuleStep, _context?: PlayMoveContext): MaterialMove<number, MaterialType, LocationType>[] {
         const playedCards = this.material(MaterialType.KitsuCard)
             .location(LocationType.PlayedKitsuCardSpot);
-        const numberOfWhiteKitsunePlayed = playedCards
+        const numberOfColourExchangeEffects = playedCards
             .id<KitsuCard>(id => isSpecialCard(id) && getSpecialCardType(id) === KitsuCardSpecialType.WhiteKitsune)
-            .length;
-        const invertColors = numberOfWhiteKitsunePlayed % 2 === 1;
+            .length +
+            this.material(MaterialType.PowerToken)
+                .id<PowerToken>(PowerToken.ColourExchange)
+                .location(LocationType.PowerTokenSportOnKitsuCard)
+                .length;
+        const invertColors = numberOfColourExchangeEffects % 2 === 1;
 
         const yakoScore = this.getScore(playedCards, invertColors ? TeamColor.Zenko : TeamColor.Yako);
         const zenkoScore = this.getScore(playedCards, invertColors ? TeamColor.Yako : TeamColor.Zenko);
