@@ -22,6 +22,7 @@ import { KitsuCardRotation } from '../material/KitsuCardRotation';
 import { LocationType } from '../material/LocationType';
 import { MaterialType } from '../material/MaterialType';
 import { PowerToken } from '../material/PowerToken';
+import { PowerTokenPlus3Side } from '../material/PowerTokenPlus3Side';
 import { Memorize } from '../Memorize';
 import { TeamColor } from '../TeamColor';
 import { RuleId } from './RuleId';
@@ -104,18 +105,17 @@ export class PlayKitsuCardRule extends PlayerTurnRule<number, MaterialType, Loca
 
     private getPowerTokenMoves(allCards: Material<number, MaterialType, LocationType>, protectionPowerToken?: MaterialItem<number, LocationType, PowerToken>): MaterialMove<number, MaterialType, LocationType>[] {
         const powerToken = this.material(MaterialType.PowerToken)
-            .location(location => (location.type === LocationType.PowerTokenSpotOnClanCard && location.player === this.player)
-                || (location.type === LocationType.PowerTokenSportOnKitsuCard
-                    && this.material(MaterialType.KitsuCard).index(location.parent).player(this.player).length === 1));
+            .location(location => (location.type === LocationType.PowerTokenSpotOnClanCard && location.player === this.player));
         if (powerToken.length === 1) {
             if (powerToken.selected(true).length === 1) {
                 return [powerToken.unselectItem()];
             } else {
-                const isTokenPowerToken = protectionPowerToken !== undefined;
-                const cardIndexes = allCards.filter(kitsuCard => !isTokenPowerToken || canBePlayedWithProtectionToken(kitsuCard.id))
+                const isProtectionPowerToken = protectionPowerToken !== undefined;
+                const isPlus3PowerToken = this.material(MaterialType.PowerToken).id<PowerToken>(PowerToken.Plus3).location(LocationType.PowerTokenSpotOnClanCard).length === 1;
+                const cardIndexes = allCards.filter(kitsuCard => !isProtectionPowerToken || canBePlayedWithProtectionToken(kitsuCard.id))
                     .getIndexes();
                 return [
-                    ...cardIndexes.flatMap(cardIndex => this.mapIndexToTokenAndCardMoveIfNecessary(cardIndex, powerToken, isTokenPowerToken)),
+                    ...cardIndexes.flatMap(cardIndex => this.mapIndexToTokenAndCardMoveIfNecessary(cardIndex, powerToken, isProtectionPowerToken, isPlus3PowerToken)),
                     powerToken.selectItem()
                 ];
             }
@@ -123,7 +123,7 @@ export class PlayKitsuCardRule extends PlayerTurnRule<number, MaterialType, Loca
         return [];
     }
 
-    private mapIndexToTokenAndCardMoveIfNecessary(cardIndex: number, powerToken: Material<number, MaterialType, LocationType>, isTokenPowerToken: boolean): MaterialMove<number, MaterialType, LocationType>[] {
+    private mapIndexToTokenAndCardMoveIfNecessary(cardIndex: number, powerToken: Material<number, MaterialType, LocationType>, isTokenPowerToken: boolean, isPlus3PowerToken: boolean): MaterialMove<number, MaterialType, LocationType>[] {
         const moves = [
             powerToken.moveItem({
                 type: LocationType.PowerTokenSportOnKitsuCard,
@@ -135,6 +135,13 @@ export class PlayKitsuCardRule extends PlayerTurnRule<number, MaterialType, Loca
                 type: LocationType.PlayedKitsuCardSpot,
                 player: this.player,
                 rotation: KitsuCardRotation.FaceDown
+            }));
+        }
+        if (isPlus3PowerToken) {
+            moves.push(powerToken.moveItem({
+                type: LocationType.PowerTokenSportOnKitsuCard,
+                parent: cardIndex,
+                rotation: PowerTokenPlus3Side.Zenko
             }));
         }
         return moves;

@@ -133,13 +133,13 @@ class KitsuCardDescription extends CardDescription<number, MaterialType, Locatio
                                                 faceDownMoves.length !== 0
                                                     ? faceDownMoves[0]
                                                     : move
-                                            ]} radius={0.5} angle={0}
+                                            ]} radius={0.5 - 2 * tokenIndex} angle={0}
                                             label={<Trans defaults="buttons.card.playWithToken"/>}>
                             </ItemMenuButton>
                         ))}
                         {this.getHelpButton(item, context, {
                             angle: 0,
-                            radius: powerTokenMovesWithThisCard.length > 0 ? -2 : 0.5,
+                            radius: powerTokenMovesWithThisCard.length > 0 ? (-2 * powerTokenMovesWithThisCard.length) : 0.5,
                         })}
                     </Fragment>
                 ))}
