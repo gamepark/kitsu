@@ -20,6 +20,7 @@ import { KitsuCardRotation } from '../material/KitsuCardRotation';
 import { LocationType } from '../material/LocationType';
 import { MaterialType } from '../material/MaterialType';
 import { PowerToken } from '../material/PowerToken';
+import { PowerTokenPlus3Side } from '../material/PowerTokenPlus3Side';
 import { Memorize } from '../Memorize';
 import { TeamColor } from '../TeamColor';
 import { RuleId } from './RuleId';
@@ -82,8 +83,11 @@ export class EndOfTrickKitsunePawnMoveRule extends PlayerTurnRule<number, Materi
         scoreDifference: number,
         winningTeam: TeamColor | undefined
     } {
-        const yakoScore = this.getScore(playedCards, invertColors ? TeamColor.Zenko : TeamColor.Yako, protectedCard);
-        const zenkoScore = this.getScore(playedCards, invertColors ? TeamColor.Yako : TeamColor.Zenko, protectedCard);
+        const plus3Token = this.material(MaterialType.PowerToken).id<PowerToken>(PowerToken.Plus3).location(LocationType.PowerTokenSportOnKitsuCard).getItem<PowerToken>();
+        const isPlus3Yako = plus3Token !== undefined && (invertColors ? plus3Token.location.rotation === PowerTokenPlus3Side.Zenko : plus3Token.location.rotation !== PowerTokenPlus3Side.Zenko);
+        const isPlus3Zenko = plus3Token !== undefined && (invertColors ? plus3Token.location.rotation !== PowerTokenPlus3Side.Zenko : plus3Token.location.rotation === PowerTokenPlus3Side.Zenko);
+        const yakoScore = this.getScore(playedCards, invertColors ? TeamColor.Zenko : TeamColor.Yako, protectedCard) + (isPlus3Yako ? 3 : 0);
+        const zenkoScore = this.getScore(playedCards, invertColors ? TeamColor.Yako : TeamColor.Zenko, protectedCard) + (isPlus3Zenko ? 3 : 0);
         const scoreDifference = Math.abs(yakoScore - zenkoScore);
         const winningTeam = scoreDifference === 0
             ? undefined
@@ -96,10 +100,7 @@ export class EndOfTrickKitsunePawnMoveRule extends PlayerTurnRule<number, Materi
         return playedCards.id<KitsuCard>(id => filteringFunction(id))
             .getItems<KitsuCard>(item => item.location.rotation !== KitsuCardRotation.FaceDown)
             .reduce(
-                (score, card) => {
-                    var newValue = score + getKitsuCardValue(card.id);
-                    return newValue;
-                },
+                (score, card) => score + getKitsuCardValue(card.id),
                 !!protectedCard && filteringFunction(protectedCard.id) && !isSpecialCard(protectedCard.id) ? getKitsuCardValue(protectedCard.id) : 0
             );
     }

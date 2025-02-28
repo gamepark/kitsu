@@ -5,8 +5,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { LocationType } from '@gamepark/kitsu/material/LocationType';
 import { MaterialType } from '@gamepark/kitsu/material/MaterialType';
 import { PowerToken } from '@gamepark/kitsu/material/PowerToken';
+import { PowerTokenPlus3Side } from '@gamepark/kitsu/material/PowerTokenPlus3Side';
 import { RuleId } from '@gamepark/kitsu/rules/RuleId';
-import { ItemContext, ItemMenuButton, TokenDescription } from '@gamepark/react-game';
+import { ItemContext, ItemMenuButton, MaterialContext, TokenDescription } from '@gamepark/react-game';
 import { isMoveItemType, isSelectItemType, MaterialItem, MaterialMove } from '@gamepark/rules-api';
 import React from 'react';
 import { Trans } from 'react-i18next';
@@ -62,6 +63,10 @@ class PowerTokenDescription extends TokenDescription<number, MaterialType, Locat
             return super.isMenuAlwaysVisible(item, context);
         }
         return true;
+    }
+
+    public isFlipped(item: Partial<MaterialItem<number, LocationType>>, _context: MaterialContext<number, MaterialType, LocationType>): boolean {
+        return item.id === PowerToken.Plus3 && item.location?.rotation === PowerTokenPlus3Side.Zenko;
     }
 
     private getItemMenuButtonsForPlayKitsuCardRule(item: MaterialItem<number, LocationType>, context: ItemContext<number, MaterialType, LocationType>, legalMoves: MaterialMove<number, MaterialType, LocationType>[]): React.ReactNode {

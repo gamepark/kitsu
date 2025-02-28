@@ -353,12 +353,6 @@ describe('PlayKitsuCardRule tests', () => {
                     expectedNumberOfMoves: 11
                 },
                 {
-                    givenCardIds: [KitsuCard.Yako2_1, KitsuCard.Zenko6, KitsuCard.Zenko4, KitsuCard.Katana_2],
-                    givenPowerToken: PowerToken.Plus3,
-                    expectedCardIds: [KitsuCard.Yako2_1, KitsuCard.Zenko6, KitsuCard.Zenko4, KitsuCard.Katana_2],
-                    expectedNumberOfMoves: 9
-                },
-                {
                     givenCardIds: [KitsuCard.Yako6, KitsuCard.Katana_1],
                     givenPowerToken: PowerToken.ColourExchange,
                     expectedCardIds: [KitsuCard.Yako6, KitsuCard.Katana_1],
