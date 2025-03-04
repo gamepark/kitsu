@@ -1,5 +1,7 @@
 /** @jsxImportSource @emotion/react */
+import { useTranslation } from 'react-i18next';
 
 export const EndOfTrickDiscardCardsHeader = () => {
-    return <>Discarding trick cards</>;
+    const { t } = useTranslation();
+    return <>{t('header.endOfTrickDiscardCards')}</>;
 };
