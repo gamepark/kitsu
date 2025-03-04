@@ -31,6 +31,7 @@ import { RoundSetupDealCardsRule } from './rules/RoundSetupDealCardsRule';
 import { RoundSetupMoveKitsunePawnsRule } from './rules/RoundSetupMoveKitsunePawnsRule';
 import { RuleId } from './rules/RuleId';
 import { SelectKatanaTargetRule } from './rules/SelectKatanaTargetRule';
+import { SendCardToTeamMemberRule } from './rules/SendCardToTeamMemberRule';
 import { TeamColor } from './TeamColor';
 
 
@@ -44,6 +45,7 @@ export class KitsuRules extends SecretMaterialRules<number, MaterialType, Locati
     rules = {
         [RuleId.RoundSetupMoveKitsunePawns]: RoundSetupMoveKitsunePawnsRule,
         [RuleId.RoundSetupDealCards]: RoundSetupDealCardsRule,
+        [RuleId.SendCardToTeamMember]: SendCardToTeamMemberRule,
         [RuleId.PlayKitsuCard]: PlayKitsuCardRule,
         [RuleId.SelectKatanaTarget]: SelectKatanaTargetRule,
         [RuleId.PickDiscardCards]: PickCardInDiscardRule,

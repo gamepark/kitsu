@@ -40,10 +40,10 @@ class PlayedKitsuCardSpotLocator extends FlexLocator<number, MaterialType, Locat
     public getCoordinates(location: Location<number, LocationType, number, number>, context: MaterialContext<number, MaterialType, LocationType>): Partial<Coordinates> {
         const numberOfPlayers = context.rules.players.length;
         const numberOfSectors = numberOfPlayers / 2;
-        const numberOfCards = this.countItems(location, context);
+        const playerIndex = (getRelativePlayerIndex(context, location.player) - (context.rules.game.rule?.id === RuleId.SendCardToTeamMember ? 2 : 0) + numberOfPlayers) % numberOfPlayers
         return {
-            x: LOCATOR_RADIUS * Math.sin(-Math.PI * getRelativePlayerIndex(context, location.player) / numberOfSectors) - (numberOfCards > 1 ? 3.5 : 0),
-            y: LOCATOR_RADIUS * Math.cos(-Math.PI * getRelativePlayerIndex(context, location.player) / numberOfSectors),
+            x: LOCATOR_RADIUS * Math.sin(-Math.PI * playerIndex / numberOfSectors),
+            y: LOCATOR_RADIUS * Math.cos(-Math.PI * playerIndex / numberOfSectors),
         };
     }
 

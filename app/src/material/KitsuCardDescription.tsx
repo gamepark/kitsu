@@ -109,6 +109,12 @@ class KitsuCardDescription extends CardDescription<number, MaterialType, Locatio
             item.location.player === context.player) {
             return this.getPickDiscardedCardItemMenu(item, context, legalMoves);
         }
+        if (context.rules.game.rule?.id === RuleId.SendCardToTeamMember &&
+            context.rules.game.rule?.players?.includes(context.player) &&
+            item.location.type === LocationType.PlayerHand &&
+            item.location.player === context.player) {
+            return this.getPlayerHandSendCardItemMenu(item, context, legalMoves);
+        }
         return;
     }
 
@@ -199,6 +205,27 @@ class KitsuCardDescription extends CardDescription<number, MaterialType, Locatio
             {movesForThisCard.map((move, index) => (
                 <ItemMenuButton key={`addDiscardedCardToPlayerHand-${context.player}-${index}`} move={move}
                 label={<Trans defaults="buttons.card.addToHand"/>}>
+                    <FontAwesomeIcon icon={faHandPointer} size="lg"/>
+                </ItemMenuButton>
+            ))}
+            {this.getHelpButton(item, context, {
+                labelPosition: 'right',
+                label: <Trans defaults="buttons.card.help"/>,
+                radius: 0.5,
+                angle: 0
+            })}
+            </>);
+    }
+
+    private getPlayerHandSendCardItemMenu(item: MaterialItem<number, LocationType>, context: ItemContext<number, MaterialType, LocationType>, legalMoves: MaterialMove<number, MaterialType, LocationType>[]): React.ReactNode {
+        const currentItemIndex = context.rules.material(MaterialType.KitsuCard).id<KitsuCard>(item.id).getIndex();
+        const movesForThisCard = legalMoves
+            .filter(isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard))
+            .filter(move => move.itemIndex === currentItemIndex);
+        return (<>
+            {movesForThisCard.map((move, index) => (
+                <ItemMenuButton key={`sendCardToTeamMember-${context.player}-${index}`} move={move}
+                label={<Trans defaults="buttons.card.sendToTeamMember"/>}>
                     <FontAwesomeIcon icon={faHandPointer} size="lg"/>
                 </ItemMenuButton>
             ))}
