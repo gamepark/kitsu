@@ -12,8 +12,7 @@ class LeaderTokenSpotOnClanCardLocator extends Locator<number, MaterialType, Loc
         return clanCardDescription.getStaticItems(context).find(item => item.location.player === location.player);
     }
 
-    coordinates = {x: -0.1, y: -4.15};
-    rotateZ = -90;
+    coordinates = {x: 4.15, y: -0.1};
 }
 
 export const leaderTokenSpotOnClanCardLocator = new LeaderTokenSpotOnClanCardLocator();

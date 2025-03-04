@@ -1,4 +1,5 @@
 import {
+    CompetitiveScore,
     hideItemId,
     hideItemIdToOthers,
     isCustomMoveType,
@@ -15,6 +16,8 @@ import { hideToTOthersWhenRotatedFaceDown } from './material/HideToTOthersWhenRo
 import { LocationType } from './material/LocationType';
 import { MaterialType } from './material/MaterialType';
 import { PowerToken } from './material/PowerToken';
+import { VictoryCard } from './material/VictoryCard';
+import { Memorize } from './Memorize';
 import { EndOfTrickDecideEndOfRoundRule } from './rules/EndOfTrickDecideEndOfRoundRule';
 import { EndOfTrickDiscardCardsRule } from './rules/EndOfTrickDiscardCardsRule';
 import { EndOfTrickKitsunePawnMoveRule } from './rules/EndOfTrickKitsunePawnMoveRule';
@@ -28,6 +31,7 @@ import { RoundSetupDealCardsRule } from './rules/RoundSetupDealCardsRule';
 import { RoundSetupMoveKitsunePawnsRule } from './rules/RoundSetupMoveKitsunePawnsRule';
 import { RuleId } from './rules/RuleId';
 import { SelectKatanaTargetRule } from './rules/SelectKatanaTargetRule';
+import { TeamColor } from './TeamColor';
 
 
 /**
@@ -35,7 +39,8 @@ import { SelectKatanaTargetRule } from './rules/SelectKatanaTargetRule';
  * It must follow Game Park "Rules" API so that the Game Park server can enforce the rules.
  */
 export class KitsuRules extends SecretMaterialRules<number, MaterialType, LocationType>
-    implements TimeLimit<MaterialGame<number, MaterialType, LocationType>, MaterialMove<number, MaterialType, LocationType>, number> {
+    implements TimeLimit<MaterialGame<number, MaterialType, LocationType>, MaterialMove<number, MaterialType, LocationType>, number>,
+    CompetitiveScore<MaterialGame<number, MaterialType, LocationType>, MaterialMove<number, MaterialType, LocationType>, number> {
     rules = {
         [RuleId.RoundSetupMoveKitsunePawns]: RoundSetupMoveKitsunePawnsRule,
         [RuleId.RoundSetupDealCards]: RoundSetupDealCardsRule,
@@ -86,7 +91,7 @@ export class KitsuRules extends SecretMaterialRules<number, MaterialType, Locati
         return super.randomize(move, player);
     }
 
-    giveTime(): number {
+    public giveTime(): number {
         return 60;
     }
 
@@ -94,6 +99,15 @@ export class KitsuRules extends SecretMaterialRules<number, MaterialType, Locati
         return super.isUnpredictableMove(move, player)
             || isCustomMoveType<CustomMoveType>(CustomMoveType.PickRandomPlayer)(move)
             || this.isUnpredictableMoveBecauseOfProtectionToken(move);
+    }
+
+    public getScore(playerId: number): number {
+        const playerTeam = this.remind<TeamColor>(Memorize.Team, playerId);
+        return this.material(MaterialType.VictoryCard).location(LocationType.VictoryCardsSpot).id<VictoryCard>(playerTeam === TeamColor.Yako ? VictoryCard.Yako : VictoryCard.Zenko).length
+    }
+
+    public getTieBreaker(_tieBreaker: number, _playerId: number): undefined {
+        return undefined;
     }
 
     private isUnpredictableMoveBecauseOfProtectionToken(move: MaterialMove<number, MaterialType, LocationType>): boolean {

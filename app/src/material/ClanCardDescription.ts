@@ -13,8 +13,8 @@ import ClanCardZenko4Front from '../images/Cards/ClanCardZenko4Front.jpg';
 import ClanCardZenko6Front from '../images/Cards/ClanCardZenko6Front.jpg';
 
 class ClanCardDescription extends CardDescription<number, MaterialType, LocationType, ClanCard> {
-    height = 8.80;
-    width = 6.30;
+    height = 6.30;
+    width = 8.80;
     images = {
         [ClanCard.Yako2Players]: ClanCardYako2Front,
         [ClanCard.Yako4Players]: ClanCardYako4Front,
