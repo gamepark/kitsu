@@ -18,7 +18,7 @@ class ClanCardSpotLocator extends Locator<number, MaterialType, LocationType> {
         const numberOfPlayers = context.rules.players.length;
         const numberOfSectors = numberOfPlayers / 2;
 
-        return 90 + (180 * getRelativePlayerIndex(context, location.player) / numberOfSectors);
+        return 180 * getRelativePlayerIndex(context, location.player) / numberOfSectors;
     }
 }
 
