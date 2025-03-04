@@ -6,9 +6,9 @@ import { MaterialType } from '@gamepark/kitsu/material/MaterialType';
 import { RuleId } from '@gamepark/kitsu/rules/RuleId';
 import {
     DropAreaDescription,
+    FlexLocator,
     getRelativePlayerIndex,
     ItemContext,
-    ListLocator,
     MaterialContext
 } from '@gamepark/react-game';
 import { Coordinates, Location, MaterialItem, MaterialMove } from '@gamepark/rules-api';
@@ -29,7 +29,7 @@ class PlayedKitsuCardSpotLocationDescription extends DropAreaDescription<number,
     }
 }
 
-class PlayedKitsuCardSpotLocator extends ListLocator<number, MaterialType, LocationType> {
+class PlayedKitsuCardSpotLocator extends FlexLocator<number, MaterialType, LocationType> {
     gap = {x: 7};
     locationDescription = new PlayedKitsuCardSpotLocationDescription();
 
@@ -40,8 +40,9 @@ class PlayedKitsuCardSpotLocator extends ListLocator<number, MaterialType, Locat
     public getCoordinates(location: Location<number, LocationType, number, number>, context: MaterialContext<number, MaterialType, LocationType>): Partial<Coordinates> {
         const numberOfPlayers = context.rules.players.length;
         const numberOfSectors = numberOfPlayers / 2;
+        const numberOfCards = this.countItems(location, context);
         return {
-            x: LOCATOR_RADIUS * Math.sin(-Math.PI * getRelativePlayerIndex(context, location.player) / numberOfSectors),
+            x: LOCATOR_RADIUS * Math.sin(-Math.PI * getRelativePlayerIndex(context, location.player) / numberOfSectors) - (numberOfCards > 1 ? 3.5 : 0),
             y: LOCATOR_RADIUS * Math.cos(-Math.PI * getRelativePlayerIndex(context, location.player) / numberOfSectors),
         };
     }
@@ -54,11 +55,10 @@ class PlayedKitsuCardSpotLocator extends ListLocator<number, MaterialType, Locat
     }
 
     public getItemRotateZ(item: MaterialItem<number, LocationType>, context: ItemContext<number, MaterialType, LocationType>): number {
-        if (item.location.player !== context.player || (context.rules.game.rule?.id && ![RuleId.PlayKitsuCard, RuleId.SelectKatanaTarget, RuleId.EndOfTrickKistunePawnMove].includes(context.rules.game.rule.id)))
-        {
+        if (item.location.player !== context.player || (context.rules.game.rule?.id && ![RuleId.PlayKitsuCard, RuleId.SelectKatanaTarget, RuleId.EndOfTrickKistunePawnMove].includes(context.rules.game.rule.id))) {
             return super.getItemRotateZ(item, context);
         }
-        return  item.location.rotation === KitsuCardRotation.FaceDown ? 180 : 0;
+        return item.location.rotation === KitsuCardRotation.FaceDown ? 180 : 0;
     }
 }
 

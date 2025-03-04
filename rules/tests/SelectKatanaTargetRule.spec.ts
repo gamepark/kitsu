@@ -243,7 +243,7 @@ describe('SelectKatanaTarget rule tests', () => {
         const yako2_2Card = gameBuilder.material(MaterialType.KitsuCard).id<KitsuCard>(KitsuCard.Yako2_2);
         const zenko6CardIndex = gameBuilder.material(MaterialType.KitsuCard).id<KitsuCard>(KitsuCard.Zenko6).getIndex();
         gameBuilder.material(MaterialType.PowerToken).id<PowerToken>(PowerToken.Protection).moveItem({
-            type: LocationType.PowerTokenSportOnKitsuCard,
+            type: LocationType.PowerTokenSpotOnKitsuCard,
             parent: yako2_2Card.getIndex()
         })
         yako2_2Card.rotateItem(KitsuCardRotation.FaceDown);

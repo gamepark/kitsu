@@ -135,7 +135,7 @@ describe('End of trick - Discard cards rule ', () => {
             gameBuilder.setRule(RuleId.EndOfTrickDiscardCards, 1);
             playedPowerTokens.forEach(({powerToken, parentIndex}) =>
                 gameBuilder.material(MaterialType.PowerToken).id<PowerToken>(powerToken).moveItem({
-                    type: LocationType.PowerTokenSportOnKitsuCard,
+                    type: LocationType.PowerTokenSpotOnKitsuCard,
                     parent: parentIndex,
                 })
             );

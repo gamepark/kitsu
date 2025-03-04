@@ -97,13 +97,22 @@ class KitsuCardDescription extends CardDescription<number, MaterialType, Locatio
         if (context.rules.game.rule?.id === RuleId.SelectKatanaTarget && item.location.type === LocationType.PlayedKitsuCardSpot) {
             return this.getSelectKatanaTargetItemMenu(item, context, legalMoves);
         }
-        if (context.rules.game.rule?.id === RuleId.PlayKitsuCard && context.rules.game.rule.player === context.player && item.location.type === LocationType.PlayerHand && item.location.player === context.player) {
-            return this.getPlayerHandItemMenu(context, item, legalMoves);
+        if (context.rules.game.rule?.id === RuleId.PlayKitsuCard &&
+            context.rules.game.rule.player === context.player &&
+            item.location.type === LocationType.PlayerHand &&
+            item.location.player === context.player) {
+            return this.getPlayerHandItemMenu(item, context, legalMoves);
+        }
+        if (context.rules.game.rule?.id === RuleId.PickDiscardCards &&
+            context.rules.game.rule?.player === context.player &&
+            item.location.type === LocationType.DiscardedCardsToPickSpot &&
+            item.location.player === context.player) {
+            return this.getPickDiscardedCardItemMenu(item, context, legalMoves);
         }
         return;
     }
 
-    private getPlayerHandItemMenu(context: ItemContext<number, MaterialType, LocationType>, item: MaterialItem<number, LocationType>, legalMoves: MaterialMove<number, MaterialType, LocationType>[]): React.ReactNode {
+    private getPlayerHandItemMenu(item: MaterialItem<number, LocationType>, context: ItemContext<number, MaterialType, LocationType>, legalMoves: MaterialMove<number, MaterialType, LocationType>[]): React.ReactNode {
         const currentItemIndex = context.rules.material(MaterialType.KitsuCard)
             .id<KitsuCard>(item.id)
             .getIndex();
@@ -178,6 +187,28 @@ class KitsuCardDescription extends CardDescription<number, MaterialType, Locatio
             </>);
         }
         return ;
+    }
+
+    private getPickDiscardedCardItemMenu(item: MaterialItem<number, LocationType>, context: ItemContext<number, MaterialType, LocationType>, legalMoves: MaterialMove<number, MaterialType, LocationType>[]): React.ReactNode {
+        const currentItemIndex = context.rules.material(MaterialType.KitsuCard).id<KitsuCard>(item.id).getIndex();
+        const movesForThisCard = legalMoves
+            .filter(isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard))
+            .filter(move => move.itemIndex === currentItemIndex);
+
+        return (<>
+            {movesForThisCard.map((move, index) => (
+                <ItemMenuButton key={`addDiscardedCardToPlayerHand-${context.player}-${index}`} move={move}
+                label={<Trans defaults="buttons.card.addToHand"/>}>
+                    <FontAwesomeIcon icon={faHandPointer} size="lg"/>
+                </ItemMenuButton>
+            ))}
+            {this.getHelpButton(item, context, {
+                labelPosition: 'right',
+                label: <Trans defaults="buttons.card.help"/>,
+                radius: 0.5,
+                angle: 0
+            })}
+            </>);
     }
 }
 

@@ -9,8 +9,9 @@ export enum LocationType {
     ClanCardSpot,
     LeaderTokenSpotOnClanCard,
     PowerTokenSpotOnClanCard,
-    PowerTokenSportOnKitsuCard,
+    PowerTokenSpotOnKitsuCard,
     PlayerHand,
     PlayedKitsuCardSpot,
-    VictoryCardsSpot
+    VictoryCardsSpot,
+    DiscardedCardsToPickSpot,
 }
