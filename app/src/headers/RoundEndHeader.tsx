@@ -1,5 +1,7 @@
 /** @jsxImportSource @emotion/react */
+import { useTranslation } from 'react-i18next';
 
 export const RoundEndHeader = () => {
-    return <>Randomly selecting a new leader in the winning team</>;
+    const { t } = useTranslation();
+    return <>{t('header.roundEndHeader')}</>;
 };

@@ -1,5 +1,7 @@
 /** @jsxImportSource @emotion/react */
+import { useTranslation } from 'react-i18next';
 
 export const EndOfTrickKitsunePawnMoveHeader = () => {
-    return <>Moving winning team's Kitsune Pawn</>;
+    const { t } = useTranslation();
+    return <>{t('header.endOfTrickKitsunePawnMove')}</>;
 };

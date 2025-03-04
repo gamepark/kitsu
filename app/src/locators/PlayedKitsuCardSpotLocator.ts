@@ -31,7 +31,12 @@ class PlayedKitsuCardSpotLocationDescription extends DropAreaDescription<number,
 
 class PlayedKitsuCardSpotLocator extends FlexLocator<number, MaterialType, LocationType> {
     gap = {x: 7};
+    maxLines = 1;
     locationDescription = new PlayedKitsuCardSpotLocationDescription();
+
+    public getLineSize(_location: Location<number, LocationType>, context: MaterialContext<number, MaterialType, LocationType>): number {
+        return context.rules.game.players.length === 2 ? 2 : 1
+    }
 
     public getLocations(context: MaterialContext<number, MaterialType, LocationType>): Partial<Location<number, LocationType, number, number>>[] {
         return context.rules.players.map(player => ({type: LocationType.PlayedKitsuCardSpot, player: player}));
@@ -40,7 +45,7 @@ class PlayedKitsuCardSpotLocator extends FlexLocator<number, MaterialType, Locat
     public getCoordinates(location: Location<number, LocationType, number, number>, context: MaterialContext<number, MaterialType, LocationType>): Partial<Coordinates> {
         const numberOfPlayers = context.rules.players.length;
         const numberOfSectors = numberOfPlayers / 2;
-        const playerIndex = (getRelativePlayerIndex(context, location.player) - (context.rules.game.rule?.id === RuleId.SendCardToTeamMember ? 2 : 0) + numberOfPlayers) % numberOfPlayers
+        const playerIndex = (getRelativePlayerIndex(context, location.player) + (context.rules.game.rule?.id === RuleId.SendCardToTeamMember ? 2 : 0)) % numberOfPlayers;
         return {
             x: LOCATOR_RADIUS * Math.sin(-Math.PI * playerIndex / numberOfSectors),
             y: LOCATOR_RADIUS * Math.cos(-Math.PI * playerIndex / numberOfSectors),
@@ -50,8 +55,8 @@ class PlayedKitsuCardSpotLocator extends FlexLocator<number, MaterialType, Locat
     public getRotateZ(location: Location<number, LocationType, number, number>, context: MaterialContext<number, MaterialType, LocationType>): number {
         const numberOfPlayers = context.rules.players.length;
         const numberOfSectors = numberOfPlayers / 2;
-
-        return 180 * getRelativePlayerIndex(context, location.player) / numberOfSectors;
+        const playerIndex = (getRelativePlayerIndex(context, location.player) + (context.rules.game.rule?.id === RuleId.SendCardToTeamMember ? 2 : 0)) % numberOfPlayers;
+        return 180 * playerIndex / numberOfSectors;
     }
 
     public getItemRotateZ(item: MaterialItem<number, LocationType>, context: ItemContext<number, MaterialType, LocationType>): number {

@@ -86,7 +86,8 @@ export class PlayKitsuCardRule extends PlayerTurnRule<number, MaterialType, Loca
                 return [this.startRule(RuleId.SelectKatanaTarget)];
             }
             const numberOfCardsPlayed = this.material(MaterialType.KitsuCard).location(LocationType.PlayedKitsuCardSpot).length;
-            return numberOfCardsPlayed < 4
+            const numberOfCardsToPlay = this.game.players.length === 6 ? 6 : 4
+            return numberOfCardsPlayed < numberOfCardsToPlay
                 ? [this.startPlayerTurn<number, RuleId>(RuleId.PlayKitsuCard, this.nextPlayer)]
                 : [this.startPlayerTurn<number, RuleId>(RuleId.EndOfTrickKistunePawnMove, this.nextPlayer)];
         }
@@ -94,7 +95,7 @@ export class PlayKitsuCardRule extends PlayerTurnRule<number, MaterialType, Loca
     }
 
     private areOpposingTeamCardsInHand(cards: Material<number, MaterialType, LocationType>, opposingTeam: TeamColor): boolean {
-        const opposingTeamCardType = opposingTeam === TeamColor.Yako ? KitsuCardType.Zenko : KitsuCardType.Yako;
+        const opposingTeamCardType = opposingTeam === TeamColor.Yako ? KitsuCardType.Yako : KitsuCardType.Zenko;
         return cards.getItems(card => getKitsuCardType(card.id) === opposingTeamCardType).length !== 0;
     }
 

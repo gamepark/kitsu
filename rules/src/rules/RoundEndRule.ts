@@ -24,7 +24,15 @@ export class RoundEndRule extends PlayerTurnRule<number, MaterialType, LocationT
             const victoryCard = this.material(MaterialType.VictoryCard).location(LocationType.VictoryCardsSpot).id(victoriousPawn.id === KitsunePawn.Yako ? VictoryCard.Yako : VictoryCard.Zenko);
 
             if (victoryCard.length === 1 && victoryCard.getItem()!.id === victoriousPawn.id) {
-                return [this.endGame()];
+                return [
+                    this.material(MaterialType.VictoryCard).createItem({
+                        id: victoriousPawn.id,
+                        location: {
+                            type: LocationType.VictoryCardsSpot
+                        },
+                    }),
+                    this.endGame()
+                ];
             }
 
             return [

@@ -1,5 +1,7 @@
 /** @jsxImportSource @emotion/react */
+import { useTranslation } from 'react-i18next';
 
 export const EndOfTrickPickCardsHeader = () => {
-    return <>Dealing two cards to each player</>;
+    const { t } = useTranslation();
+    return <>{t('header.endOfTrickPickCards')}</>;
 };

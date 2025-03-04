@@ -45,7 +45,8 @@ export class SelectKatanaTargetRule extends PlayerTurnRule<number, MaterialType,
             && move.location.type === LocationType.PlayedKitsuCardSpot
             && move.location.rotation === KitsuCardRotation.FaceDown) {
             const numberOfCardsPlayed = this.material(MaterialType.KitsuCard).location(LocationType.PlayedKitsuCardSpot).length;
-            return numberOfCardsPlayed === 4
+            const numberOfCardsToPlay = this.game.players.length === 6 ? 6 : 4
+            return numberOfCardsPlayed === numberOfCardsToPlay
                 ? [this.startPlayerTurn(RuleId.EndOfTrickKistunePawnMove, this.nextPlayer)]
                 : [this.startPlayerTurn(RuleId.PlayKitsuCard, this.nextPlayer)];
         }
