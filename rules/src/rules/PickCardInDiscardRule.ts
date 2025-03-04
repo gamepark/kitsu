@@ -16,14 +16,15 @@ import { RuleId } from './RuleId';
 export class PickCardInDiscardRule extends PlayerTurnRule<number, MaterialType, LocationType> {
 
     public onRuleStart(_move: RuleMove<number, RuleId>, _previousRule?: RuleStep, _context?: PlayMoveContext): MaterialMove<number, number, number>[] {
+        const numberOfCardsToPick = this.game.players.length === 6 ? 6 : 4;
         const ruleMove = this.isParentCardKatana()
             ? this.startRule(RuleId.SelectKatanaTarget)
             : this.startPlayerTurn(this.getNextPlayerRuleId(), this.nextPlayer);
         const lastDiscardedCards = this.material(MaterialType.KitsuCard)
             .location(LocationType.KitsuCardDiscardSpotOnWisdomBoard)
             .sort(item => (item.location.x ?? 0))
-            .limit(4);
-        return lastDiscardedCards.length === 4
+            .limit(numberOfCardsToPick);
+        return lastDiscardedCards.length === numberOfCardsToPick
             ? [lastDiscardedCards.moveItemsAtOnce({type: LocationType.DiscardedCardsToPickSpot, player: this.player})]
             : [ruleMove];
     }
@@ -51,7 +52,9 @@ export class PickCardInDiscardRule extends PlayerTurnRule<number, MaterialType, 
     }
 
     private getNextPlayerRuleId(): RuleId {
-        return this.material(MaterialType.KitsuCard).location(LocationType.PlayedKitsuCardSpot).length === 4
+        const numberOfPlayers = this.game.players.length;
+        const numberOfCardsToPlay = numberOfPlayers === 6 ? 6 : 4;
+        return this.material(MaterialType.KitsuCard).location(LocationType.PlayedKitsuCardSpot).length === numberOfCardsToPlay
             ? RuleId.EndOfTrickKistunePawnMove
             : RuleId.PlayKitsuCard;
     }

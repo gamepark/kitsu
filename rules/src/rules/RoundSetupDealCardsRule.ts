@@ -9,9 +9,10 @@ export class RoundSetupDealCardsRule extends PlayerTurnRule<number, MaterialType
         const leaderPlayerIndex = this.game.players.indexOf(this.material(MaterialType.LeaderToken).getItem()!.location.player!);
         const numberOfPlayers = this.game.players.length;
         const dealPlayerOrder = this.game.players.slice(leaderPlayerIndex + 1 % numberOfPlayers).concat(this.game.players.slice(0, leaderPlayerIndex + 1 % numberOfPlayers));
+        const numberOfCardsToDeal = this.game.players.length === 6 ? 5 : 6;
         return [
             deck.shuffle(),
-            ...Array(6).fill(1).flatMap(() =>
+            ...Array(numberOfCardsToDeal).fill(1).flatMap(() =>
                 dealPlayerOrder.map(player => deck.dealOne({
                     type: LocationType.PlayerHand,
                     player: player,

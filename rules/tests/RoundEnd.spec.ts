@@ -51,9 +51,9 @@ describe('RoundEnd rule tests', () => {
         const ruleMoves = consequences.filter(isEndGame<number, MaterialType, LocationType>)
 
         // Then
-        expect(consequences).toHaveLength(1);
+        expect(consequences).toHaveLength(2);
         expect(ruleMoves).toHaveLength(1);
-        expect(ruleMoves[0]).toBe(consequences[0]);
+        expect(ruleMoves[0]).toBe(consequences[1]);
     });
 
     describe('2 players tests', () => {
