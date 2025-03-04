@@ -21,6 +21,7 @@ import { EndOfTrickKitsunePawnMoveRule } from './rules/EndOfTrickKitsunePawnMove
 import { EndOfTrickMoveLeaderTokenRule } from './rules/EndOfTrickMoveLeaderTokenRule';
 import { EndOfTrickPickAvailablePowerToken } from './rules/EndOfTrickPickAvailablePowerToken';
 import { EndOfTrickPickCardsRule } from './rules/EndOfTrickPickCardsRule';
+import { PickCardInDiscardRule } from './rules/PickCardInDiscardRule';
 import { PlayKitsuCardRule } from './rules/PlayKitsuCardRule';
 import { RoundEndRule } from './rules/RoundEndRule';
 import { RoundSetupDealCardsRule } from './rules/RoundSetupDealCardsRule';
@@ -40,6 +41,7 @@ export class KitsuRules extends SecretMaterialRules<number, MaterialType, Locati
         [RuleId.RoundSetupDealCards]: RoundSetupDealCardsRule,
         [RuleId.PlayKitsuCard]: PlayKitsuCardRule,
         [RuleId.SelectKatanaTarget]: SelectKatanaTargetRule,
+        [RuleId.PickDiscardCards]: PickCardInDiscardRule,
         [RuleId.EndOfTrickKistunePawnMove]: EndOfTrickKitsunePawnMoveRule,
         [RuleId.EndOfTrickPickAvailablePowerToken]: EndOfTrickPickAvailablePowerToken,
         [RuleId.EndOfTrickDiscardCards]: EndOfTrickDiscardCardsRule,
@@ -57,6 +59,7 @@ export class KitsuRules extends SecretMaterialRules<number, MaterialType, Locati
             [LocationType.PlayerHand]: new PositiveSequenceStrategy(),
             [LocationType.KitsuCardDiscardSpotOnWisdomBoard]: new PositiveSequenceStrategy(),
             [LocationType.PlayedKitsuCardSpot]: new PositiveSequenceStrategy(),
+            [LocationType.DiscardedCardsToPickSpot]: new PositiveSequenceStrategy(),
         },
         [MaterialType.PowerToken]: {
             [LocationType.DiscardedPowerTokenAreaOnWisdomBoard]: new PositiveSequenceStrategy(),
@@ -72,6 +75,7 @@ export class KitsuRules extends SecretMaterialRules<number, MaterialType, Locati
             [LocationType.KitsuCardDiscardSpotOnWisdomBoard]: hideItemId,
             [LocationType.PlayerHand]: hideItemIdToOthers,
             [LocationType.PlayedKitsuCardSpot]: hideToTOthersWhenRotatedFaceDown,
+            [LocationType.DiscardedCardsToPickSpot]: hideItemIdToOthers
         }
     };
 
@@ -93,7 +97,7 @@ export class KitsuRules extends SecretMaterialRules<number, MaterialType, Locati
     }
 
     private isUnpredictableMoveBecauseOfProtectionToken(move: MaterialMove<number, MaterialType, LocationType>): boolean {
-        return this.material(MaterialType.PowerToken).id<PowerToken>(PowerToken.Protection).location(LocationType.PowerTokenSportOnKitsuCard).length === 1
+        return this.material(MaterialType.PowerToken).id<PowerToken>(PowerToken.Protection).location(LocationType.PowerTokenSpotOnKitsuCard).length === 1
             && (isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsunePawn)(move)
                 || isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard)(move))
     }

@@ -34,11 +34,11 @@ export class EndOfTrickKitsunePawnMoveRule extends PlayerTurnRule<number, Materi
             .length +
             this.material(MaterialType.PowerToken)
                 .id<PowerToken>(PowerToken.ColourExchange)
-                .location(LocationType.PowerTokenSportOnKitsuCard)
+                .location(LocationType.PowerTokenSpotOnKitsuCard)
                 .length;
         const invertColors = numberOfColourExchangeEffects % 2 === 1;
         const protectionToken = this.material(MaterialType.PowerToken)
-            .location(LocationType.PowerTokenSportOnKitsuCard)
+            .location(LocationType.PowerTokenSpotOnKitsuCard)
             .id<PowerToken>(PowerToken.Protection)
             .getItem<PowerToken>();
         const protectedCard = protectionToken !== undefined ? this.material(MaterialType.KitsuCard).index(protectionToken.location.parent).getItem<KitsuCard>() : undefined;
@@ -48,7 +48,7 @@ export class EndOfTrickKitsunePawnMoveRule extends PlayerTurnRule<number, Materi
         } = this.getWinningTeamAndScoreDifference(playedCards, invertColors, protectedCard);
 
         const discardCardsRuleMove = this.startRule(RuleId.EndOfTrickDiscardCards);
-        if (winningTeam === undefined || this.material(MaterialType.PowerToken).id<PowerToken>(PowerToken.NoAdvance).location(LocationType.PowerTokenSportOnKitsuCard).length === 1) {
+        if (winningTeam === undefined || this.material(MaterialType.PowerToken).id<PowerToken>(PowerToken.NoAdvance).location(LocationType.PowerTokenSpotOnKitsuCard).length === 1) {
             return protectedCard !== undefined
                 ? [
                     this.material(MaterialType.KitsuCard).id<KitsuCard>(protectedCard.id).rotateItem(undefined),
@@ -83,7 +83,7 @@ export class EndOfTrickKitsunePawnMoveRule extends PlayerTurnRule<number, Materi
         scoreDifference: number,
         winningTeam: TeamColor | undefined
     } {
-        const plus3Token = this.material(MaterialType.PowerToken).id<PowerToken>(PowerToken.Plus3).location(LocationType.PowerTokenSportOnKitsuCard).getItem<PowerToken>();
+        const plus3Token = this.material(MaterialType.PowerToken).id<PowerToken>(PowerToken.Plus3).location(LocationType.PowerTokenSpotOnKitsuCard).getItem<PowerToken>();
         const isPlus3Yako = plus3Token !== undefined && (invertColors ? plus3Token.location.rotation === PowerTokenPlus3Side.Zenko : plus3Token.location.rotation !== PowerTokenPlus3Side.Zenko);
         const isPlus3Zenko = plus3Token !== undefined && (invertColors ? plus3Token.location.rotation !== PowerTokenPlus3Side.Zenko : plus3Token.location.rotation === PowerTokenPlus3Side.Zenko);
         const yakoScore = this.getScore(playedCards, invertColors ? TeamColor.Zenko : TeamColor.Yako, protectedCard) + (isPlus3Yako ? 3 : 0);

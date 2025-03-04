@@ -2,6 +2,7 @@ import { LocationType } from '@gamepark/kitsu/material/LocationType';
 import { MaterialType } from '@gamepark/kitsu/material/MaterialType';
 import { Locator } from '@gamepark/react-game';
 import { clanCardSpotLocator } from './ClanCardSpotLocator';
+import { discardedCardsToPickSpotLocator } from './DiscardedCardsToPickSpotLocator';
 import { discardedPowerTokenAreaOnWisdomBoardLocator } from './DiscardedPowerTokenAreaOnWisdomBoardLocator';
 import { kitsuCardDeckSpotOnWisdomBoardLocator } from './KitsuCardDeckSpotOnWisdomBoardLocator';
 import { kitsuCardDiscardSpotOnWisdomBoardLocator } from './KitsuCardDiscardSpotOnWisdomBoardLocator';
@@ -30,5 +31,6 @@ export const Locators: Partial<Record<LocationType, Locator<number, MaterialType
     [LocationType.DiscardedPowerTokenAreaOnWisdomBoard]: discardedPowerTokenAreaOnWisdomBoardLocator,
     [LocationType.PlayedKitsuCardSpot]: playedKitsuCardSpotLocator,
     [LocationType.VictoryCardsSpot]: victoryCardSpotLocator,
-    [LocationType.PowerTokenSportOnKitsuCard]: powerTokenSpotOnKitsuCardLocator,
+    [LocationType.PowerTokenSpotOnKitsuCard]: powerTokenSpotOnKitsuCardLocator,
+    [LocationType.DiscardedCardsToPickSpot]: discardedCardsToPickSpotLocator,
 };

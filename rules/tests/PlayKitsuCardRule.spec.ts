@@ -394,7 +394,7 @@ describe('PlayKitsuCardRule tests', () => {
                 expect(legalMoves).toHaveLength(expectedNumberOfMoves);
                 expect(cardMoves).toHaveLength(Math.floor(expectedNumberOfMoves / 2));
                 expect(tokenMoves).toHaveLength(Math.floor(expectedNumberOfMoves / 2));
-                expect(tokenMoves.every(move => move.location.type === LocationType.PowerTokenSportOnKitsuCard)).toBe(true);
+                expect(tokenMoves.every(move => move.location.type === LocationType.PowerTokenSpotOnKitsuCard)).toBe(true);
                 expect(cardIdsInMoves).toHaveLength(Math.floor(expectedNumberOfMoves / 2));
                 expect(cardIdsInMoves).toEqual(expect.arrayContaining(expectedCardIds));
                 expect(tokenTargetCardIds).toHaveLength(Math.floor(expectedNumberOfMoves / 2));
@@ -482,12 +482,6 @@ describe('PlayKitsuCardRule tests', () => {
                     location: {type: LocationType.PlayedKitsuCardSpot, player: 1}
                 } as MoveItem<number, MaterialType, LocationType>,
                 selectedPowerToken: PowerToken.PickDiscarded,
-                expectedConsequence: {
-                    kind: MoveKind.RulesMove,
-                    type: RuleMoveType.StartPlayerTurn,
-                    id: RuleId.PlayKitsuCard,
-                    player: 2
-                } as StartPlayerTurn<number, RuleId>,
             }, {
                 alreadyPlayedCards: [{player: 1 as (1 | 2), playedCardIds: [KitsuCard.Yako1_1] as KitsuCard[]}, {
                     player: 2 as (1 | 2),
@@ -501,12 +495,6 @@ describe('PlayKitsuCardRule tests', () => {
                     location: {type: LocationType.PlayedKitsuCardSpot, player: 2}
                 } as MoveItem<number, MaterialType, LocationType>,
                 selectedPowerToken: PowerToken.ColourExchange,
-                expectedConsequence: {
-                    kind: MoveKind.RulesMove,
-                    type: RuleMoveType.StartPlayerTurn,
-                    id: RuleId.PlayKitsuCard,
-                    player: 1
-                } as StartPlayerTurn<number, RuleId>,
             }, {
                 alreadyPlayedCards: [{
                     player: 1 as (1 | 2),
@@ -520,19 +508,12 @@ describe('PlayKitsuCardRule tests', () => {
                     location: {type: LocationType.PlayedKitsuCardSpot, player: 1}
                 } as MoveItem<number, MaterialType, LocationType>,
                 selectedPowerToken: PowerToken.NoAdvance,
-                expectedConsequence: {
-                    kind: MoveKind.RulesMove,
-                    type: RuleMoveType.StartPlayerTurn,
-                    id: RuleId.PlayKitsuCard,
-                    player: 2
-                } as StartPlayerTurn<number, RuleId>,
             },
-            ])('Given a selected power token and 1, 2 or 3 cards already played, afterItemMove() should return consequence ' +
-                'containing a move to unselect the power token, the power token move to the card a rule move for the next player', ({
+            ])('Given a selected power token and 1, 2 or 3 cards already played, beforeItemMove() should return consequence ' +
+                'containing a move to unselect the power token, the power token move to the card', ({
                                                                                                                                         alreadyPlayedCards,
                                                                                                                                         selectedPowerToken,
                                                                                                                                         move,
-                                                                                                                                        expectedConsequence
                                                                                                                                     }) => {
                 // Given
                 const gameBuilder = create2PlayersGameBuilderWithPlayedCards(alreadyPlayedCards);
@@ -547,20 +528,19 @@ describe('PlayKitsuCardRule tests', () => {
                 const rule = new PlayKitsuCardRule(game);
 
                 // When
-                const consequences = rule.afterItemMove(move);
+                const consequences = rule.beforeItemMove(move);
                 const selectPowerTokenMoves = consequences.filter(isSelectItemType<number, MaterialType, LocationType>(MaterialType.PowerToken));
                 const movePowerTokenMoves = consequences.filter(isMoveItemType<number, MaterialType, LocationType>(MaterialType.PowerToken));
 
                 // Then
-                expect(consequences).toHaveLength(3);
+                expect(consequences).toHaveLength(2);
                 expect(selectPowerTokenMoves).toHaveLength(1);
                 expect(movePowerTokenMoves).toHaveLength(1);
                 expect(selectPowerTokenMoves[0]).toBe(consequences[0]);
                 expect(selectPowerTokenMoves[0].selected).toBe(false);
                 expect(movePowerTokenMoves[0]).toBe(consequences[1]);
-                expect(movePowerTokenMoves[0].location.type).toBe(LocationType.PowerTokenSportOnKitsuCard);
+                expect(movePowerTokenMoves[0].location.type).toBe(LocationType.PowerTokenSpotOnKitsuCard);
                 expect(movePowerTokenMoves[0].location.parent).toBe(move.itemIndex);
-                expect(consequences[2]).toEqual(expectedConsequence);
             });
 
             test('Given 4 cards already played and a seelcted power token, afterItemMove() should return consequences' +
@@ -594,15 +574,10 @@ describe('PlayKitsuCardRule tests', () => {
                 const moveTokenMoves = consequences.filter(isMoveItemType<number, MaterialType, LocationType>(MaterialType.PowerToken));
 
                 // Then
-                expect(consequences).toHaveLength(3);
-                expect(selectMoves).toHaveLength(1);
-                expect(moveTokenMoves).toHaveLength(1);
-                expect(selectMoves[0]).toBe(consequences[0]);
-                expect(selectMoves[0].selected).toBe(false);
-                expect(moveTokenMoves[0]).toBe(consequences[1]);
-                expect(moveTokenMoves[0].location.type).toBe(LocationType.PowerTokenSportOnKitsuCard);
-                expect(moveTokenMoves[0].location.parent).toBe(0);
-                expect(consequences[2]).toEqual({
+                expect(consequences).toHaveLength(1);
+                expect(selectMoves).toHaveLength(0);
+                expect(moveTokenMoves).toHaveLength(0);
+                expect(consequences[0]).toEqual({
                     kind: MoveKind.RulesMove,
                     type: RuleMoveType.StartPlayerTurn,
                     id: RuleId.EndOfTrickKistunePawnMove,

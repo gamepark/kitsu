@@ -38,7 +38,7 @@ export class EndOfTrickDiscardCardsRule extends PlayerTurnRule<number, MaterialT
     }
 
     private getPowerTokenMove(): MaterialMove<number, MaterialType, LocationType>[] {
-        const playedPowerTokens = this.material(MaterialType.PowerToken).location(LocationType.PowerTokenSportOnKitsuCard);
+        const playedPowerTokens = this.material(MaterialType.PowerToken).location(LocationType.PowerTokenSpotOnKitsuCard);
         if (playedPowerTokens.length > 0) {
             return [
                 playedPowerTokens.moveItemsAtOnce({

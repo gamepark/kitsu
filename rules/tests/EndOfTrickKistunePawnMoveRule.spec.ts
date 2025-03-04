@@ -456,7 +456,7 @@ describe('End of trick - kitsune pawn move rule', () => {
             const gameBuilder = create2PlayersGameBuilderWithPlayedCards(givenPlayedCards);
             if (givenColourExchangeTokenParent !== undefined) {
                 gameBuilder.material(MaterialType.PowerToken).id<PowerToken>(PowerToken.ColourExchange).moveItem({
-                    type: LocationType.PowerTokenSportOnKitsuCard,
+                    type: LocationType.PowerTokenSpotOnKitsuCard,
                     parent: givenColourExchangeTokenParent
                 });
             }
@@ -492,7 +492,7 @@ describe('End of trick - kitsune pawn move rule', () => {
             playedCardIds: [KitsuCard.Yako1_1, KitsuCard.Yako2_1]
         }]);
         gameBuilder.material(MaterialType.PowerToken).id<PowerToken>(PowerToken.NoAdvance).moveItem({
-            type: LocationType.PowerTokenSportOnKitsuCard,
+            type: LocationType.PowerTokenSpotOnKitsuCard,
             parent: gameBuilder.material(MaterialType.KitsuCard).id<KitsuCard>(KitsuCard.Yako1_1).getIndex()
         });
         gameBuilder.setRule(RuleId.EndOfTrickKistunePawnMove, 1);

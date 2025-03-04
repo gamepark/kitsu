@@ -20,8 +20,8 @@ import Plus3ZenkoToken from '../images/Tokens/PowerPlus3ZenkoToken.png';
 import ProtectionToken from '../images/Tokens/PowerProtectionToken.png';
 
 class PowerTokenDescription extends TokenDescription<number, MaterialType, LocationType, Partial<Record<'front' | 'back', PowerToken>>> {
-    height = 2.94;
-    width = 3.00;
+    height = 3.136;
+    width = 3.20;
     images = {
         [PowerToken.ColourExchange]: ColourExchangeToken,
         [PowerToken.NoAdvance]: NoAdvanceToken,
