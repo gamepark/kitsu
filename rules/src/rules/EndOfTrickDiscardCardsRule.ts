@@ -14,13 +14,21 @@ import { RuleId } from './RuleId';
 export class EndOfTrickDiscardCardsRule extends PlayerTurnRule<number, MaterialType, LocationType> {
 
     onRuleStart(_move: RuleMove<number, RuleId>, _previousRule?: RuleStep, _context?: PlayMoveContext): MaterialMove<number, MaterialType, LocationType>[] {
-        return [
+        const moves = [
             this.material(MaterialType.KitsuCard).location(LocationType.PlayedKitsuCardSpot).moveItemsAtOnce({
                 type: LocationType.KitsuCardDiscardSpotOnWisdomBoard,
             }),
             ...this.getPowerTokenMove(),
-            this.startRule(RuleId.EndOfTrickDecideEndOfRound)
         ];
+        const cardsInPlayerHands = this.material(MaterialType.KitsuCard).location(LocationType.PlayerHand);
+        if (cardsInPlayerHands.length === 1) {
+            moves.push(...cardsInPlayerHands.moveItems({
+                type: LocationType.KitsuCardDiscardSpotOnWisdomBoard
+            }));
+        }
+        const ruleMove = this.startRule(RuleId.EndOfTrickDecideEndOfRound);
+        moves.push(ruleMove);
+        return moves;
     }
 
     afterItemMove(move: ItemMove<number, MaterialType, LocationType>, _context?: PlayMoveContext): MaterialMove<number, MaterialType, LocationType>[] {

@@ -12,8 +12,7 @@ class PowerTokenSpotOnClanCardLocator extends Locator<number, MaterialType, Loca
         return clanCardDescription.getStaticItems(context).find(item => item.location.player === location.player);
     }
 
-    coordinates = {x: -0.55, y: 1.69};
-    rotateZ = -90;
+    coordinates = {x: -1.69, y: -0.55};
     height = 2.94;
     width = 3.00;
 }
