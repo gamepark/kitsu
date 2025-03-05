@@ -76,8 +76,8 @@ class PowerTokenDescription extends TokenDescription<number, MaterialType, Locat
                 <ItemMenuButton key={`powerToken-button-${index}`}
                                 move={move} radius={3.5} angle={0}
                                 label={item.selected === true
-                                    ? <Trans defaults="button.powerToken.unselect"/>
-                                    : <Trans defaults="button.powerToken.select"/>}>
+                                    ? <Trans defaults='button.powerToken.unselect'/>
+                                        : <Trans defaults='button.powerToken.select'/>}>
                     <FontAwesomeIcon icon={faHandPointer} size="sm"/>
                 </ItemMenuButton>))
             }

@@ -1,3 +1,4 @@
+/** @jsxImportSource @emotion/react */
 import { LocationType } from '@gamepark/kitsu/material/LocationType';
 import { MaterialType } from '@gamepark/kitsu/material/MaterialType';
 import { ItemMenuButton, usePlayerId, usePlayerName } from '@gamepark/react-game';
