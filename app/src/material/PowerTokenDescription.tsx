@@ -11,6 +11,7 @@ import { ItemContext, ItemMenuButton, MaterialContext, TokenDescription } from '
 import { isMoveItemType, isSelectItemType, MaterialItem, MaterialMove } from '@gamepark/rules-api';
 import React from 'react';
 import { Trans } from 'react-i18next';
+import { PowerTokenHelp } from '../components/Help/PowerTokenHelp';
 import { GivePowerTokenItemMenuButton } from '../components/ItemMenuButton/GivePowerTokenItemMenuButton';
 import ColourExchangeToken from '../images/Tokens/PowerColourExchangeToken.png';
 import NoAdvanceToken from '../images/Tokens/PowerNoAdvanceToken.png';
@@ -36,6 +37,7 @@ class PowerTokenDescription extends TokenDescription<number, MaterialType, Locat
         [PowerToken.Plus3]: Plus3ZenkoToken,
         [PowerToken.Protection]: ProtectionToken,
     };
+    help = PowerTokenHelp
 
     public getItemMenu(item: MaterialItem<number, LocationType>, context: ItemContext<number, MaterialType, LocationType>, legalMoves: MaterialMove<number, MaterialType, LocationType>[]): React.ReactNode {
         if (context.player !== undefined && context.player === context.rules.game.rule?.player) {
