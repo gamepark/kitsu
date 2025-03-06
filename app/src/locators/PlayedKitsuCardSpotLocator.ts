@@ -7,7 +7,7 @@ import {
     DropAreaDescription,
     FlexLocator,
     getRelativePlayerIndex,
-    ItemContext,
+    ItemContext, LocationDescription,
     MaterialContext
 } from '@gamepark/react-game';
 import { Coordinates, Location, MaterialMove } from '@gamepark/rules-api';
@@ -31,14 +31,17 @@ class PlayedKitsuCardSpotLocationDescription extends DropAreaDescription<number,
 class PlayedKitsuCardSpotLocator extends FlexLocator<number, MaterialType, LocationType> {
     gap = {x: 7};
     maxLines = 1;
-    locationDescription = new PlayedKitsuCardSpotLocationDescription();
 
     public getLineSize(_location: Location<number, LocationType>, context: MaterialContext<number, MaterialType, LocationType>): number {
-        return context.rules.game.players.length === 2 ? 2 : 1
+        return context.rules.game.players.length === 2 ? 2 : 1;
     }
 
     public getLocations(context: MaterialContext<number, MaterialType, LocationType>): Partial<Location<number, LocationType, number, number>>[] {
-        return context.rules.players.map(player => ({type: LocationType.PlayedKitsuCardSpot, player: player}));
+        return context.rules.players.flatMap(player => (context.rules.players.length > 2 ? [0] : [0, 1]).map(x => ({
+            type: LocationType.PlayedKitsuCardSpot,
+            player: player,
+            x
+        })));
     }
 
     public getCoordinates(location: Location<number, LocationType, number, number>, context: MaterialContext<number, MaterialType, LocationType>): Partial<Coordinates> {
@@ -46,7 +49,7 @@ class PlayedKitsuCardSpotLocator extends FlexLocator<number, MaterialType, Locat
         const numberOfSectors = numberOfPlayers / 2;
         const playerIndex = (getRelativePlayerIndex(context, location.player) + (context.rules.game.rule?.id === RuleId.SendCardToTeamMember ? 2 : 0)) % numberOfPlayers;
         return {
-            x: LOCATOR_RADIUS * Math.sin(-Math.PI * playerIndex / numberOfSectors),
+            x: LOCATOR_RADIUS * Math.sin(-Math.PI * playerIndex / numberOfSectors) - (numberOfPlayers === 2 ? 3.5 : 0),
             y: LOCATOR_RADIUS * Math.cos(-Math.PI * playerIndex / numberOfSectors),
         };
     }
@@ -56,6 +59,13 @@ class PlayedKitsuCardSpotLocator extends FlexLocator<number, MaterialType, Locat
         const numberOfSectors = numberOfPlayers / 2;
         const playerIndex = (getRelativePlayerIndex(context, location.player) + (context.rules.game.rule?.id === RuleId.SendCardToTeamMember ? 2 : 0)) % numberOfPlayers;
         return 180 * playerIndex / numberOfSectors;
+    }
+
+    public getLocationDescription(location: Location<number, LocationType>, context: MaterialContext<number, MaterialType, LocationType> | ItemContext<number, MaterialType, LocationType>): LocationDescription<number, MaterialType, LocationType> | undefined {
+        if (location.x === undefined) {
+            return super.getLocationDescription(location, context);
+        }
+        return new PlayedKitsuCardSpotLocationDescription();
     }
 }
 
