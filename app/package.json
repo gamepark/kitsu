@@ -1,6 +1,6 @@
 {
   "name": "@gamepark/kitsu-app",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": true,
   "description": "The user interface of Kitsu adaptation for Game Park",
   "author": "Romain Fromi <romain@game-park.com> (https://game-park.com/)",
