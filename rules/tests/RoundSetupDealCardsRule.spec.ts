@@ -2,6 +2,7 @@ import {
     isMoveItemType,
     isShuffleItemType,
     isStartRule,
+    ItemMoveType,
     MoveItem,
     MoveKind,
     RuleMoveType,
@@ -34,18 +35,18 @@ describe('Round setup - deal card rule tests', () => {
             expect((shuffleMove as Shuffle).indexes).toHaveLength(24);
         });
 
-        test('onRuleStart() should return an array of moves containing 12 deal KitsuCard moves, 6 for each player, each player being alternated', () => {
+        test('afterItemMove() should return an array of moves containing 12 deal KitsuCard moves, 6 for each player, each player being alternated', () => {
             // Given
             const gameStateBuilder = create2PlayersGameBuilder();
             gameStateBuilder.setRule(RuleId.RoundSetupDealCards, 1);
             const roundSetupRule = new RoundSetupDealCardsRule(gameStateBuilder.build());
 
             // When
-            const moves = roundSetupRule.onRuleStart({
-                type: RuleMoveType.StartPlayerTurn,
-                player: 1,
-                id: RuleId.RoundSetupMoveKitsunePawns,
-                kind: MoveKind.RulesMove
+            const moves = roundSetupRule.afterItemMove({
+                type: ItemMoveType.Shuffle,
+                itemType: MaterialType.KitsuCard,
+                kind: MoveKind.ItemMove,
+                indexes: Array(24).fill(1).map((_, i) => i)
             });
             const dealCardMoves = moves.filter(move => isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard)(move)
                     && (move as MoveItem).location.type === LocationType.PlayerHand)
