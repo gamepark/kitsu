@@ -1,5 +1,6 @@
 import {
     isMoveItemType,
+    isSelectItemType,
     ItemMove,
     Location,
     Material,
@@ -115,7 +116,8 @@ export class PlayKitsuCardRule extends PlayerTurnRule<number, MaterialType, Loca
         const consideredCardIndexes = allCards.id((cardId: KitsuCard) => getKitsuCardType(cardId) === previousPlayerTeamCardType).getIndexes();
         return allMoves.filter(move =>
             (isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard)(move) && consideredCardIndexes.includes(move.itemIndex))
-            || (isMoveItemType<number, MaterialType, LocationType>(MaterialType.PowerToken)(move) && consideredCardIndexes.includes(move.location.parent!)));
+            || (isMoveItemType<number, MaterialType, LocationType>(MaterialType.PowerToken)(move) && consideredCardIndexes.includes(move.location.parent!))
+            || (isSelectItemType<number, MaterialType, LocationType>(MaterialType.PowerToken)(move)));
     }
 
     private getPowerTokenMoves(allCards: Material<number, MaterialType, LocationType>, protectionPowerToken?: MaterialItem<number, LocationType, PowerToken>): MaterialMove<number, MaterialType, LocationType>[] {
@@ -128,7 +130,11 @@ export class PlayKitsuCardRule extends PlayerTurnRule<number, MaterialType, Loca
                 return [powerToken.unselectItem()];
             } else {
                 const isProtectionPowerToken = protectionPowerToken !== undefined;
-                const isPlus3PowerToken = this.material(MaterialType.PowerToken).id<PowerToken>(PowerToken.Plus3).location(LocationType.PowerTokenSpotOnClanCard).length === 1;
+                const isPlus3PowerToken = this.material(MaterialType.PowerToken)
+                    .id<PowerToken>(PowerToken.Plus3)
+                    .location(LocationType.PowerTokenSpotOnClanCard)
+                    .player(this.player)
+                    .length === 1;
                 const cardIndexes = allCards.filter(kitsuCard => !isProtectionPowerToken || canBePlayedWithProtectionToken(kitsuCard.id))
                     .getIndexes();
                 return [
