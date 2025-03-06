@@ -1,6 +1,4 @@
 /** @jsxImportSource @emotion/react */
-
-import { css, Interpolation, Theme } from '@emotion/react';
 import { faArrowRotateRight, faHandPointer } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { KitsuCard } from '@gamepark/kitsu/material/KitsuCard';
@@ -10,7 +8,7 @@ import { MaterialType } from '@gamepark/kitsu/material/MaterialType';
 import { PowerToken } from '@gamepark/kitsu/material/PowerToken';
 import { PowerTokenPlus3Side } from '@gamepark/kitsu/material/PowerTokenPlus3Side';
 import { RuleId } from '@gamepark/kitsu/rules/RuleId';
-import { CardDescription, ItemContext, ItemMenuButton } from '@gamepark/react-game';
+import { CardDescription, ItemContext, ItemMenuButton, MaterialContext } from '@gamepark/react-game';
 import { isMoveItemType, MaterialItem, MaterialMove, MoveItem } from '@gamepark/rules-api';
 import React, { Fragment } from 'react';
 import { Trans } from 'react-i18next';
@@ -84,16 +82,6 @@ class KitsuCardDescription extends CardDescription<number, MaterialType, Locatio
         return item.location.rotation !== KitsuCardRotation.FaceDown;
     }
 
-    public getItemExtraCss(item: MaterialItem<number, LocationType>, context: ItemContext<number, MaterialType, LocationType>): Interpolation<Theme> {
-        if (context.player !== item.location.player || (context.rules.game.rule?.id && ![RuleId.PlayKitsuCard, RuleId.SelectKatanaTarget].includes(context.rules.game.rule?.id))) {
-            return super.getItemExtraCss(item, context);
-        }
-        return item.location.rotation === KitsuCardRotation.FaceDown
-            ? css`
-                    opacity: 0.5;`
-            : css``;
-    }
-
     public getItemMenu(item: MaterialItem<number, LocationType>, context: ItemContext<number, MaterialType, LocationType>, legalMoves: MaterialMove<number, MaterialType, LocationType>[]): React.ReactNode {
         if (context.player === undefined) {
             return;
@@ -120,6 +108,14 @@ class KitsuCardDescription extends CardDescription<number, MaterialType, Locatio
             return this.getPlayerHandSendCardItemMenu(item, context, legalMoves);
         }
         return;
+    }
+
+    public isFlippedOnTable(item: Partial<MaterialItem<number, LocationType>>, context: MaterialContext<number, MaterialType, LocationType>): boolean {
+        if (context.player !== undefined && context.rules.game.rule?.id === RuleId.PlayKitsuCard
+            && item.location?.rotation === KitsuCardRotation.FaceDown) {
+            return true;
+        }
+        return super.isFlippedOnTable(item, context);
     }
 
     private getPlayerHandItemMenu(item: MaterialItem<number, LocationType>, context: ItemContext<number, MaterialType, LocationType>, legalMoves: MaterialMove<number, MaterialType, LocationType>[]): React.ReactNode {

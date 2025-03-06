@@ -1,6 +1,5 @@
 import { css } from '@emotion/react';
 import { KitsuCard } from '@gamepark/kitsu/material/KitsuCard';
-import { KitsuCardRotation } from '@gamepark/kitsu/material/KitsuCardRotation';
 import { LocationType } from '@gamepark/kitsu/material/LocationType';
 import { MaterialType } from '@gamepark/kitsu/material/MaterialType';
 import { RuleId } from '@gamepark/kitsu/rules/RuleId';
@@ -11,7 +10,7 @@ import {
     ItemContext,
     MaterialContext
 } from '@gamepark/react-game';
-import { Coordinates, Location, MaterialItem, MaterialMove } from '@gamepark/rules-api';
+import { Coordinates, Location, MaterialMove } from '@gamepark/rules-api';
 import GenericCardFront from '../images/Cards/GenericCardFront.jpg';
 import { RADIUS } from './Radius';
 
@@ -57,13 +56,6 @@ class PlayedKitsuCardSpotLocator extends FlexLocator<number, MaterialType, Locat
         const numberOfSectors = numberOfPlayers / 2;
         const playerIndex = (getRelativePlayerIndex(context, location.player) + (context.rules.game.rule?.id === RuleId.SendCardToTeamMember ? 2 : 0)) % numberOfPlayers;
         return 180 * playerIndex / numberOfSectors;
-    }
-
-    public getItemRotateZ(item: MaterialItem<number, LocationType>, context: ItemContext<number, MaterialType, LocationType>): number {
-        if (item.location.player !== context.player || (context.rules.game.rule?.id && ![RuleId.PlayKitsuCard, RuleId.SelectKatanaTarget, RuleId.EndOfTrickKistunePawnMove].includes(context.rules.game.rule.id))) {
-            return super.getItemRotateZ(item, context);
-        }
-        return item.location.rotation === KitsuCardRotation.FaceDown ? 180 : 0;
     }
 }
 
