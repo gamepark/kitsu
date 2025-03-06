@@ -64,6 +64,7 @@ export class KitsuRules extends SecretMaterialRules<number, MaterialType, Locati
         },
         [MaterialType.KitsuCard]: {
             [LocationType.PlayerHand]: new PositiveSequenceStrategy(),
+            [LocationType.KitsuCardDeckSpotOnWisdomBoard]: new PositiveSequenceStrategy(),
             [LocationType.KitsuCardDiscardSpotOnWisdomBoard]: new PositiveSequenceStrategy(),
             [LocationType.PlayedKitsuCardSpot]: new PositiveSequenceStrategy(),
             [LocationType.DiscardedCardsToPickSpot]: new PositiveSequenceStrategy(),
