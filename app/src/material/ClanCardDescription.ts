@@ -5,6 +5,7 @@ import { Memorize } from '@gamepark/kitsu/Memorize';
 import { TeamColor } from '@gamepark/kitsu/TeamColor';
 import { CardDescription, MaterialContext } from '@gamepark/react-game';
 import { MaterialItem } from '@gamepark/rules-api';
+import { ClanCardHelp } from '../components/Help/ClanCardHelp';
 import ClanCardYako2Front from '../images/Cards/ClanCardYako2Front.jpg';
 import ClanCardYako4Front from '../images/Cards/ClanCardYako4Front.jpg';
 import ClanCardYako6Front from '../images/Cards/ClanCardYako6Front.jpg';
@@ -23,6 +24,7 @@ class ClanCardDescription extends CardDescription<number, MaterialType, Location
         [ClanCard.Zenko4Players]: ClanCardZenko4Front,
         [ClanCard.Zenko6Players]: ClanCardZenko6Front,
     };
+    help = ClanCardHelp
 
     getStaticItems(context: MaterialContext<number, MaterialType, LocationType>): MaterialItem<number, LocationType, ClanCard>[] {
         const numberOfPlayers = context.rules.players.length;
