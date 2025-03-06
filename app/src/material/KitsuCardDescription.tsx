@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import { faArrowRotateRight, faHandPointer } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRotateRight, faHandPointer, faSquarePlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { KitsuCard } from '@gamepark/kitsu/material/KitsuCard';
 import { KitsuCardRotation } from '@gamepark/kitsu/material/KitsuCardRotation';
@@ -142,7 +142,7 @@ class KitsuCardDescription extends CardDescription<number, MaterialType, Locatio
                         {powerTokenMovesWithThisCard.map((tokenMove, tokenIndex) => {
                             const isPlus3PowerToken = context.rules.material(MaterialType.PowerToken).getItem<PowerToken>(tokenMove.itemIndex).id === PowerToken.Plus3;
                             const translationKey = isPlus3PowerToken
-                                ? (move.location.rotation === PowerTokenPlus3Side.Zenko
+                                ? (tokenMove.location.rotation === PowerTokenPlus3Side.Zenko
                                     ? 'button.card.playWithPlus3TokenZenko'
                                     : 'button.card.playWithPlus3TokenYako')
                                 : 'button.card.playWithToken';
@@ -155,6 +155,7 @@ class KitsuCardDescription extends CardDescription<number, MaterialType, Locatio
                                                         : move
                                                 ]} radius={0.5 - 2 * tokenIndex} angle={0}
                                                 label={<Trans defaults={translationKey}/>}>
+                                    <FontAwesomeIcon icon={faSquarePlus} size="lg"/>
                                 </ItemMenuButton>
                             );
                         })}
