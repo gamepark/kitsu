@@ -9,6 +9,8 @@ import {
 } from '@gamepark/rules-api';
 import { LocationType } from '../material/LocationType';
 import { MaterialType } from '../material/MaterialType';
+import { PowerToken } from '../material/PowerToken';
+import { PowerTokenPlus3Side } from '../material/PowerTokenPlus3Side';
 import { RuleId } from './RuleId';
 
 export class EndOfTrickPickAvailablePowerToken extends PlayerTurnRule<number, MaterialType, LocationType> {
@@ -34,10 +36,16 @@ export class EndOfTrickPickAvailablePowerToken extends PlayerTurnRule<number, Ma
         return this.teamMembers
             .flatMap(player => this.material(MaterialType.PowerToken)
                 .location(LocationType.PowerTokenSpotOnWisdomBoard)
-                .moveItems({
-                    type: LocationType.PowerTokenSpotOnClanCard,
-                    player: player,
-                })
+                .moveItems(item => item.id === PowerToken.Plus3
+                    ? {
+                        type: LocationType.PowerTokenSpotOnClanCard,
+                        player: player,
+                        rotation: PowerTokenPlus3Side.Yako
+                    }
+                    : {
+                        type: LocationType.PowerTokenSpotOnClanCard,
+                        player: player,
+                    })
             );
     }
 
