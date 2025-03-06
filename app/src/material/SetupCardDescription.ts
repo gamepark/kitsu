@@ -3,6 +3,7 @@ import { MaterialType } from '@gamepark/kitsu/material/MaterialType';
 import { SetupCard } from '@gamepark/kitsu/material/SetupCard';
 import { CardDescription, MaterialContext } from '@gamepark/react-game';
 import { MaterialItem } from '@gamepark/rules-api';
+import { SetupCardHelp } from '../components/Help/SetupCardHelp';
 import SetupCard2 from '../images/Cards/SetupCard2.jpg';
 import SetupCard4 from '../images/Cards/SetupCard4.jpg';
 import SetupCard6 from '../images/Cards/SetupCard6.jpg';
@@ -16,6 +17,7 @@ class SetupCardDescription extends CardDescription<number, MaterialType, Locatio
         [SetupCard.For4Players]: SetupCard4,
         [SetupCard.For6Players]: SetupCard6,
     };
+    help = SetupCardHelp
 
     getStaticItems(context: MaterialContext<number, MaterialType, LocationType>): MaterialItem<number, LocationType, SetupCard>[] {
         const numberOfPlayers: number = context.rules.players.length;
