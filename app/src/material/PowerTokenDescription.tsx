@@ -7,11 +7,11 @@ import { MaterialType } from '@gamepark/kitsu/material/MaterialType';
 import { PowerToken } from '@gamepark/kitsu/material/PowerToken';
 import { PowerTokenPlus3Side } from '@gamepark/kitsu/material/PowerTokenPlus3Side';
 import { RuleId } from '@gamepark/kitsu/rules/RuleId';
-import { ItemContext, ItemMenuButton, MaterialContext, TokenDescription } from '@gamepark/react-game';
-import { isMoveItemType, isSelectItemType, MaterialItem, MaterialMove } from '@gamepark/rules-api';
+import { ItemContext, MaterialContext, TokenDescription } from '@gamepark/react-game';
+import { isMoveItemType, MaterialItem, MaterialMove } from '@gamepark/rules-api';
 import React from 'react';
-import { Trans } from 'react-i18next';
 import { PowerTokenHelp } from '../components/Help/PowerTokenHelp';
+import { FlipPlus3TokenItemMenuButton } from '../components/ItemMenuButton/FlipPlus3TokenItemMenuButton';
 import { GivePowerTokenItemMenuButton } from '../components/ItemMenuButton/GivePowerTokenItemMenuButton';
 import ColourExchangeToken from '../images/Tokens/PowerColourExchangeToken.png';
 import NoAdvanceToken from '../images/Tokens/PowerNoAdvanceToken.png';
@@ -37,23 +37,21 @@ class PowerTokenDescription extends TokenDescription<number, MaterialType, Locat
         [PowerToken.Plus3]: Plus3ZenkoToken,
         [PowerToken.Protection]: ProtectionToken,
     };
-    help = PowerTokenHelp
+    help = PowerTokenHelp;
 
     public getItemMenu(item: MaterialItem<number, LocationType>, context: ItemContext<number, MaterialType, LocationType>, legalMoves: MaterialMove<number, MaterialType, LocationType>[]): React.ReactNode {
         if (context.player !== undefined && context.player === context.rules.game.rule?.player) {
             if (context.rules.game.rule?.id === RuleId.EndOfTrickPickAvailablePowerToken
-                && item.location.type === LocationType.PowerTokenSpotOnWisdomBoard)
-            {
+                && item.location.type === LocationType.PowerTokenSpotOnWisdomBoard) {
                 return this.getItemMenuButtonsForEndOfTrickPickAvailablePowerTokenRule(item, context, legalMoves);
             }
             if (context.rules.game.rule?.id === RuleId.PlayKitsuCard
                 && item.location.type === LocationType.PowerTokenSpotOnClanCard
-                && item.location.player === context.player)
-            {
+                && item.location.player === context.player) {
                 return this.getItemMenuButtonsForPlayKitsuCardRule(item, context, legalMoves);
             }
         }
-        return ;
+        return;
     }
 
     public isMenuAlwaysVisible(item: MaterialItem<number, LocationType>, context: ItemContext<number, MaterialType, LocationType>): boolean {
@@ -71,18 +69,13 @@ class PowerTokenDescription extends TokenDescription<number, MaterialType, Locat
         return item.id === PowerToken.Plus3 && item.location?.rotation === PowerTokenPlus3Side.Zenko;
     }
 
-    private getItemMenuButtonsForPlayKitsuCardRule(item: MaterialItem<number, LocationType>, context: ItemContext<number, MaterialType, LocationType>, legalMoves: MaterialMove<number, MaterialType, LocationType>[]): React.ReactNode {
-        const selectTokenMoves = legalMoves.filter(isSelectItemType<number, MaterialType, LocationType>(MaterialType.PowerToken));
+    private getItemMenuButtonsForPlayKitsuCardRule(item: MaterialItem<number, LocationType>, context: ItemContext<number, MaterialType, LocationType>, _legalMoves: MaterialMove<number, MaterialType, LocationType>[]): React.ReactNode {
+        const isPlus3Token = item.id === PowerToken.Plus3;
+        const flipMove = context.rules.material(MaterialType.PowerToken)
+            .id(item.id)
+            .rotateItem(item.location.rotation === PowerTokenPlus3Side.Yako ? PowerTokenPlus3Side.Zenko : PowerTokenPlus3Side.Yako);
         return (<>
-            {selectTokenMoves && selectTokenMoves.map((move, index) => (
-                <ItemMenuButton key={`powerToken-button-${index}`}
-                                move={move} radius={3.5} angle={0}
-                                label={item.selected === true
-                                    ? <Trans defaults='button.powerToken.unselect'/>
-                                        : <Trans defaults='button.powerToken.select'/>}>
-                    <FontAwesomeIcon icon={faHandPointer} size="sm"/>
-                </ItemMenuButton>))
-            }
+            {isPlus3Token && <FlipPlus3TokenItemMenuButton move={flipMove} rotation={flipMove.location.rotation} />}
             {this.getHelpButton(item, context, {
                 radius: 1,
                 angle: 0,
@@ -95,13 +88,15 @@ class PowerTokenDescription extends TokenDescription<number, MaterialType, Locat
         const currentItemIndex = context.rules.material(MaterialType.PowerToken).id<PowerToken>(item.id).getIndex();
         const giveTokenMoves = legalMoves.filter(isMoveItemType<number, MaterialType, LocationType>(MaterialType.PowerToken))
             .filter(move => move.itemIndex === currentItemIndex);
+
         return (<>
             {giveTokenMoves.map((move, index) => (
-                <GivePowerTokenItemMenuButton move={move} y={3 * (index - 0.5)} x={2} playerId={move.location.player}
-                                              key={`powerToken-button-give-${move.location.player}-${index}`}>
-                    <FontAwesomeIcon icon={faHandPointer} size="sm"/>
-                </GivePowerTokenItemMenuButton>
-            ))}
+                    <GivePowerTokenItemMenuButton move={move} y={3 * (index - 0.5)} x={2} playerId={move.location.player}
+                                                  key={`powerToken-button-give-${move.location.player}-${index}`}>
+                        <FontAwesomeIcon icon={faHandPointer} size="sm"/>
+                    </GivePowerTokenItemMenuButton>
+                )
+            )}
             {this.getHelpButton(item, context, {
                 y: 3 * (giveTokenMoves.length - 0.5),
                 x: 2
