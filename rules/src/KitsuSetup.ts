@@ -1,15 +1,15 @@
-import { MaterialGameSetup } from '@gamepark/rules-api';
-import { shuffle } from 'lodash';
-import { KitsuOptions } from './KitsuOptions';
-import { KitsuRules } from './KitsuRules';
-import { kitsuCardIds, last24PlayersKitsuCardEnumValueIndex } from './material/KitsuCard';
-import { kitsunePawnIds } from './material/KitsunePawn';
-import { LocationType } from './material/LocationType';
-import { MaterialType } from './material/MaterialType';
-import { powerToken } from './material/PowerToken';
-import { Memorize } from './Memorize';
-import { RuleId } from './rules/RuleId';
-import { TeamColor } from './TeamColor';
+import { MaterialGameSetup } from '@gamepark/rules-api'
+import { shuffle } from 'lodash'
+import { KitsuOptions } from './KitsuOptions'
+import { KitsuRules } from './KitsuRules'
+import { kitsuCardIds, last24PlayersKitsuCardEnumValueIndex } from './material/KitsuCard'
+import { kitsunePawnIds } from './material/KitsunePawn'
+import { LocationType } from './material/LocationType'
+import { MaterialType } from './material/MaterialType'
+import { powerToken } from './material/PowerToken'
+import { Memorize } from './Memorize'
+import { RuleId } from './rules/RuleId'
+import { TeamColor } from './TeamColor'
 
 /**
  * This class creates a new Game based on the game options
@@ -70,7 +70,7 @@ export class KitsuSetup extends MaterialGameSetup<number, MaterialType, Location
     }
 
     private MemorizeTeamsAndReorderPlayers(options: KitsuOptions) {
-        const playerOptionsWithTeams = options.players.every(playerOption => playerOption.team === undefined)
+        const playerOptionsWithTeams = options.players.every(playerOption => playerOption.team !== TeamColor.Yako && playerOption.team !== TeamColor.Zenko)
             ? this.addTeamToPlayerOptions(options.players)
             : options.players as { id?: number, team: TeamColor }[];
         const playerOptionsWithIds = playerOptionsWithTeams.map((playerOption, index) => {
