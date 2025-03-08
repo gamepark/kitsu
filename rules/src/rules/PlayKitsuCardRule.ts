@@ -52,24 +52,6 @@ export class PlayKitsuCardRule extends PlayerTurnRule<number, MaterialType, Loca
         return allMoves;
     }
 
-    public beforeItemMove(move: ItemMove<number, MaterialType, LocationType>, _context?: PlayMoveContext): MaterialMove<number, MaterialType, LocationType>[] {
-        if (isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard)(move) &&
-            move.location.type === LocationType.PlayedKitsuCardSpot &&
-            move.location.player === this.player) {
-            const selectedPowerToken = this.material(MaterialType.PowerToken).location(LocationType.PowerTokenSpotOnClanCard).player(this.player).selected(true);
-            if (selectedPowerToken.length === 1) {
-                return [
-                    selectedPowerToken.unselectItem(),
-                    selectedPowerToken.moveItem({
-                        type: LocationType.PowerTokenSpotOnKitsuCard,
-                        parent: move.itemIndex,
-                    })
-                ];
-            }
-        }
-        return [];
-    }
-
     public afterItemMove(move: ItemMove<number, MaterialType, LocationType>, _context?: PlayMoveContext): MaterialMove<number, MaterialType, LocationType>[] {
         if (isMoveItemType<number, MaterialType, LocationType>(MaterialType.PowerToken)(move) && move.location.type === LocationType.PowerTokenSpotOnKitsuCard) {
             const powerToken = this.material(MaterialType.PowerToken).getItem<PowerToken>(move.itemIndex);
@@ -87,7 +69,6 @@ export class PlayKitsuCardRule extends PlayerTurnRule<number, MaterialType, Loca
                 })
             return [
                 cardMove,
-                ...this.getCardMoveConsequences(cardMove)
             ];
         }
         if (isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard)(move)
