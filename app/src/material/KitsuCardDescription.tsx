@@ -127,9 +127,6 @@ class KitsuCardDescription extends CardDescription<number, MaterialType, Locatio
                 move.location.rotation !== KitsuCardRotation.FaceDown);
         const powerTokenMovesWithThisCard = legalMoves.filter(isMoveItemType<number, MaterialType, LocationType>(MaterialType.PowerToken))
             .filter(move => move.location.parent === currentItemIndex);
-        const faceDownMoves = legalMoves.filter(isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard))
-            .filter(move => move.itemIndex === currentItemIndex &&
-                move.location.rotation === KitsuCardRotation.FaceDown);
         if (movesForThisCard.length > 0) {
             return (<>
                 {movesForThisCard.map((move, index) => (
@@ -148,12 +145,7 @@ class KitsuCardDescription extends CardDescription<number, MaterialType, Locatio
                                 : 'button.card.playWithToken';
                             return (
                                 <ItemMenuButton key={`playKistuCardWithToken-${context.player}-${tokenIndex}`}
-                                                moves={[
-                                                    tokenMove,
-                                                    faceDownMoves.length !== 0
-                                                        ? faceDownMoves[0]
-                                                        : move
-                                                ]} radius={0.5 - 2 * tokenIndex} angle={0}
+                                                moves={[tokenMove]} radius={0.5 - 2 * tokenIndex} angle={0}
                                                 label={<Trans defaults={translationKey}/>}>
                                     <FontAwesomeIcon icon={faSquarePlus} size="lg"/>
                                 </ItemMenuButton>
@@ -183,10 +175,10 @@ class KitsuCardDescription extends CardDescription<number, MaterialType, Locatio
             return (<>
                 {movesToThisLocation.map((move, index) => (
                     <ItemMenuButton key={`selectKatanaTarget-${context.player}-${index}`} move={move}
-                                    label={<Trans defaults='button.card.flip'/>}
+                                    label={<Trans defaults="button.card.flip"/>}
                                     labelPosition={(item.location.x ?? 0) === 0 ? 'right' : 'left'}>
-                    <span className='fa-flip-vertical'>
-                        <FontAwesomeIcon icon={faArrowRotateRight} rotation={90} size='lg'/>
+                    <span className="fa-flip-vertical">
+                        <FontAwesomeIcon icon={faArrowRotateRight} rotation={90} size="lg"/>
                     </span>
                     </ItemMenuButton>)
                 )}
@@ -209,7 +201,7 @@ class KitsuCardDescription extends CardDescription<number, MaterialType, Locatio
         return (<>
             {movesForThisCard.map((move, index) => (
                 <ItemMenuButton key={`addDiscardedCardToPlayerHand-${context.player}-${index}`} move={move}
-                                label={<Trans defaults='button.card.addToHand'/>}>
+                                label={<Trans defaults="button.card.addToHand"/>}>
                     <FontAwesomeIcon icon={faHandPointer} size="lg"/>
                 </ItemMenuButton>
             ))}
@@ -229,7 +221,7 @@ class KitsuCardDescription extends CardDescription<number, MaterialType, Locatio
         return (<>
             {movesForThisCard.map((move, index) => (
                 <ItemMenuButton key={`sendCardToTeamMember-${context.player}-${index}`} move={move}
-                                label={<Trans defaults='button.card.sendToTeamMember'/>}>
+                                label={<Trans defaults="button.card.sendToTeamMember"/>}>
                     <FontAwesomeIcon icon={faHandPointer} size="lg"/>
                 </ItemMenuButton>
             ))}
