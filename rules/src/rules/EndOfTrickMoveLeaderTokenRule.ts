@@ -12,7 +12,7 @@ export class EndOfTrickMoveLeaderTokenRule extends PlayerTurnRule<number, Materi
         let ruleMove: RuleMove<number, RuleId>;
         if (this.material(MaterialType.KitsuCard).location(LocationType.PlayerHand).length === 0
             && this.material(MaterialType.KitsuCard).location(LocationType.KitsuCardDiscardSpotOnWisdomBoard).length === 0) {
-            ruleMove = this.startRule(RuleId.RoundSetupDealCards);
+            ruleMove = this.startPlayerTurn(RuleId.RoundSetupDealCards, nextLeaderPlayer);
         } else {
             ruleMove = this.startRule(RuleId.EndOfTrickPickCards);
         }
