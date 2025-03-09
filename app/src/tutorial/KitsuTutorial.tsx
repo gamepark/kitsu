@@ -4,10 +4,9 @@ import { LocationType } from '@gamepark/kitsu/material/LocationType';
 import { MaterialType } from '@gamepark/kitsu/material/MaterialType';
 import { PowerToken } from '@gamepark/kitsu/material/PowerToken';
 import { PowerTokenPlus3Side } from '@gamepark/kitsu/material/PowerTokenPlus3Side';
-import { RuleId } from '@gamepark/kitsu/rules/RuleId';
 import { TeamColor } from '@gamepark/kitsu/TeamColor';
 import { MaterialTutorial, TutorialStep } from '@gamepark/react-game';
-import { isMoveItemType, isStartPlayerTurn, MaterialGame, MaterialMove } from '@gamepark/rules-api';
+import { isMoveItemType, MaterialGame, MaterialMove } from '@gamepark/rules-api';
 import { Trans } from 'react-i18next';
 import { clanCardDescription } from '../material/ClanCardDescription';
 import { wisdomBoardDescription } from '../material/WisdomBoardDescription';
@@ -21,7 +20,6 @@ export class KitsuTutorial extends MaterialTutorial<number, MaterialType, Locati
     players = [
         {id: me}, {id: opponent}
     ];
-    //@ts-ignore
     setup = new KitsuTutorialSetup();
     steps: TutorialStep<number, MaterialType, LocationType>[] = [
         {
@@ -56,7 +54,7 @@ export class KitsuTutorial extends MaterialTutorial<number, MaterialType, Locati
                     this.material(game, MaterialType.KitsunePawn).id(KitsunePawn.Zenko),
                     this.material(game, MaterialType.KitsunePawn).id(KitsunePawn.Yako)
                 ],
-                scale: 1
+                scale: 0.5
             })
         },
         {
@@ -64,8 +62,11 @@ export class KitsuTutorial extends MaterialTutorial<number, MaterialType, Locati
                 text: () => <Trans defaults="tuto.cards" components={{bold: <strong/>}}/>
             },
             focus: (game) => ({
-                materials: [this.material(game, MaterialType.KitsuCard).location(LocationType.PlayerHand)],
-                locations: [{type: LocationType.PlayerHand, player: me}]
+                materials: [this.material(game, MaterialType.KitsuCard)
+                    .location(LocationType.PlayerHand)
+                    .player(me)],
+                locations: [{type: LocationType.PlayerHand, player: me}],
+                scale: 0.25
             })
         },
         {
@@ -76,8 +77,10 @@ export class KitsuTutorial extends MaterialTutorial<number, MaterialType, Locati
                 materials: [
                     this.material(game, MaterialType.KitsuCard)
                         .location(LocationType.PlayerHand)
+                        .player(me)
                         .id<KitsuCard>(id => getKitsuCardType(id) !== KitsuCardType.Special)
                 ],
+                scale: 0.25
             })
         },
         {
@@ -90,7 +93,7 @@ export class KitsuTutorial extends MaterialTutorial<number, MaterialType, Locati
                         .location(LocationType.PlayerHand)
                         .id<KitsuCard>(id => getKitsuCardType(id) === KitsuCardType.Special)
                 ],
-                scale: 1
+                scale: 0.25
             })
         },
         {
@@ -112,14 +115,14 @@ export class KitsuTutorial extends MaterialTutorial<number, MaterialType, Locati
             }
         },
         {
-            popup: {
-                text: () => <Trans defaults="tuto.game.play.opponent.card1"/>
-            }
-        },
-        {
             move: {
                 player: opponent,
                 filter: (move, game) => this.isMoveForKitsuCard(KitsuCard.Yako3_1, move, game)
+            }
+        },
+        {
+            popup: {
+                text: () => <Trans defaults="tuto.game.play.opponent.card1"/>
             }
         },
         {
@@ -139,7 +142,7 @@ export class KitsuTutorial extends MaterialTutorial<number, MaterialType, Locati
             move: {
                 player: opponent,
                 filter: (move, game) => this.isMoveForKitsuCard(KitsuCard.Yako5, move, game),
-                interrupt: (move) => isStartPlayerTurn<number, MaterialType, LocationType>(move) && move.id === RuleId.EndOfTrickKistunePawnMove
+                interrupt: (move) => isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsunePawn)(move)
             }
         },
         {
@@ -176,7 +179,7 @@ export class KitsuTutorial extends MaterialTutorial<number, MaterialType, Locati
         },
         {
             popup: {
-                text: () => <Trans defaults="tuto.game.play.me.katana" />
+                text: () => <Trans defaults="tuto.game.play.me.katana" components={{bold: <strong/>}}/>
             },
             move: {
                 filter: (move, game) => this.isMoveForKitsuCard(KitsuCard.Katana_1, move, game)
@@ -267,7 +270,8 @@ export class KitsuTutorial extends MaterialTutorial<number, MaterialType, Locati
             focus: (game) => ({
                 materials: [
                     this.material(game, MaterialType.KitsuCard).id<KitsuCard>(KitsuCard.WhiteKitsune_1)
-                ]
+                ],
+                scale: 0.25
             })
         },
         {
