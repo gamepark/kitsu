@@ -10,6 +10,7 @@ import App from './App';
 import { Locators } from './locators/Locators';
 import { Material } from './material/Material';
 import translations from './translations.json';
+import { KitsuTutorial } from './tutorial/KitsuTutorial';
 
 setupTranslation(translations, {debug: false});
 
@@ -22,7 +23,8 @@ ReactDOM.render(
             GameSetup={KitsuSetup}
             material={Material}
             locators={Locators}
-            animations={gameAnimations}>
+            animations={gameAnimations}
+            tutorial={new KitsuTutorial()}>
             <App/>
         </GameProvider>
     </StrictMode>,
