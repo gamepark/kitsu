@@ -1,3 +1,13 @@
+import {
+    ClotheType,
+    EyebrowType,
+    EyeType,
+    FacialHairType,
+    MouthType,
+    TopType
+} from '@gamepark/avataaars';
+import SkinColor from '@gamepark/avataaars/dist/avatar/SkinColor';
+import HairColorName from '@gamepark/avataaars/dist/avatar/top/HairColorName';
 import { getKitsuCardType, KitsuCard, KitsuCardType } from '@gamepark/kitsu/material/KitsuCard';
 import { KitsunePawn } from '@gamepark/kitsu/material/KitsunePawn';
 import { LocationType } from '@gamepark/kitsu/material/LocationType';
@@ -18,7 +28,22 @@ export class KitsuTutorial extends MaterialTutorial<number, MaterialType, Locati
         players: [{id: me, team: TeamColor.Zenko}, {id: opponent, team: TeamColor.Yako}],
     };
     players = [
-        {id: me}, {id: opponent}
+        {id: me},
+        {
+            id: opponent,
+            name: 'Thomas',
+            avatar: {
+                topType: TopType.LongHairBun,
+                hairColor: HairColorName.Blonde,
+                facialHairType: FacialHairType.BeardLight,
+                facialHairColor: HairColorName.Blonde,
+                clotheType: ClotheType.BlazerShirt,
+                eyeType: EyeType.Default,
+                eyebrowType: EyebrowType.DefaultNatural,
+                mouthType: MouthType.Smile,
+                skinColor: SkinColor.Pale
+            }
+        }
     ];
     setup = new KitsuTutorialSetup();
     steps: TutorialStep<number, MaterialType, LocationType>[] = [
@@ -44,7 +69,8 @@ export class KitsuTutorial extends MaterialTutorial<number, MaterialType, Locati
         },
         {
             popup: {
-                text: () => <Trans defaults="tuto.board" components={{bold: <strong/>}}/>
+                text: () => <Trans defaults="tuto.board" components={{bold: <strong/>}}/>,
+                position: {x: 30}
             },
             focus: (game) => ({
                 staticItems: {
@@ -54,7 +80,7 @@ export class KitsuTutorial extends MaterialTutorial<number, MaterialType, Locati
                     this.material(game, MaterialType.KitsunePawn).id(KitsunePawn.Zenko),
                     this.material(game, MaterialType.KitsunePawn).id(KitsunePawn.Yako)
                 ],
-                scale: 0.5
+                margin: {top: 1, right: 30, bottom: 1, left: 0},
             })
         },
         {
@@ -65,7 +91,6 @@ export class KitsuTutorial extends MaterialTutorial<number, MaterialType, Locati
                 materials: [this.material(game, MaterialType.KitsuCard)
                     .location(LocationType.PlayerHand)
                     .player(me)],
-                locations: [{type: LocationType.PlayerHand, player: me}],
                 scale: 0.25
             })
         },
@@ -111,7 +136,8 @@ export class KitsuTutorial extends MaterialTutorial<number, MaterialType, Locati
         },
         {
             popup: {
-                text: () => <Trans defaults="tuto.game.play.opponent.card"/>
+                text: () => <Trans defaults="tuto.game.play.opponent.card"/>,
+                position: {x: 50}
             }
         },
         {
@@ -122,12 +148,14 @@ export class KitsuTutorial extends MaterialTutorial<number, MaterialType, Locati
         },
         {
             popup: {
-                text: () => <Trans defaults="tuto.game.play.opponent.card1"/>
+                text: () => <Trans defaults="tuto.game.play.opponent.card1"/>,
+                position: {x: 50}
             }
         },
         {
             popup: {
-                text: () => <Trans defaults="tuto.game.play.me.card2"/>
+                text: () => <Trans defaults="tuto.game.play.me.card2"/>,
+                position: {x: 50}
             },
             move: {
                 filter: (move, game) => this.isMoveForKitsuCard(KitsuCard.Zenko3_1, move, game)
@@ -135,7 +163,8 @@ export class KitsuTutorial extends MaterialTutorial<number, MaterialType, Locati
         },
         {
             popup: {
-                text: () => <Trans defaults="tuto.game.play.opponent.card2"/>
+                text: () => <Trans defaults="tuto.game.play.opponent.card2"/>,
+                position: {x: 50}
             }
         },
         {
@@ -147,7 +176,8 @@ export class KitsuTutorial extends MaterialTutorial<number, MaterialType, Locati
         },
         {
             popup: {
-                text: () => <Trans defaults="tuto.game.interrupt.endOfTrick" components={{bold: <strong/>}}/>
+                text: () => <Trans defaults="tuto.game.interrupt.endOfTrick" components={{bold: <strong/>}}/>,
+                position: {x: 50}
             }
         },
         {
@@ -157,13 +187,14 @@ export class KitsuTutorial extends MaterialTutorial<number, MaterialType, Locati
                                        bold: <strong/>,
                                        blue: <span style={{color: 'blue'}}/>,
                                        orange: <span style={{color: 'orange'}}/>
-                                   }}/>
+                                   }}/>,
+                position: {x: 50}
             },
             move: {}
         },
         {
             popup: {
-                text: () => <Trans defaults="tuto.game.play.opponent.card3" />
+                text: () => <Trans defaults="tuto.game.play.opponent.card3"/>
             }
         },
         {
@@ -174,12 +205,14 @@ export class KitsuTutorial extends MaterialTutorial<number, MaterialType, Locati
         },
         {
             popup: {
-                text: () => <Trans defaults="tuto.game.play.opponent.bestCard" />
+                text: () => <Trans defaults="tuto.game.play.opponent.bestCard"/>,
+                position: {x: 50}
             }
         },
         {
             popup: {
-                text: () => <Trans defaults="tuto.game.play.me.katana" components={{bold: <strong/>}}/>
+                text: () => <Trans defaults="tuto.game.play.me.katana" components={{bold: <strong/>}}/>,
+                position: {x: 50}
             },
             move: {
                 filter: (move, game) => this.isMoveForKitsuCard(KitsuCard.Katana_1, move, game)
@@ -198,12 +231,14 @@ export class KitsuTutorial extends MaterialTutorial<number, MaterialType, Locati
         },
         {
             popup: {
-                text: () => <Trans defaults="tuto.game.play.opponent.blackKitsune" components={{bold: <strong/>}}/>
+                text: () => <Trans defaults="tuto.game.play.opponent.blackKitsune" components={{bold: <strong/>}}/>,
+                position: {x: 50}
             }
         },
         {
             popup: {
-                text: () => <Trans defaults="tuto.game.play.me.card4" />
+                text: () => <Trans defaults="tuto.game.play.me.card4"/>,
+                position: {x: 50}
             },
             move: {
                 filter: (move, game) => this.isMoveForKitsuCard(KitsuCard.Yako4, move, game),
@@ -212,13 +247,15 @@ export class KitsuTutorial extends MaterialTutorial<number, MaterialType, Locati
         },
         {
             popup: {
-                text: () => <Trans defaults="tuto.game.interrupt.endOfTrick2" components={{bold: <strong/>}} />
+                text: () => <Trans defaults="tuto.game.interrupt.endOfTrick2" components={{bold: <strong/>}}/>,
+                position: {x: 50}
             },
             move: {}
         },
         {
             popup: {
-                text: () => <Trans defaults="tuto.game.play.me.pickPlus3Token" components={{italic: <em/>}}/>
+                text: () => <Trans defaults="tuto.game.play.me.pickPlus3Token" components={{italic: <em/>}}/>,
+                position: {x: 50}
             },
             move: {
                 filter: (move, game) => isMoveItemType<number, MaterialType, LocationType>(MaterialType.PowerToken)(move)
@@ -227,7 +264,8 @@ export class KitsuTutorial extends MaterialTutorial<number, MaterialType, Locati
         },
         {
             popup: {
-                text: () => <Trans defaults="tuto.game.play.me.card5" />
+                text: () => <Trans defaults="tuto.game.play.me.card5"/>,
+                position: {x: 50}
             },
             move: {
                 filter: (move, game) => this.isMoveForKitsuCard(KitsuCard.Zenko1_1, move, game)
@@ -241,7 +279,8 @@ export class KitsuTutorial extends MaterialTutorial<number, MaterialType, Locati
         },
         {
             popup: {
-                text: () => <Trans defaults="tuto.game.play.me.card6PlusToken" />
+                text: () => <Trans defaults="tuto.game.play.me.card6PlusToken"/>,
+                position: {x: 50}
             },
             move: {
                 filter: (move, game) => isMoveItemType<number, MaterialType, LocationType>(MaterialType.PowerToken)(move)
@@ -259,13 +298,14 @@ export class KitsuTutorial extends MaterialTutorial<number, MaterialType, Locati
         },
         {
             popup: {
-                text: () => <Trans defaults="tuto.game.interrupt.endOfTrick3" />
+                text: () => <Trans defaults="tuto.game.interrupt.endOfTrick3"/>,
+                position: {x: 50}
             },
             move: {}
         },
         {
             popup: {
-                text: () => <Trans defaults="tuto.card.whiteKitsune" components={{bold: <strong/>}} />
+                text: () => <Trans defaults="tuto.card.whiteKitsune" components={{bold: <strong/>}}/>
             },
             focus: (game) => ({
                 materials: [
@@ -276,7 +316,7 @@ export class KitsuTutorial extends MaterialTutorial<number, MaterialType, Locati
         },
         {
             popup: {
-                text: () => <Trans defaults="tuto.end" />
+                text: () => <Trans defaults="tuto.end"/>
             }
         }
     ];
