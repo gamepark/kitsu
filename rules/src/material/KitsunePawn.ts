@@ -1,8 +1,8 @@
-import { getEnumValues } from '@gamepark/rules-api';
+import { getEnumValues } from '@gamepark/rules-api'
 
 export enum KitsunePawn {
-    Yako = 1,
-    Zenko
+  Yako = 1,
+  Zenko,
 }
 
-export const kitsunePawnIds = getEnumValues(KitsunePawn);
+export const kitsunePawnIds = getEnumValues(KitsunePawn)

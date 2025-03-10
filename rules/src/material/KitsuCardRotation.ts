@@ -1,4 +1,4 @@
 export enum KitsuCardRotation {
-    FaceUp = 1,
-    FaceDown = 2,
+  FaceUp = 1,
+  FaceDown = 2,
 }
