@@ -21,7 +21,7 @@ export class KitsuTutorialSetup extends KitsuSetup {
             .id<KitsuCard>(KitsuCard.WhiteKitsune_1)
             .moveItem({
                 type: LocationType.KitsuCardDeckSpotOnWisdomBoard,
-                x: 3
+                x: 2
             });
         this.material(MaterialType.KitsuCard)
             .id<KitsuCard>(KitsuCard.WhiteKitsune_2)
