@@ -26,7 +26,8 @@
     "build": "yarn workspace @gamepark/kitsu-app run build",
     "deploy": "yarn workspace @gamepark/kitsu-app run deploy",
     "cwebp-osx": "rm -f ./node_modules/cwebp-bin/vendor/cwebp && ln -s /opt/homebrew/bin/cwebp ./node_modules/cwebp-bin/vendor/cwebp",
-    "publish": "lerna publish"
+    "publish": "lerna publish",
+    "lint": "yarn workspace @gamepark/kitsu run lint && yarn workspace @gamepark/kitsu-app run lint"
   },
   "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }

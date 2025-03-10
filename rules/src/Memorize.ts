@@ -1,3 +1,3 @@
 export enum Memorize {
-    Team = 1,
+  Team = 1,
 }
