@@ -270,7 +270,7 @@
       "tuto.teams": "Dans cette partie, vous jouez le clan <bold>Zenko</bold> (bleu), et votre adversaire joue le clan <bold>Yako</bold> (orange).",
       "tuto.board": "Voici le <bold>plateau Sagesse</bold>. Votre objectif est de faire avancer votre <bold>pion Kitsune</bold> au bout de la piste, afin de remporter une manche. Le premier clan à <bold>remporter 2 manches</bold> gagne la partie.",
       "tuto.cards": "Voici votre main de <bold>cartes Kitsu</bold>.",
-      "tuto.cards.numeral": "Il y a des cartes aux couleurs des 2 Clan, chacune ayant une valeur allant de 1 à 6.",
+      "tuto.cards.numeral": "Il y a des cartes aux couleurs des 2 Clans, chacune ayant une valeur allant de 1 à 6.",
       "tuto.cards.special": "Et des cartes spéciales (3 différentes, en 2 exemplaires chacune), que nous expliquerons plus loin.",
       "tuto.cards.numberPerTrick": "À 2 joueurs, vous allez jouer 2 cartes à chaque tour.\n<italic>À 4 ou 6 joueurs, chaque joueur ne joue qu'une carte par tour.</italic>",
       "tuto.game.play.me.card1": "C'est à vous de jouer. Posez cette carte.",

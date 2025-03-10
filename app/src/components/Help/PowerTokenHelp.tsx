@@ -16,33 +16,33 @@ export const PowerTokenHelp: FC<MaterialHelpProps<number, MaterialType, Location
             return (<>
                 <h2>{t('help.powerToken.title')}</h2>
                 <p>{t('help.powerToken.colourExchange.description')}</p>
-                {item.location?.type === LocationType.DiscardedPowerTokenAreaOnWisdomBoard && <p>{t('help.powerToken.unavailableForRound')}</p>}
+                {item.location?.type === LocationType.DiscardedPowerTokenAreaOnWisdomBoard && <p><small><em>{t('help.powerToken.unavailableForRound')}</em></small></p>}
             </>);
         case PowerToken.NoAdvance:
             return (<>
                 <h2>{t('help.powerToken.title')}</h2>
                 <p>{t('help.powerToken.noAdvance.description')}</p>
-                {item.location?.type === LocationType.DiscardedPowerTokenAreaOnWisdomBoard && <p>{t('help.powerToken.unavailableForRound')}</p>}
+                {item.location?.type === LocationType.DiscardedPowerTokenAreaOnWisdomBoard && <p><small><em>{t('help.powerToken.unavailableForRound')}</em></small></p>}
             </>);
         case PowerToken.PickDiscarded:
             return (<>
                 <h2>{t('help.powerToken.title')}</h2>
                 <p>{t('help.powerToken.pickDiscarded.description', {numberOfCardsToReveal: isSixPlayersGame ? 6 : 4})}</p>
                 <p>{t('help.powerToken.pickDiscarded.description.clarification')}</p>
-                {item.location?.type === LocationType.DiscardedPowerTokenAreaOnWisdomBoard && <p>{t('help.powerToken.unavailableForRound')}</p>}
+                {item.location?.type === LocationType.DiscardedPowerTokenAreaOnWisdomBoard && <p><small><em>{t('help.powerToken.unavailableForRound')}</em></small></p>}
             </>);
         case PowerToken.Plus3:
             return (<>
                 <h2>{t('help.powerToken.title')}</h2>
                 <p>{t('help.powerToken.plus3.description')}</p>
-                {item.location?.type === LocationType.DiscardedPowerTokenAreaOnWisdomBoard && <p>{t('help.powerToken.unavailableForRound')}</p>}
+                {item.location?.type === LocationType.DiscardedPowerTokenAreaOnWisdomBoard && <p><small><em>{t('help.powerToken.unavailableForRound')}</em></small></p>}
             </>);
         case PowerToken.Protection:
             return (<>
                 <h2>{t('help.powerToken.title')}</h2>
                 <p>{t('help.powerToken.protection.description')}</p>
                 <p>{t('help.powerToken.protection.description.clarification')}</p>
-                {item.location?.type === LocationType.DiscardedPowerTokenAreaOnWisdomBoard && <p>{t('help.powerToken.unavailableForRound')}</p>}
+                {item.location?.type === LocationType.DiscardedPowerTokenAreaOnWisdomBoard && <p><small><em>{t('help.powerToken.unavailableForRound')}</em></small></p>}
             </>);
     }
 }
