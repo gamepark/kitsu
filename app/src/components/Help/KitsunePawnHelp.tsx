@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next'
 
 export const KitsunePawnHelp: FC<MaterialHelpProps<number, MaterialType, LocationType>> = ({ item }) => {
   const { t } = useTranslation()
-  const me = usePlayerId()
+  const me = usePlayerId<number>()
   const rules = useRules<KitsuRules>()
   const myTeam = rules?.remind<TeamColor>(Memorize.Team, me)
   const isPawnOfMyTeam = myTeam === TeamColor.Yako ? item.id === KitsunePawn.Yako : item.id === KitsunePawn.Zenko

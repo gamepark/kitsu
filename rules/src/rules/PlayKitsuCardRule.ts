@@ -128,7 +128,9 @@ export class PlayKitsuCardRule extends PlayerTurnRule<number, MaterialType, Loca
     return allMoves.filter(
       (move) =>
         (isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard)(move) && consideredCardIndexes.includes(move.itemIndex)) ||
-        (isMoveItemType<number, MaterialType, LocationType>(MaterialType.PowerToken)(move) && consideredCardIndexes.includes(move.location.parent!)) ||
+        (isMoveItemType<number, MaterialType, LocationType>(MaterialType.PowerToken)(move) &&
+          typeof move.location.parent === 'number' &&
+          consideredCardIndexes.includes(move.location.parent)) ||
         isSelectItemType<number, MaterialType, LocationType>(MaterialType.PowerToken)(move),
     )
   }
@@ -141,7 +143,7 @@ export class PlayKitsuCardRule extends PlayerTurnRule<number, MaterialType, Loca
     const powerToken = this.material(MaterialType.PowerToken).location(
       (location) =>
         (location.type === LocationType.PowerTokenSpotOnClanCard && location.player === this.player) ||
-        (location.type === LocationType.PowerTokenSpotOnKitsuCard && allCardIndexes.includes(location.parent!)),
+        (location.type === LocationType.PowerTokenSpotOnKitsuCard && typeof location.parent === 'number' && allCardIndexes.includes(location.parent)),
     )
     if (powerToken.length === 1) {
       const isProtectionPowerToken = protectionPowerToken !== undefined
@@ -188,7 +190,7 @@ export class PlayKitsuCardRule extends PlayerTurnRule<number, MaterialType, Loca
     const cardPlayedByPreviousPlayer = this.material(MaterialType.KitsuCard)
       .location(LocationType.PlayedKitsuCardSpot)
       .player(previousPlayer)
-      .maxBy((card) => card.location.x!)
+      .maxBy((card) => card.location.x ?? 0)
       .getItem<KitsuCard>()
     return (
       cardPlayedByPreviousPlayer !== undefined &&

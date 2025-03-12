@@ -13,16 +13,16 @@ import { UnknownKitsuCardHelp } from './UnknownKitsuCardHelp'
 export const KitsuCardHelp: FC<MaterialHelpProps<number, MaterialType, LocationType>> = (props) => {
   const rules = useRules<KitsuRules>()
   const isSixPlayersGame = rules?.game.players.length === 6
-  const isSpecialCard = getKitsuCardType(props.item.id) === KitsuCardType.Special
-  const card = isKitsuCardMaterial(props.item) ? props.item : undefined
+  const kitsuCard = isKitsuCardMaterial(props.item) ? props.item : undefined
+  const isSpecialCard = getKitsuCardType(kitsuCard?.id ?? KitsuCard.Yako1_1) === KitsuCardType.Special
   const unknownKitsuCard = props.item as Omit<MaterialItem<number, LocationType, KitsuCard>, 'id'>
   return (
     <>
-      {card ? (
+      {kitsuCard ? (
         isSpecialCard ? (
-          <SpecialKitsuCardHelp item={card} />
+          <SpecialKitsuCardHelp item={kitsuCard} />
         ) : (
-          <NumericKitsuCardHelp item={card} isSixPlayersGame={isSixPlayersGame} />
+          <NumericKitsuCardHelp item={kitsuCard} isSixPlayersGame={isSixPlayersGame} />
         )
       ) : (
         <UnknownKitsuCardHelp item={unknownKitsuCard} />

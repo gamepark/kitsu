@@ -20,7 +20,11 @@ export class RoundSetupDealCardsRule extends PlayerTurnRule<number, MaterialType
   public afterItemMove(move: ItemMove<number, MaterialType, LocationType>, _context?: PlayMoveContext): MaterialMove<number, MaterialType, LocationType>[] {
     if (isShuffleItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard)(move)) {
       const deck = this.material(MaterialType.KitsuCard).location(LocationType.KitsuCardDeckSpotOnWisdomBoard).deck()
-      const leaderPlayerIndex = this.game.players.indexOf(this.material(MaterialType.LeaderToken).getItem()!.location.player!)
+      const currentLeader = this.material(MaterialType.LeaderToken).getItem()?.location.player
+      if (currentLeader === undefined) {
+        throw Error('Invalid leader')
+      }
+      const leaderPlayerIndex = this.game.players.indexOf(currentLeader)
       const numberOfPlayers = this.game.players.length
       const dealPlayerOrder = this.game.players
         .slice(leaderPlayerIndex + (1 % numberOfPlayers))

@@ -282,7 +282,7 @@ export class KitsuTutorial extends MaterialTutorial<number, MaterialType, Locati
         filter: (move, game) =>
           isMoveItemType<number, MaterialType, LocationType>(MaterialType.PowerToken)(move) &&
           this.material(game, MaterialType.PowerToken).getItem<PowerToken>(move.itemIndex).id === PowerToken.Plus3 &&
-          this.material(game, MaterialType.KitsuCard).getItem<KitsuCard>(move.location.parent as number).id === KitsuCard.Zenko1_2 &&
+          this.material(game, MaterialType.KitsuCard).getItem<KitsuCard>(move.location.parent ?? -1).id === KitsuCard.Zenko1_2 &&
           move.location.rotation === PowerTokenPlus3Side.Zenko,
       },
     },

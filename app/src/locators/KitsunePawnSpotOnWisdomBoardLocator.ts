@@ -29,8 +29,8 @@ class KitsunePawnSpotOnWisdomBoardLocator extends ListLocator<number, MaterialTy
     _context: MaterialContext<number, MaterialType, LocationType>,
   ): Partial<Coordinates> {
     return {
-      x: spotsCoordinates[location.id as number].x,
-      y: spotsCoordinates[location.id as number].y - 0.7,
+      x: spotsCoordinates[location.id ?? 0].x,
+      y: spotsCoordinates[location.id ?? 0].y - 0.7,
     }
   }
 

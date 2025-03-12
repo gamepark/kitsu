@@ -82,7 +82,7 @@ class KitsuCardDescription extends CardDescription<number, MaterialType, Locatio
   }
 
   public getItemMenu(
-    item: MaterialItem<number, LocationType>,
+    item: MaterialItem<number, LocationType, KitsuCard>,
     context: ItemContext<number, MaterialType, LocationType>,
     legalMoves: MaterialMove<number, MaterialType, LocationType>[],
   ): React.ReactNode {
@@ -102,7 +102,7 @@ class KitsuCardDescription extends CardDescription<number, MaterialType, Locatio
     }
     if (
       context.rules.game.rule?.id === RuleId.PickDiscardCards &&
-      context.rules.game.rule?.player === context.player &&
+      context.rules.game.rule.player === context.player &&
       item.location.type === LocationType.DiscardedCardsToPickSpot &&
       item.location.player === context.player
     ) {
@@ -110,7 +110,7 @@ class KitsuCardDescription extends CardDescription<number, MaterialType, Locatio
     }
     if (
       context.rules.game.rule?.id === RuleId.SendCardToTeamMember &&
-      context.rules.game.rule?.players?.includes(context.player) &&
+      context.rules.game.rule.players?.includes(context.player) &&
       item.location.type === LocationType.PlayerHand &&
       item.location.player === context.player
     ) {
@@ -127,7 +127,7 @@ class KitsuCardDescription extends CardDescription<number, MaterialType, Locatio
   }
 
   private getPlayerHandItemMenu(
-    item: MaterialItem<number, LocationType>,
+    item: MaterialItem<number, LocationType, KitsuCard>,
     context: ItemContext<number, MaterialType, LocationType>,
     legalMoves: MaterialMove<number, MaterialType, LocationType>[],
   ): React.ReactNode {
@@ -142,7 +142,7 @@ class KitsuCardDescription extends CardDescription<number, MaterialType, Locatio
       return (
         <>
           {movesForThisCard.map((move, index) => (
-            <ItemMenuButton move={move} label={<Trans defaults="button.card.play" />} key={`playKistuCard-${context.player}-${index}`}>
+            <ItemMenuButton move={move} label={<Trans defaults="button.card.play" />} key={`playKistuCard-${context.player}-${index}`} labelPosition="left">
               <FontAwesomeIcon icon={faHandPointer} size="lg" />
             </ItemMenuButton>
           ))}
@@ -160,6 +160,7 @@ class KitsuCardDescription extends CardDescription<number, MaterialType, Locatio
                 radius={0.5 - 2 * tokenIndex}
                 angle={0}
                 label={<Trans defaults={translationKey} />}
+                labelPosition="left"
               >
                 <FontAwesomeIcon icon={faSquarePlus} size="lg" />
               </ItemMenuButton>
@@ -168,6 +169,7 @@ class KitsuCardDescription extends CardDescription<number, MaterialType, Locatio
           {this.getHelpButton(item, context, {
             angle: 0,
             radius: powerTokenMovesWithThisCard.length > 0 ? -2 * powerTokenMovesWithThisCard.length : 0.5,
+            labelPosition: 'left',
           })}
         </>
       )
@@ -176,7 +178,7 @@ class KitsuCardDescription extends CardDescription<number, MaterialType, Locatio
   }
 
   private getSelectKatanaTargetItemMenu(
-    item: MaterialItem<number, LocationType>,
+    item: MaterialItem<number, LocationType, KitsuCard>,
     context: ItemContext<number, MaterialType, LocationType>,
     legalMoves: MaterialMove<number, MaterialType, LocationType>[],
   ): React.ReactNode {
@@ -194,6 +196,7 @@ class KitsuCardDescription extends CardDescription<number, MaterialType, Locatio
         move.itemIndex === currentItemIndex,
     )
     if (movesToThisLocation.length > 0) {
+      const labelPosition = context.rules.players.length === 2 ? ((item.location.x ?? 0) === 0 ? 'left' : 'right') : 'right'
       return (
         <>
           {movesToThisLocation.map((move, index) => (
@@ -201,7 +204,7 @@ class KitsuCardDescription extends CardDescription<number, MaterialType, Locatio
               key={`selectKatanaTarget-${context.player}-${index}`}
               move={move}
               label={<Trans defaults="button.card.flip" />}
-              labelPosition={(item.location.x ?? 0) === 0 ? 'right' : 'left'}
+              labelPosition={labelPosition}
             >
               <span className="fa-flip-vertical">
                 <FontAwesomeIcon icon={faArrowRotateRight} rotation={90} size="lg" />
@@ -209,7 +212,7 @@ class KitsuCardDescription extends CardDescription<number, MaterialType, Locatio
             </ItemMenuButton>
           ))}
           {this.getHelpButton(item, context, {
-            labelPosition: (item.location.x ?? 0) === 0 ? 'right' : 'left',
+            labelPosition: labelPosition,
             radius: 0.5,
             angle: 0,
           })}
@@ -220,7 +223,7 @@ class KitsuCardDescription extends CardDescription<number, MaterialType, Locatio
   }
 
   private getPickDiscardedCardItemMenu(
-    item: MaterialItem<number, LocationType>,
+    item: MaterialItem<number, LocationType, KitsuCard>,
     context: ItemContext<number, MaterialType, LocationType>,
     legalMoves: MaterialMove<number, MaterialType, LocationType>[],
   ): React.ReactNode {
@@ -246,7 +249,7 @@ class KitsuCardDescription extends CardDescription<number, MaterialType, Locatio
   }
 
   private getPlayerHandSendCardItemMenu(
-    item: MaterialItem<number, LocationType>,
+    item: MaterialItem<number, LocationType, KitsuCard>,
     context: ItemContext<number, MaterialType, LocationType>,
     legalMoves: MaterialMove<number, MaterialType, LocationType>[],
   ): React.ReactNode {
@@ -257,12 +260,17 @@ class KitsuCardDescription extends CardDescription<number, MaterialType, Locatio
     return (
       <>
         {movesForThisCard.map((move, index) => (
-          <ItemMenuButton key={`sendCardToTeamMember-${context.player}-${index}`} move={move} label={<Trans defaults="button.card.sendToTeamMember" />}>
+          <ItemMenuButton
+            key={`sendCardToTeamMember-${context.player}-${index}`}
+            move={move}
+            label={<Trans defaults="button.card.sendToTeamMember" />}
+            labelPosition="left"
+          >
             <FontAwesomeIcon icon={faHandPointer} size="lg" />
           </ItemMenuButton>
         ))}
         {this.getHelpButton(item, context, {
-          labelPosition: 'right',
+          labelPosition: 'left',
           radius: 0.5,
           angle: 0,
         })}

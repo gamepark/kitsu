@@ -9,7 +9,10 @@ export class EndOfTrickPickCardsRule extends PlayerTurnRule<number, MaterialType
     _previousRule?: RuleStep,
     _context?: PlayMoveContext,
   ): MaterialMove<number, MaterialType, LocationType>[] {
-    const leaderPlayer = this.material(MaterialType.LeaderToken).getItem()!.location.player!
+    const leaderPlayer = this.material(MaterialType.LeaderToken).getItem()?.location.player
+    if (leaderPlayer === undefined) {
+      throw new Error('Invalid leader player')
+    }
     const ruleMove = this.startPlayerTurn(RuleId.PlayKitsuCard, leaderPlayer)
     if (this.material(MaterialType.KitsuCard).location(LocationType.KitsuCardDeckSpotOnWisdomBoard).length !== 0) {
       const deck = this.material(MaterialType.KitsuCard).location(LocationType.KitsuCardDeckSpotOnWisdomBoard).deck()
