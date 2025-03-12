@@ -108,13 +108,15 @@ export class EndOfTrickKitsunePawnMoveRule extends PlayerTurnRule<number, Materi
   }
 
   private getRuleMoveToPickAvailableToken(winningTeam: TeamColor): MaterialMove<number, MaterialType, LocationType> {
-    const currentLeader = this.material(MaterialType.LeaderToken).getItem()!.location.player!
+    const currentLeader = this.material(MaterialType.LeaderToken).getItem()?.location.player
     const isCurrentLeaderLoosingTeam = this.remind<TeamColor>(Memorize.Team, currentLeader) !== winningTeam
     if (isCurrentLeaderLoosingTeam) {
       return this.startRule(RuleId.EndOfTrickPickAvailablePowerToken)
-    } else {
+    } else if (currentLeader !== undefined) {
       const loosingTeamNextLeader = this.game.players[(this.game.players.indexOf(currentLeader) + 1) % this.game.players.length]
       return this.startPlayerTurn<number, RuleId>(RuleId.EndOfTrickPickAvailablePowerToken, loosingTeamNextLeader)
+    } else {
+      throw Error('undefined current leader')
     }
   }
 }

@@ -65,7 +65,7 @@ const panelPositionRight = (index: number, numberOfPlayers: number): number => {
 const panelPositionTop6Players = (index: number) => {
   switch (index) {
     case 0:
-      return 90
+      return 92.5
     case 1:
     case 5:
       return 80
@@ -83,14 +83,14 @@ const panelPositionRight6Players = (index: number): number => {
   switch (index) {
     case 0:
     case 3:
-      return 50
+      return 40
     case 1:
     case 2:
-      return 135
+      return 127.5
     case 4:
-      return 20
+      return 15
     case 5:
-      return 30
+      return 20
     default:
       throw new Error('Invalid position')
   }
@@ -101,11 +101,11 @@ const panelPositionTop4Players = (index: number): number => {
     case 0:
       return 90
     case 1:
-      return 75
+      return 77.5
     case 2:
       return 8
     case 3:
-      return 35
+      return 25
     default:
       throw new Error('Invalid position')
   }
@@ -115,7 +115,7 @@ const panelPositionRight4Players = (_index: number): number => {
   switch (_index) {
     case 0:
     case 2:
-      return 45
+      return 40
     case 1:
       return 110
     case 3:
@@ -137,7 +137,7 @@ const panelPositionTop2Players = (_index: number): number => {
 }
 
 const panelPositionRight2Players = (_index: number): number => {
-  return 45
+  return 40
 }
 
 export const playerColorCode: Record<number, string> = {

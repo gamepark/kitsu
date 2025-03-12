@@ -9,8 +9,8 @@ import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'
 export default tseslint.config([
     globalIgnores(["build/**/*.js", "config-overrides.js", "eslint.config.mjs"]),
     eslint.configs.recommended,
-    tseslint.configs.strict,
-    tseslint.configs.stylistic,
+    tseslint.configs.strictTypeChecked,
+    tseslint.configs.stylisticTypeChecked,
     {
         files: ["src/**/*.{js,mjs,ts,jsx,tsx}"],
         ...pluginJs.configs.recommended,
@@ -33,6 +33,7 @@ export default tseslint.config([
         },
         rules: {
             "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+            "@typescript-eslint/restrict-template-expressions": ["error", { "allowNullish": true, "allowNumber": true }],
         }
     },
     eslintPluginPrettierRecommended,

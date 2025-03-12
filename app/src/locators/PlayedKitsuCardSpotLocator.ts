@@ -19,7 +19,7 @@ class PlayedKitsuCardSpotLocationDescription extends DropAreaDescription<number,
   `
 
   public canDrop(
-    _move: MaterialMove<number, number, number>,
+    _move: MaterialMove,
     _location: Location<number, LocationType, number, number>,
     context: ItemContext<number, MaterialType, LocationType>,
   ): boolean {

@@ -21,7 +21,7 @@ export class RoundEndRule extends PlayerTurnRule<number, MaterialType, LocationT
         .location(LocationType.VictoryCardsSpot)
         .id(victoriousPawn.id === KitsunePawn.Yako ? VictoryCard.Yako : VictoryCard.Zenko)
 
-      if (victoryCard.length === 1 && victoryCard.getItem()!.id === victoriousPawn.id) {
+      if (victoryCard.length === 1 && victoryCard.getItem()?.id === victoriousPawn.id) {
         return [
           this.material(MaterialType.VictoryCard).createItem({
             id: victoriousPawn.id,
@@ -50,7 +50,7 @@ export class RoundEndRule extends PlayerTurnRule<number, MaterialType, LocationT
   public onCustomMove(move: CustomMove, _context?: PlayMoveContext): MaterialMove<number, MaterialType, LocationType>[] {
     if (isCustomMoveType<CustomMoveType>(CustomMoveType.PickRandomPlayer)(move)) {
       const victoriousTeam =
-        this.material(MaterialType.KitsunePawn).location(LocationType.KitsunePawnSpotOnWisdomBoard).locationId(13).getItem()!.id === KitsunePawn.Zenko
+        this.material(MaterialType.KitsunePawn).location(LocationType.KitsunePawnSpotOnWisdomBoard).locationId(13).getItem()?.id === KitsunePawn.Zenko
           ? TeamColor.Zenko
           : TeamColor.Yako
       const victoriousPlayers = this.game.players.filter((player) => this.remind<TeamColor>(Memorize.Team, player) === victoriousTeam)

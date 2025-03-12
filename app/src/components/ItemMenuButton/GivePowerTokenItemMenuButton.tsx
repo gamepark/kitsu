@@ -19,7 +19,7 @@ export const GivePowerTokenItemMenuButton: FC<PropsWithChildren<GivePowerTokenIt
   const labelComponent =
     playerId === me ? <Trans defaults="button.powerToken.takeForSelf" /> : <Trans defaults="button.powerToken.giveToPlayer" values={{ playerName: player }} />
   return (
-    <ItemMenuButton move={move} x={x} y={y} label={labelComponent}>
+    <ItemMenuButton move={move} x={x} y={y} label={labelComponent} labelPosition="right">
       {children}
     </ItemMenuButton>
   )

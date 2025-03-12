@@ -9,7 +9,10 @@ export class EndOfTrickMoveLeaderTokenRule extends PlayerTurnRule<number, Materi
     _previousRule?: RuleStep,
     _context?: PlayMoveContext,
   ): MaterialMove<number, MaterialType, LocationType>[] {
-    const currentLeaderPlayer = this.material(MaterialType.LeaderToken).getItem()!.location.player!
+    const currentLeaderPlayer = this.material(MaterialType.LeaderToken).getItem()?.location.player
+    if (currentLeaderPlayer === undefined) {
+      throw new Error('Invalid leader player')
+    }
     const numberOfPlayers = this.game.players.length
     const nextLeaderPlayer = this.game.players[(this.game.players.indexOf(currentLeaderPlayer) + 1) % numberOfPlayers]
 

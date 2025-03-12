@@ -6,7 +6,11 @@ import { PowerToken } from '../material/PowerToken'
 import { RuleId } from './RuleId'
 
 export class PickCardInDiscardRule extends PlayerTurnRule<number, MaterialType, LocationType> {
-  public onRuleStart(_move: RuleMove<number, RuleId>, _previousRule?: RuleStep, _context?: PlayMoveContext): MaterialMove<number, number, number>[] {
+  public onRuleStart(
+    _move: RuleMove<number, RuleId>,
+    _previousRule?: RuleStep,
+    _context?: PlayMoveContext,
+  ): MaterialMove<number, MaterialType, LocationType>[] {
     const numberOfCardsToPick = this.game.players.length === 6 ? 6 : 4
     const ruleMove = this.isParentCardKatana() ? this.startRule(RuleId.SelectKatanaTarget) : this.startPlayerTurn(this.getNextPlayerRuleId(), this.nextPlayer)
     const lastDiscardedCards = this.material(MaterialType.KitsuCard)
@@ -18,7 +22,7 @@ export class PickCardInDiscardRule extends PlayerTurnRule<number, MaterialType, 
       : [ruleMove]
   }
 
-  public getPlayerMoves(): MaterialMove<number, number, number>[] {
+  public getPlayerMoves(): MaterialMove<number, MaterialType, LocationType>[] {
     return this.material(MaterialType.KitsuCard).location(LocationType.DiscardedCardsToPickSpot).moveItems({
       type: LocationType.PlayerHand,
       player: this.player,
@@ -51,7 +55,10 @@ export class PickCardInDiscardRule extends PlayerTurnRule<number, MaterialType, 
   }
 
   private isParentCardKatana(): boolean {
-    const parentCardIndex = this.material(MaterialType.PowerToken).id<PowerToken>(PowerToken.PickDiscarded).getItem<PowerToken>()!.location.parent!
+    const parentCardIndex = this.material(MaterialType.PowerToken).id<PowerToken>(PowerToken.PickDiscarded).getItem<PowerToken>()?.location.parent
+    if (parentCardIndex === undefined) {
+      throw Error('Invalid parent index')
+    }
     const parentCard = this.material(MaterialType.KitsuCard).getItem<KitsuCard>(parentCardIndex)
     return isSpecialCard(parentCard.id) && getSpecialCardType(parentCard.id) === KitsuCardSpecialType.Katana
   }

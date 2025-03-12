@@ -41,7 +41,7 @@ import { TeamColor } from './TeamColor'
 export class KitsuRules
   extends SecretMaterialRules<number, MaterialType, LocationType>
   implements
-    TimeLimit<MaterialGame<number, MaterialType, LocationType>, MaterialMove<number, MaterialType, LocationType>, number>,
+    TimeLimit<MaterialGame<number, MaterialType, LocationType>, MaterialMove<number, MaterialType, LocationType>>,
     CompetitiveScore<MaterialGame<number, MaterialType, LocationType>, MaterialMove<number, MaterialType, LocationType>, number>
 {
   rules = {

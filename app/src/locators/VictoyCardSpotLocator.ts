@@ -4,7 +4,7 @@ import { FlexLocator, MaterialContext } from '@gamepark/react-game'
 import { Coordinates, Location } from '@gamepark/rules-api'
 
 class VictoryCardLocator extends FlexLocator<number, MaterialType, LocationType> {
-  limit = 2
+  limit = 3
   coordinates = { x: -60, y: 0 }
   rotateZ = -90
   maxLines = 1

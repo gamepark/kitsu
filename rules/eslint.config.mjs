@@ -11,7 +11,7 @@ export default tseslint.config([
   globalIgnores(["tests/**/*.{js,ts}", "*.config.{ts,mjs}"]),
   {files: ["src/**/*.{js,mjs,cjs,ts}"]},
   eslint.configs.recommended,
-  tseslint.configs.recommendedTypeChecked,
+  tseslint.configs.strictTypeChecked,
   tseslint.configs.stylisticTypeChecked,
   {
       languageOptions: {

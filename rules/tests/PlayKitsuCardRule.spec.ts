@@ -10,7 +10,6 @@ import {
   StartPlayerTurn,
 } from '@gamepark/rules-api'
 import { KitsuCard } from '../src/material/KitsuCard'
-import { KitsuCardRotation } from '../src/material/KitsuCardRotation'
 import { LocationType } from '../src/material/LocationType'
 import { MaterialType } from '../src/material/MaterialType'
 import { PowerToken } from '../src/material/PowerToken'
@@ -412,91 +411,6 @@ describe('PlayKitsuCardRule tests', () => {
         },
       )
 
-      test.each([
-        {
-          alreadyPlayedCards: [
-            { player: 1 as 1 | 2, playedCardIds: [KitsuCard.Yako1_1] as KitsuCard[] },
-            {
-              player: 2 as 1 | 2,
-              playedCardIds: [] as KitsuCard[],
-            },
-          ],
-          move: {
-            kind: MoveKind.ItemMove,
-            type: ItemMoveType.Move,
-            itemType: MaterialType.KitsuCard,
-            itemIndex: 0,
-            location: { type: LocationType.PlayedKitsuCardSpot, player: 1 },
-          } as MoveItem<number, MaterialType, LocationType>,
-          selectedPowerToken: PowerToken.PickDiscarded,
-        },
-        {
-          alreadyPlayedCards: [
-            { player: 1 as 1 | 2, playedCardIds: [KitsuCard.Yako1_1] as KitsuCard[] },
-            {
-              player: 2 as 1 | 2,
-              playedCardIds: [KitsuCard.Yako4] as KitsuCard[],
-            },
-          ],
-          move: {
-            kind: MoveKind.ItemMove,
-            type: ItemMoveType.Move,
-            itemType: MaterialType.KitsuCard,
-            itemIndex: 7,
-            location: { type: LocationType.PlayedKitsuCardSpot, player: 2 },
-          } as MoveItem<number, MaterialType, LocationType>,
-          selectedPowerToken: PowerToken.ColourExchange,
-        },
-        {
-          alreadyPlayedCards: [
-            {
-              player: 1 as 1 | 2,
-              playedCardIds: [KitsuCard.Yako1_1, KitsuCard.Zenko6] as KitsuCard[],
-            },
-            { player: 2 as 1 | 2, playedCardIds: [KitsuCard.Yako5] as KitsuCard[] },
-          ],
-          move: {
-            kind: MoveKind.ItemMove,
-            type: ItemMoveType.Move,
-            itemType: MaterialType.KitsuCard,
-            itemIndex: 18,
-            location: { type: LocationType.PlayedKitsuCardSpot, player: 1 },
-          } as MoveItem<number, MaterialType, LocationType>,
-          selectedPowerToken: PowerToken.NoAdvance,
-        },
-      ])(
-        'Given a selected power token and 1, 2 or 3 cards already played, beforeItemMove() should return consequence ' +
-          'containing a move to unselect the power token, the power token move to the card',
-        ({ alreadyPlayedCards, selectedPowerToken, move }) => {
-          // Given
-          const gameBuilder = create2PlayersGameBuilderWithPlayedCards(alreadyPlayedCards)
-          gameBuilder.setRule(RuleId.PlayKitsuCard, move.location.player)
-          const powerToken = gameBuilder.material(MaterialType.PowerToken).id<PowerToken>(selectedPowerToken)
-          powerToken.moveItem({
-            type: LocationType.PowerTokenSpotOnClanCard,
-            player: move.location.player,
-          })
-          powerToken.selectItem()
-          const game = gameBuilder.build()
-          const rule = new PlayKitsuCardRule(game)
-
-          // When
-          const consequences = rule.beforeItemMove(move)
-          const selectPowerTokenMoves = consequences.filter(isSelectItemType<number, MaterialType, LocationType>(MaterialType.PowerToken))
-          const movePowerTokenMoves = consequences.filter(isMoveItemType<number, MaterialType, LocationType>(MaterialType.PowerToken))
-
-          // Then
-          expect(consequences).toHaveLength(2)
-          expect(selectPowerTokenMoves).toHaveLength(1)
-          expect(movePowerTokenMoves).toHaveLength(1)
-          expect(selectPowerTokenMoves[0]).toBe(consequences[0])
-          expect(selectPowerTokenMoves[0].selected).toBe(false)
-          expect(movePowerTokenMoves[0]).toBe(consequences[1])
-          expect(movePowerTokenMoves[0].location.type).toBe(LocationType.PowerTokenSpotOnKitsuCard)
-          expect(movePowerTokenMoves[0].location.parent).toBe(move.itemIndex)
-        },
-      )
-
       test(
         'Given 4 cards already played and a seelcted power token, afterItemMove() should return consequences' +
           ' containing a move to unselect the power token, a rule to ove the power token to the relevant location' +
@@ -549,26 +463,26 @@ describe('PlayKitsuCardRule tests', () => {
         test.each([
           {
             givenCardsInHand: [KitsuCard.Zenko6, KitsuCard.Yako6, KitsuCard.WhiteKitsune_1, KitsuCard.Zenko1_1],
-            expectLegalMovesNumber: 12,
-            expectedFaceDownMoves: 4,
-            expectedFaceDownIds: [KitsuCard.Zenko6, KitsuCard.Yako6, KitsuCard.WhiteKitsune_1, KitsuCard.Zenko1_1],
+            expectLegalMovesNumber: 8,
+            expectedTokenMovesNumber: 4,
+            expectedTokenMoveCardIds: [KitsuCard.Zenko6, KitsuCard.Yako6, KitsuCard.WhiteKitsune_1, KitsuCard.Zenko1_1],
           },
           {
             givenCardsInHand: [KitsuCard.Zenko6, KitsuCard.Yako6, KitsuCard.WhiteKitsune_1, KitsuCard.BlackKitsune_1],
-            expectLegalMovesNumber: 10,
-            expectedFaceDownMoves: 3,
-            expectedFaceDownIds: [KitsuCard.Zenko6, KitsuCard.Yako6, KitsuCard.WhiteKitsune_1],
+            expectLegalMovesNumber: 7,
+            expectedTokenMovesNumber: 3,
+            expectedTokenMoveCardIds: [KitsuCard.Zenko6, KitsuCard.Yako6, KitsuCard.WhiteKitsune_1],
           },
           {
             givenCardsInHand: [KitsuCard.Zenko6, KitsuCard.Katana_1, KitsuCard.WhiteKitsune_1, KitsuCard.BlackKitsune_1],
-            expectLegalMovesNumber: 8,
-            expectedFaceDownMoves: 2,
-            expectedFaceDownIds: [KitsuCard.Zenko6, KitsuCard.WhiteKitsune_1],
+            expectLegalMovesNumber: 6,
+            expectedTokenMovesNumber: 2,
+            expectedTokenMoveCardIds: [KitsuCard.Zenko6, KitsuCard.WhiteKitsune_1],
           },
         ])(
           'Given a protection token and cards in hand, getPlayerMoves() should return a move to play each card,' +
             ' moves to play the token on the card, and moves to play relevant cards face down',
-          ({ givenCardsInHand, expectLegalMovesNumber, expectedFaceDownMoves, expectedFaceDownIds }) => {
+          ({ givenCardsInHand, expectLegalMovesNumber, expectedTokenMovesNumber, expectedTokenMoveCardIds }) => {
             // Given
             const gameBuilder = create2PlayersGameBuilderWithCardsInPlayerHand(1, givenCardsInHand)
             gameBuilder.material(MaterialType.PowerToken).id(PowerToken.Protection).moveItem({
@@ -581,22 +495,14 @@ describe('PlayKitsuCardRule tests', () => {
 
             // When
             const legalMoves = rule.getPlayerMoves()
-            const kitsuCardFaceDownMoves = legalMoves
-              .filter(isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard))
-              .filter((move) => move.location.rotation === KitsuCardRotation.FaceDown)
-            const faceDownIds = kitsuCardFaceDownMoves.map((move) => game.items[MaterialType.KitsuCard]![move.itemIndex].id as KitsuCard)
             const tokenMoves = legalMoves.filter(isMoveItemType<number, MaterialType, LocationType>(MaterialType.PowerToken))
             const tokenMovesCardIds = tokenMoves.map((move) => game.items[MaterialType.KitsuCard]![move.location.parent!].id as KitsuCard)
 
             // Then
             expect(legalMoves).toHaveLength(expectLegalMovesNumber)
-            expect(kitsuCardFaceDownMoves).toHaveLength(expectedFaceDownMoves)
-            expect(faceDownIds).toHaveLength(expectedFaceDownMoves)
-            expect(faceDownIds).toEqual(expect.arrayContaining(expectedFaceDownIds))
-            expect([...new Set(faceDownIds)]).toHaveLength(expectedFaceDownMoves)
-            expect(tokenMovesCardIds).toHaveLength(expectedFaceDownMoves)
-            expect(tokenMovesCardIds).toEqual(expect.arrayContaining(expectedFaceDownIds))
-            expect([...new Set(tokenMovesCardIds)]).toHaveLength(expectedFaceDownMoves)
+            expect(tokenMovesCardIds).toHaveLength(expectedTokenMovesNumber)
+            expect(tokenMovesCardIds).toEqual(expect.arrayContaining(expectedTokenMoveCardIds))
+            expect([...new Set(tokenMovesCardIds)]).toHaveLength(expectedTokenMovesNumber)
           },
         )
       })

@@ -1,4 +1,4 @@
-import { isMoveItemType, isStartRule, MoveKind, RuleMoveType, StartPlayerTurn } from '@gamepark/rules-api'
+import { isMoveItemType, isStartPlayerTurn, isStartRule, MoveKind, RuleMoveType, StartPlayerTurn } from '@gamepark/rules-api'
 import { KitsuCard } from '../src/material/KitsuCard'
 import { LocationType } from '../src/material/LocationType'
 import { MaterialType } from '../src/material/MaterialType'
@@ -81,7 +81,7 @@ describe('End of trick - Move leader token rule tests', () => {
         // When
         const consequences = rule.onRuleStart(previousRuleMove)
         const leaderTokenMoves = consequences.filter(isMoveItemType<number, MaterialType, LocationType>(MaterialType.LeaderToken))
-        const ruleMoves = consequences.filter(isStartRule<number, MaterialType, LocationType>)
+        const ruleMoves = consequences.filter(isStartPlayerTurn<number, MaterialType, LocationType>)
 
         // Then
         expect(consequences).toHaveLength(2)
@@ -89,6 +89,7 @@ describe('End of trick - Move leader token rule tests', () => {
         expect(leaderTokenMoves[0].location.player).toBe(2)
         expect(ruleMoves).toHaveLength(1)
         expect(ruleMoves[0].id).toBe(RuleId.RoundSetupDealCards)
+        expect(ruleMoves[0].player).toBe(2)
       },
     )
   })

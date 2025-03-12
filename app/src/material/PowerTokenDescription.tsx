@@ -39,17 +39,18 @@ class PowerTokenDescription extends TokenDescription<number, MaterialType, Locat
   }
   help = PowerTokenHelp
 
+  /* eslint "@typescript-eslint/no-unsafe-enum-comparison": "off" */
   public getItemMenu(
-    item: MaterialItem<number, LocationType>,
+    item: MaterialItem<number, LocationType, PowerToken>,
     context: ItemContext<number, MaterialType, LocationType>,
     legalMoves: MaterialMove<number, MaterialType, LocationType>[],
   ): React.ReactNode {
     if (context.player !== undefined && context.player === context.rules.game.rule?.player) {
-      if (context.rules.game.rule?.id === RuleId.EndOfTrickPickAvailablePowerToken && item.location.type === LocationType.PowerTokenSpotOnWisdomBoard) {
+      if (context.rules.game.rule.id === RuleId.EndOfTrickPickAvailablePowerToken && item.location.type === LocationType.PowerTokenSpotOnWisdomBoard) {
         return this.getItemMenuButtonsForEndOfTrickPickAvailablePowerTokenRule(item, context, legalMoves)
       }
       if (
-        context.rules.game.rule?.id === RuleId.PlayKitsuCard &&
+        context.rules.game.rule.id === RuleId.PlayKitsuCard &&
         item.location.type === LocationType.PowerTokenSpotOnClanCard &&
         item.location.player === context.player
       ) {
@@ -63,7 +64,7 @@ class PowerTokenDescription extends TokenDescription<number, MaterialType, Locat
     if (
       context.player === undefined ||
       context.player !== context.rules.game.rule?.player ||
-      context.rules.game.rule?.id !== RuleId.PlayKitsuCard ||
+      context.rules.game.rule.id !== RuleId.PlayKitsuCard ||
       item.location.type !== LocationType.PowerTokenSpotOnClanCard ||
       item.location.player !== context.player
     ) {
@@ -88,6 +89,7 @@ class PowerTokenDescription extends TokenDescription<number, MaterialType, Locat
       .rotateItem(item.location.rotation === PowerTokenPlus3Side.Yako ? PowerTokenPlus3Side.Zenko : PowerTokenPlus3Side.Yako)
     return (
       <>
+        {/* eslint "@typescript-eslint/no-unsafe-assignment": "off" */}
         {isPlus3Token && <FlipPlus3TokenItemMenuButton move={flipMove} rotation={flipMove.location.rotation} />}
         {this.getHelpButton(item, context, {
           radius: 1,
@@ -98,7 +100,7 @@ class PowerTokenDescription extends TokenDescription<number, MaterialType, Locat
   }
 
   private getItemMenuButtonsForEndOfTrickPickAvailablePowerTokenRule(
-    item: MaterialItem<number, LocationType>,
+    item: MaterialItem<number, LocationType, PowerToken>,
     context: ItemContext<number, MaterialType, LocationType>,
     legalMoves: MaterialMove<number, MaterialType, LocationType>[],
   ): React.ReactNode {
@@ -123,6 +125,7 @@ class PowerTokenDescription extends TokenDescription<number, MaterialType, Locat
           {this.getHelpButton(item, context, {
             y: 3 * (giveTokenMoves.length - 0.5),
             x: 2,
+            labelPosition: 'right',
           })}
         </>
       )

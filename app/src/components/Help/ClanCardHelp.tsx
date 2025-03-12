@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import { ClanCard } from '@gamepark/kitsu/material/ClanCard'
+import { ClanCard, isClanCardMaterial } from '@gamepark/kitsu/material/ClanCard'
 import { LocationType } from '@gamepark/kitsu/material/LocationType'
 import { MaterialType } from '@gamepark/kitsu/material/MaterialType'
 import { MaterialHelpProps, usePlayerId, usePlayerName } from '@gamepark/react-game'
@@ -22,7 +22,11 @@ const getTranslatedClanFromCard = (id: ClanCard, t: TFunction): string => {
 
 export const ClanCardHelp: FC<MaterialHelpProps<number, MaterialType, LocationType>> = ({ item }) => {
   const { t } = useTranslation()
-  const translatedClan = getTranslatedClanFromCard(item.id, t)
+  const clanCard = isClanCardMaterial(item) ? item : undefined
+  if (clanCard === undefined) {
+    throw Error('Invalid card')
+  }
+  const translatedClan = getTranslatedClanFromCard(clanCard.id, t)
   const me = usePlayerId<number>()
   const cardOwnerId = item.location?.player
   const cardOwner = usePlayerName(cardOwnerId)
