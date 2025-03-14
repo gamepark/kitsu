@@ -1,14 +1,19 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react'
 import { KitsuRules } from '@gamepark/kitsu/KitsuRules'
+import { Memorize } from '@gamepark/kitsu/Memorize'
+import { TeamColor } from '@gamepark/kitsu/TeamColor'
 import { StyledPlayerPanel, usePlayers, useRules } from '@gamepark/react-game'
 import { createPortal } from 'react-dom'
 import ScoreIcon from '../images/Icons/Score.png'
+import YakoBackground from '../images/PlayerPanels/YakoBackGround.jpg'
+import ZenkoBackground from '../images/PlayerPanels/ZenkoBackground.jpg'
 
 export const PlayerPanels = () => {
   const players = usePlayers<number>({ sortFromMe: true })
   const rules = useRules<KitsuRules>()
   const root = document.getElementById('root')
+  const playerTeams = players.map((player) => rules?.remind<TeamColor>(Memorize.Team, player.id))
   if (!root) {
     return null
   }
@@ -19,7 +24,8 @@ export const PlayerPanels = () => {
         <StyledPlayerPanel
           key={player.id}
           player={player}
-          color={playerColorCode[player.id]}
+          backgroundImage={playerTeams[index] === TeamColor.Yako ? YakoBackground : ZenkoBackground}
+          color={playerTeams[index] === TeamColor.Yako ? 'orange' : 'blue'}
           css={panelPosition(index, players.length)}
           counters={[{ image: ScoreIcon, value: rules?.getScore(player.id) ?? 0 }]}
         />
@@ -138,11 +144,4 @@ const panelPositionTop2Players = (_index: number): number => {
 
 const panelPositionRight2Players = (_index: number): number => {
   return 40
-}
-
-export const playerColorCode: Record<number, string> = {
-  1: 'red',
-  2: 'blue',
-  3: 'green',
-  4: 'yellow',
 }
