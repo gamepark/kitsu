@@ -8,6 +8,7 @@ import { EndOfTrickKitsunePawnMoveHeader } from './EndOfTrickKitsunePawnMoveHead
 import { EndOfTrickMoveLeaderTokenHeader } from './EndOfTrickMoveLeaderTokenHeader'
 import { EndOfTrickPickAvailablePowerTokenHeader } from './EndOfTrickPickAvailablePowerTokenHeader'
 import { EndOfTrickPickCardsHeader } from './EndOfTrickPickCardsHeader'
+import { PickCardInDiscardHeader } from './PickCardInDiscardHeader'
 import { PlayKitsuCardHeader } from './PlayKitsuCardHeader'
 import { RoundEndHeader } from './RoundEndHeader'
 import { RoundSetupMoveKitsunePawnsHeader } from './RoundSetupMoveKitsunePawnsHeader'
@@ -18,6 +19,7 @@ export const Headers: Partial<Record<RuleId, ComponentType>> = {
   [RuleId.RoundSetupMoveKitsunePawns]: RoundSetupMoveKitsunePawnsHeader,
   [RuleId.RoundSetupDealCards]: RoundSetupMoveKitsunePawnsHeader,
   [RuleId.PlayKitsuCard]: PlayKitsuCardHeader,
+  [RuleId.PickDiscardCards]: PickCardInDiscardHeader,
   [RuleId.SendCardToTeamMember]: SendCardToTeamMemberHeader,
   [RuleId.SelectKatanaTarget]: SelectKatanaTargetHeader,
   [RuleId.EndOfTrickKistunePawnMove]: EndOfTrickKitsunePawnMoveHeader,
