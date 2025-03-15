@@ -6,6 +6,7 @@ import { LocationType } from '../material/LocationType'
 import { MaterialType } from '../material/MaterialType'
 import { PowerToken } from '../material/PowerToken'
 import { PowerTokenPlus3Side } from '../material/PowerTokenPlus3Side'
+import { VictoryCard } from '../material/VictoryCard'
 import { Memorize } from '../Memorize'
 import { TeamColor } from '../TeamColor'
 import { RuleId } from './RuleId'
@@ -44,7 +45,7 @@ export class EndOfTrickKitsunePawnMoveRule extends PlayerTurnRule<number, Materi
     const finalKitsuneSpotId = Math.min(currentKitsuneSpotId + scoreDifference, 13)
     const moves = this.getRevealProtectedCardAndKitsunePawnMoves(winningTeam, currentKitsuneSpotId, finalKitsuneSpotId, protectedCard)
     if (finalKitsuneSpotId - currentKitsuneSpotId >= 4) {
-      moves.push(this.getRuleMoveToPickAvailableToken(winningTeam))
+      moves.push(this.getRuleMoveToPickAvailableToken(winningTeam, finalKitsuneSpotId))
     } else {
       moves.push(discardCardsRuleMove)
     }
@@ -107,9 +108,17 @@ export class EndOfTrickKitsunePawnMoveRule extends PlayerTurnRule<number, Materi
       )
   }
 
-  private getRuleMoveToPickAvailableToken(winningTeam: TeamColor): MaterialMove<number, MaterialType, LocationType> {
+  private getRuleMoveToPickAvailableToken(winningTeam: TeamColor, finalWinningKistunePawnSpot: number): MaterialMove<number, MaterialType, LocationType> {
     const currentLeader = this.material(MaterialType.LeaderToken).getItem()?.location.player
     const isCurrentLeaderLoosingTeam = this.remind<TeamColor>(Memorize.Team, currentLeader) !== winningTeam
+    if (
+      this.material(MaterialType.VictoryCard)
+        .location(LocationType.VictoryCardsSpot)
+        .id<VictoryCard>(winningTeam === TeamColor.Yako ? VictoryCard.Yako : VictoryCard.Zenko).length === 1 &&
+      finalWinningKistunePawnSpot === 13
+    ) {
+      return this.startRule(RuleId.EndOfTrickDiscardCards)
+    }
     if (isCurrentLeaderLoosingTeam) {
       return this.startRule(RuleId.EndOfTrickPickAvailablePowerToken)
     } else if (currentLeader !== undefined) {
