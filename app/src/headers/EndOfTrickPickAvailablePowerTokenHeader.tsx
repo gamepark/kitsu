@@ -9,8 +9,15 @@ export const EndOfTrickPickAvailablePowerTokenHeader = () => {
   const me = usePlayerId<number>()
   const activePlayer = rules?.getActivePlayer()
   const player = usePlayerName(activePlayer)
-  if (activePlayer === me) {
-    return <>{t('header.endOfTrickPickAvailablePowerToken.active')}</>
+  if (rules?.players.length === 2) {
+    if (activePlayer === me) {
+      return <>{t('header.endOfTrickPickAvailablePowerToken.2players.active')}</>
+    }
+    return <>{t('header.endOfTrickPickAvailablePowerToken.2players.other')}</>
+  } else {
+    if (activePlayer === me) {
+      return <>{t('header.endOfTrickPickAvailablePowerToken.active')}</>
+    }
+    return <>{t('header.endOfTrickPickAvailablePowerToken.other', { name: player })}</>
   }
-  return <>{t('header.endOfTrickPickAvailablePowerToken.other', { name: player })}</>
 }
