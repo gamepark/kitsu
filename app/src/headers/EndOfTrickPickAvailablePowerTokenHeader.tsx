@@ -13,7 +13,7 @@ export const EndOfTrickPickAvailablePowerTokenHeader = () => {
     if (activePlayer === me) {
       return <>{t('header.endOfTrickPickAvailablePowerToken.2players.active')}</>
     }
-    return <>{t('header.endOfTrickPickAvailablePowerToken.2players.other')}</>
+    return <>{t('header.endOfTrickPickAvailablePowerToken.2players.other', { name: player })}</>
   } else {
     if (activePlayer === me) {
       return <>{t('header.endOfTrickPickAvailablePowerToken.active')}</>
