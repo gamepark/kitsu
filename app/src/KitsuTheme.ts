@@ -5,6 +5,6 @@ export const KitsuTheme = {
     background: {
       image: blackBackground,
       overlay: 'rgba(0, 0, 0, 0.3)',
-    }
-  }
+    },
+  },
 }
