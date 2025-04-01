@@ -4,6 +4,7 @@ import { KitsuCard, last24PlayersKitsuCardEnumValueIndex } from '../src/material
 import { KitsunePawn } from '../src/material/KitsunePawn'
 import { LocationType } from '../src/material/LocationType'
 import { MaterialType } from '../src/material/MaterialType'
+import { Memorize } from '../src/Memorize'
 import { TeamColor } from '../src/TeamColor'
 
 describe('Setup tests', () => {
@@ -418,6 +419,287 @@ describe('Setup tests', () => {
       expect(
         powerTokens.every((powerToken) => powerToken.location.type === LocationType.PowerTokenSpotOnWisdomBoard && powerToken.id === powerToken.location.id),
       ).toBe(true)
+    })
+  })
+
+  describe('Incomplete teams tests', () => {
+    test.each([
+      {
+        options: {
+          players: [
+            { team: TeamColor.Zenko },
+            { }
+          ]
+        },
+        expectedNumberOfPlayersPerTeam: 1
+      },
+      {
+        options: {
+          players: [
+            { team: TeamColor.Yako },
+            { }
+          ]
+        },
+        expectedNumberOfPlayersPerTeam: 1
+      },
+      {
+        options: {
+          players: [
+            { },
+            { team: TeamColor.Zenko }
+          ]
+        },
+        expectedNumberOfPlayersPerTeam: 1
+      },
+      {
+        options: {
+          players: [
+            { },
+            { team: TeamColor.Yako }
+          ]
+        },
+        expectedNumberOfPlayersPerTeam: 1
+      },
+      {
+        options: {
+          players: [
+            { id: 1, team: TeamColor.Zenko },
+            { id: 2 }
+          ]
+        },
+        expectedNumberOfPlayersPerTeam: 1
+      },
+      {
+        options: {
+          players: [
+            { id: 1, team: TeamColor.Yako },
+            { id: 2 }
+          ]
+        },
+        expectedNumberOfPlayersPerTeam: 1
+      },
+      {
+        options: {
+          players: [
+            { id: 1 },
+            { id: 2, team: TeamColor.Zenko }
+          ]
+        },
+        expectedNumberOfPlayersPerTeam: 1
+      },
+      {
+        options: {
+          players: [
+            { id: 1 },
+            { id: 2, team: TeamColor.Yako }
+          ]
+        },
+        expectedNumberOfPlayersPerTeam: 1
+      },
+      {
+        options: {
+          players: [
+            { team: TeamColor.Zenko },
+            { id: 2 }
+          ]
+        },
+        expectedNumberOfPlayersPerTeam: 1
+      },
+      {
+        options: {
+          players: [
+            { team: TeamColor.Yako },
+            { id: 2 }
+          ]
+        },
+        expectedNumberOfPlayersPerTeam: 1
+      },
+      {
+        options: {
+          players: [
+            { id: 1 },
+            { team: TeamColor.Zenko }
+          ]
+        },
+        expectedNumberOfPlayersPerTeam: 1
+      },
+      {
+        options: {
+          players: [
+            { id: 1 },
+            { team: TeamColor.Yako }
+          ]
+        },
+        expectedNumberOfPlayersPerTeam: 1
+      },
+      {
+        options: {
+          players: [
+            { id: 1, team: TeamColor.Zenko },
+            { }
+          ]
+        },
+        expectedNumberOfPlayersPerTeam: 1
+      },
+      {
+        options: {
+          players: [
+            { id: 1, team: TeamColor.Yako },
+            { }
+          ]
+        },
+        expectedNumberOfPlayersPerTeam: 1
+      },
+      {
+        options: {
+          players: [
+            { },
+            { id: 2, team: TeamColor.Zenko }
+          ]
+        },
+        expectedNumberOfPlayersPerTeam: 1
+      },
+      {
+        options: {
+          players: [
+            { },
+            { id: 2, team: TeamColor.Yako }
+          ]
+        },
+        expectedNumberOfPlayersPerTeam: 1
+      },
+      {
+        options: {
+          players: [
+            { },
+            { },
+            { team: TeamColor.Zenko },
+            { }
+          ]
+        },
+        expectedNumberOfPlayersPerTeam: 2
+      },
+      {
+        options: {
+          players: [
+            { },
+            { team: TeamColor.Zenko },
+            { team: TeamColor.Yako },
+            { }
+          ]
+        },
+        expectedNumberOfPlayersPerTeam: 2
+      },
+      {
+        options: {
+          players: [
+            { team: TeamColor.Yako },
+            { },
+            { },
+            { team: TeamColor.Yako }
+          ]
+        },
+        expectedNumberOfPlayersPerTeam: 2
+      },
+      {
+        options: {
+          players: [
+            { team: TeamColor.Zenko },
+            { team: TeamColor.Zenko },
+            { },
+            { }
+          ]
+        },
+        expectedNumberOfPlayersPerTeam: 2
+      },
+      {
+        options: {
+          players: [
+            { team: TeamColor.Zenko },
+            { team: TeamColor.Zenko },
+            { team: TeamColor.Yako },
+            { }
+          ]
+        },
+        expectedNumberOfPlayersPerTeam: 2
+      },
+      {
+        options: {
+          players: [
+            { },
+            { },
+            { },
+            { },
+            { },
+            { team: TeamColor.Zenko }
+          ]
+        },
+        expectedNumberOfPlayersPerTeam: 3
+      },
+      {
+        options: {
+          players: [
+            { },
+            { },
+            { team: TeamColor.Zenko },
+            { },
+            { },
+            { team: TeamColor.Yako }
+          ]
+        },
+        expectedNumberOfPlayersPerTeam: 3
+      },
+      {
+        options: {
+          players: [
+            { },
+            { team: TeamColor.Yako },
+            { },
+            { team: TeamColor.Zenko },
+            { },
+            { team: TeamColor.Zenko }
+          ]
+        },
+        expectedNumberOfPlayersPerTeam: 3
+      },
+      {
+        options: {
+          players: [
+            { team: TeamColor.Yako },
+            { team: TeamColor.Yako },
+            { },
+            { team: TeamColor.Yako },
+            { },
+            { team: TeamColor.Zenko }
+          ]
+        },
+        expectedNumberOfPlayersPerTeam: 3
+      },
+      {
+        options: {
+          players: [
+            { team: TeamColor.Zenko },
+            { team: TeamColor.Zenko },
+            { team: TeamColor.Yako },
+            { },
+            { team: TeamColor.Yako },
+            { team: TeamColor.Zenko }
+          ]
+        },
+        expectedNumberOfPlayersPerTeam: 3
+      }
+    ])('KitsuSetup.setupNewMaterial() should assign teams to players missing one', ({options, expectedNumberOfPlayersPerTeam}) => {
+      // Given
+      const setup = new KitsuSetup()
+
+      // When
+      const game = setup.setup(options)
+      const playerTeamsCounts = { [TeamColor.Zenko]: 0, [TeamColor.Yako]: 0}
+      game.players.forEach((player) => playerTeamsCounts[game.memory[Memorize.Team][player] as TeamColor] += 1)
+
+      // Then
+      expect(playerTeamsCounts[TeamColor.Zenko]).toBe(expectedNumberOfPlayersPerTeam)
+      expect(playerTeamsCounts[TeamColor.Yako]).toBe(expectedNumberOfPlayersPerTeam)
     })
   })
 })
