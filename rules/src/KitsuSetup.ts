@@ -76,8 +76,8 @@ export class KitsuSetup extends MaterialGameSetup<number, MaterialType, Location
   }
 
   private MemorizeTeamsAndReorderPlayers(options: KitsuOptions) {
-    const playerOptionsWithTeams = options.players.every((playerOption) => playerOption.team !== TeamColor.Yako && playerOption.team !== TeamColor.Zenko)
-      ? this.addTeamToPlayerOptions(options.players)
+    const playerOptionsWithTeams = options.players.some((playerOption) => playerOption.team !== TeamColor.Yako && playerOption.team !== TeamColor.Zenko)
+      ? this.addMissingTeamsToPlayerOptions(options.players)
       : (options.players as { id?: number; team: TeamColor }[])
     const playerOptionsWithIds = playerOptionsWithTeams.map((playerOption, index) => {
       const playerId = 'id' in playerOption && typeof playerOption.id === 'number' ? playerOption.id : index + 1
@@ -86,7 +86,7 @@ export class KitsuSetup extends MaterialGameSetup<number, MaterialType, Location
     })
     const firstPlayerTeam = options.players[0].team
     const yakoPlayers = this.getTeamMemberIds(playerOptionsWithIds, TeamColor.Yako)
-    const zenkoPlayers = playerOptionsWithIds.filter((playerOption) => playerOption.team === TeamColor.Zenko).map((playerOption) => playerOption.id)
+    const zenkoPlayers = this.getTeamMemberIds(playerOptionsWithIds, TeamColor.Zenko)
     this.game.players = Array(yakoPlayers.length)
       .fill(1)
       .flatMap((_, index) => {
@@ -98,19 +98,34 @@ export class KitsuSetup extends MaterialGameSetup<number, MaterialType, Location
     return playerOptionsWithIds.filter((playerOption) => playerOption.team === team).map((playerOption) => playerOption.id)
   }
 
-  private getRandomTeamsForPlayers(numberOfPlayers: number): TeamColor[] {
-    return shuffle(
-      Array(numberOfPlayers)
-        .fill(0)
-        .map((_, index) => (index % 2 === 0 ? TeamColor.Yako : TeamColor.Zenko)),
+  private getRandomMissingTeamsForPlayers(numberOfPlayers: number, numberOfZenkoPlayers: number, numberOfYakoPlayers: number): TeamColor[] {
+    const numberOfPlayersPerTeam = numberOfPlayers / 2
+    return shuffle<TeamColor>(
+      Array(numberOfPlayersPerTeam - numberOfZenkoPlayers)
+        .fill(TeamColor.Zenko)
+        .concat(Array(numberOfPlayersPerTeam - numberOfYakoPlayers).fill(TeamColor.Yako)),
     )
   }
 
-  private addTeamToPlayerOptions(playerOptions: { id?: number; team?: TeamColor }[]): {
+  private addMissingTeamsToPlayerOptions(playerOptions: { id?: number; team?: TeamColor }[]): {
     id?: number
     team: TeamColor
   }[] {
-    const playerTeam = this.getRandomTeamsForPlayers(playerOptions.length)
-    return playerOptions.map((playerOption, index) => ({ ...playerOption, team: playerTeam[index] }))
+    const { [TeamColor.Zenko]: numberOfZenkoPlayers, [TeamColor.Yako]: numberOfYakoPlayers } = playerOptions.reduce(
+      (previousCount, currentOption) => {
+        if (currentOption.team === TeamColor.Yako || currentOption.team === TeamColor.Zenko) {
+          previousCount[currentOption.team] += 1
+        }
+        return previousCount
+      },
+      { [TeamColor.Zenko]: 0, [TeamColor.Yako]: 0 },
+    )
+    const missingPlayerTeams = this.getRandomMissingTeamsForPlayers(playerOptions.length, numberOfZenkoPlayers, numberOfYakoPlayers)
+    return playerOptions.map((playerOption) => {
+      if (playerOption.team === TeamColor.Yako || playerOption.team === TeamColor.Zenko) {
+        return playerOption as { id?: number; team: TeamColor }
+      }
+      return { ...playerOption, team: missingPlayerTeams.splice(0, 1)[0] }
+    })
   }
 }
