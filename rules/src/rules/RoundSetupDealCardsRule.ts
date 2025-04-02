@@ -27,8 +27,8 @@ export class RoundSetupDealCardsRule extends PlayerTurnRule<number, MaterialType
       const leaderPlayerIndex = this.game.players.indexOf(currentLeader)
       const numberOfPlayers = this.game.players.length
       const dealPlayerOrder = this.game.players
-        .slice(leaderPlayerIndex + (1 % numberOfPlayers))
-        .concat(this.game.players.slice(0, leaderPlayerIndex + (1 % numberOfPlayers)))
+        .slice((leaderPlayerIndex + 1) % numberOfPlayers)
+        .concat(this.game.players.slice(0, (leaderPlayerIndex + 1) % numberOfPlayers))
       const numberOfCardsToDeal = this.game.players.length === 6 ? 5 : 6
       return Array(numberOfCardsToDeal)
         .fill(1)
