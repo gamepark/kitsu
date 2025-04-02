@@ -30,7 +30,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.22.0",
-    "@gamepark/rules-api": "~6.29.3",
+    "@gamepark/rules-api": "~6.30.0",
     "@types/jest": "^27.5.2",
     "@types/lodash": "^4.17.7",
     "eslint": "^9.22.0",
