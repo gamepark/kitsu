@@ -9,7 +9,7 @@ export const SendCardToTeamMemberHeader: FC = () => {
   const me = usePlayerId<number>()
   const rules = useRules<KitsuRules>()
   const activePlayers = rules?.game.rule?.players ?? []
-  const nextTeamMemberId = me !== undefined ? rules?.game.players[rules.game.players.indexOf(me) + (2 % rules.game.players.length)] : undefined
+  const nextTeamMemberId = me !== undefined ? rules?.game.players[(rules.game.players.indexOf(me) + 2) % rules.game.players.length] : undefined
   const nextTeamMemberName = usePlayerName(nextTeamMemberId)
   const activePlayer = usePlayerName<number>(activePlayers[0])
   if (me !== undefined && activePlayers.includes(me)) {
