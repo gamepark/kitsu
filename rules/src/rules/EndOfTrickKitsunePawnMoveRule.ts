@@ -18,17 +18,9 @@ export class EndOfTrickKitsunePawnMoveRule extends PlayerTurnRule<number, Materi
     _context?: PlayMoveContext,
   ): MaterialMove<number, MaterialType, LocationType>[] {
     const playedCards = this.material(MaterialType.KitsuCard).location(LocationType.PlayedKitsuCardSpot)
-    const numberOfColourExchangeEffects =
-      playedCards.id<KitsuCard>((id) => isSpecialCard(id) && getSpecialCardType(id) === KitsuCardSpecialType.WhiteKitsune).length +
-      this.material(MaterialType.PowerToken).id<PowerToken>(PowerToken.ColourExchange).location(LocationType.PowerTokenSpotOnKitsuCard).length
-    const invertColors = numberOfColourExchangeEffects % 2 === 1
-    const protectionToken = this.material(MaterialType.PowerToken)
-      .location(LocationType.PowerTokenSpotOnKitsuCard)
-      .id<PowerToken>(PowerToken.Protection)
-      .getItem<PowerToken>()
-    const protectedCard =
-      protectionToken !== undefined ? this.material(MaterialType.KitsuCard).index(protectionToken.location.parent).getItem<KitsuCard>() : undefined
-    const { scoreDifference, winningTeam } = this.getWinningTeamAndScoreDifference(playedCards, invertColors, protectedCard)
+    const playedTokens = this.material(MaterialType.PowerToken).location(LocationType.PowerTokenSpotOnKitsuCard)
+    const { zenkoScore, yakoScore, winningTeam, protectedCard } = EndOfTrickKitsunePawnMoveRule.getWinningTeamAndScoreDifference(playedCards, playedTokens)
+    const scoreDifference = Math.abs(zenkoScore - yakoScore)
 
     const discardCardsRuleMove = this.startRule(RuleId.EndOfTrickDiscardCards)
     if (
@@ -72,32 +64,43 @@ export class EndOfTrickKitsunePawnMoveRule extends PlayerTurnRule<number, Materi
     ]
   }
 
-  private getWinningTeamAndScoreDifference(
+  public static getWinningTeamAndScoreDifference(
     playedCards: Material<number, MaterialType, LocationType>,
-    invertColors: boolean,
-    protectedCard: MaterialItem<number, LocationType, KitsuCard> | undefined,
+    playedTokens: Material<number, MaterialType, LocationType>,
+    alreadyRevealed: boolean = false
   ): {
-    scoreDifference: number
+    zenkoScore: number
+    yakoScore: number
     winningTeam: TeamColor | undefined
+    protectedCard: MaterialItem<number, LocationType, KitsuCard> | undefined,
   } {
-    const plus3Token = this.material(MaterialType.PowerToken)
-      .id<PowerToken>(PowerToken.Plus3)
-      .location(LocationType.PowerTokenSpotOnKitsuCard)
-      .getItem<PowerToken>()
+    const numberOfColourExchangeEffects =
+      playedCards.id<KitsuCard>((id) => isSpecialCard(id) && getSpecialCardType(id) === KitsuCardSpecialType.WhiteKitsune).length +
+      playedTokens.id<PowerToken>(PowerToken.ColourExchange).length
+    const invertColors = numberOfColourExchangeEffects % 2 === 1
+    const protectionToken = playedTokens.id<PowerToken>(PowerToken.Protection).getItem<PowerToken>()
+    const protectedCard =
+      protectionToken !== undefined ? playedCards.index(protectionToken.location.parent).getItem<KitsuCard>() : undefined
+    const plus3Token = playedTokens.id<PowerToken>(PowerToken.Plus3).getItem<PowerToken>()
     const isPlus3Yako =
       plus3Token !== undefined &&
       (invertColors ? plus3Token.location.rotation === PowerTokenPlus3Side.Zenko : plus3Token.location.rotation !== PowerTokenPlus3Side.Zenko)
     const isPlus3Zenko =
       plus3Token !== undefined &&
       (invertColors ? plus3Token.location.rotation !== PowerTokenPlus3Side.Zenko : plus3Token.location.rotation === PowerTokenPlus3Side.Zenko)
-    const yakoScore = this.getScore(playedCards, invertColors ? TeamColor.Zenko : TeamColor.Yako, protectedCard) + (isPlus3Yako ? 3 : 0)
-    const zenkoScore = this.getScore(playedCards, invertColors ? TeamColor.Yako : TeamColor.Zenko, protectedCard) + (isPlus3Zenko ? 3 : 0)
-    const scoreDifference = Math.abs(yakoScore - zenkoScore)
-    const winningTeam = scoreDifference === 0 ? undefined : yakoScore > zenkoScore ? TeamColor.Yako : TeamColor.Zenko
-    return { scoreDifference, winningTeam }
+    const yakoScore =
+      EndOfTrickKitsunePawnMoveRule.getScore(playedCards, invertColors ? TeamColor.Zenko : TeamColor.Yako, alreadyRevealed ? undefined : protectedCard ) + (isPlus3Yako ? 3 : 0)
+    const zenkoScore =
+      EndOfTrickKitsunePawnMoveRule.getScore(playedCards, invertColors ? TeamColor.Yako : TeamColor.Zenko, alreadyRevealed ? undefined : protectedCard ) + (isPlus3Zenko ? 3 : 0)
+    const winningTeam = Math.abs(yakoScore - zenkoScore) === 0 ? undefined : yakoScore > zenkoScore ? TeamColor.Yako : TeamColor.Zenko
+    return { zenkoScore, yakoScore, winningTeam, protectedCard }
   }
 
-  private getScore(playedCards: Material<number, MaterialType, LocationType>, team: TeamColor, protectedCard?: MaterialItem<number, LocationType, KitsuCard>) {
+  public static getScore(
+    playedCards: Material<number, MaterialType, LocationType>,
+    team: TeamColor,
+    protectedCard?: MaterialItem<number, LocationType, KitsuCard>,
+  ) {
     const filteringFunction = team === TeamColor.Zenko ? isZenkoCard : isYakoCard
     return playedCards
       .id<KitsuCard>((id) => filteringFunction(id))
