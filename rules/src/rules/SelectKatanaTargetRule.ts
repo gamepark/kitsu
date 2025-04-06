@@ -19,7 +19,7 @@ export class SelectKatanaTargetRule extends PlayerTurnRule<number, MaterialType,
     if (selectableNumeralCardsPlayed.length > 0) {
       return []
     }
-    return cardsPlayed.length === 4
+    return cardsPlayed.length === (this.game.players.length === 6 ? 6 : 4)
       ? [this.startPlayerTurn(RuleId.EndOfTrickKistunePawnMove, this.nextPlayer)]
       : [this.startPlayerTurn(RuleId.PlayKitsuCard, this.nextPlayer)]
   }
@@ -34,6 +34,7 @@ export class SelectKatanaTargetRule extends PlayerTurnRule<number, MaterialType,
         type: LocationType.PlayedKitsuCardSpot,
         rotation: KitsuCardRotation.FaceDown,
         player: item.location.player,
+        x: item.location.x
       }))
   }
 
