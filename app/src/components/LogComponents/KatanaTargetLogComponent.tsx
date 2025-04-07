@@ -1,9 +1,9 @@
 /** @jsxImportSource @emotion/react */
-import { KitsuRules } from '@gamepark/kitsu/KitsuRules'
 import { KitsuCard } from '@gamepark/kitsu/material/KitsuCard'
 import { LocationType } from '@gamepark/kitsu/material/LocationType'
 import { MaterialType } from '@gamepark/kitsu/material/MaterialType'
 import { RuleId } from '@gamepark/kitsu/rules/RuleId'
+import { SelectKatanaTargetRule } from '@gamepark/kitsu/rules/SelectKatanaTargetRule'
 import { MoveComponentProps, Picture, usePlayerId, usePlayerName } from '@gamepark/react-game'
 import { MaterialGame, MoveItem } from '@gamepark/rules-api'
 import { FC } from 'react'
@@ -13,8 +13,8 @@ import { kitsuCardDescription } from '../../material/KitsuCardDescription'
 
 export const KatanaTargetLogComponent: FC<MoveComponentProps<MoveItem<number, MaterialType, LocationType>>> = ({ move, context }) => {
   const me = usePlayerId<number>()
-  const rule = new KitsuRules(context.game as MaterialGame<number, MaterialType, LocationType, RuleId>)
-  const actingPlayer = context.action.playerId
+  const rule = new SelectKatanaTargetRule(context.game as MaterialGame<number, MaterialType, LocationType, RuleId>)
+  const actingPlayer = rule.player
   const targetPlayer = move.location.player
   const actingPlayerName = usePlayerName(actingPlayer)
   const targetPlayerName = usePlayerName(targetPlayer)

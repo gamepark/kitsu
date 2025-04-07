@@ -1,5 +1,4 @@
 /** @jsxImportSource @emotion/react */
-import { KitsuRules } from '@gamepark/kitsu/KitsuRules'
 import { KitsunePawn } from '@gamepark/kitsu/material/KitsunePawn'
 import { LocationType } from '@gamepark/kitsu/material/LocationType'
 import { MaterialType } from '@gamepark/kitsu/material/MaterialType'
@@ -15,7 +14,7 @@ import { kitsunePawnDescription } from '../../material/KitsunePawnDescription'
 
 export const EndOfTrickWinningTeamLogComponent: FC<MoveComponentProps<MaterialMove<number, MaterialType, LocationType>>> = ({ context }) => {
   const { t } = useTranslation()
-  const rule = new KitsuRules(context.game as MaterialGame<number, MaterialType, LocationType, RuleId>)
+  const rule = new EndOfTrickKitsunePawnMoveRule(context.game as MaterialGame<number, MaterialType, LocationType, RuleId>)
   const playedCards = rule.material(MaterialType.KitsuCard).location(LocationType.PlayedKitsuCardSpot)
   const playedTokens = rule.material(MaterialType.PowerToken).location(LocationType.PowerTokenSpotOnKitsuCard)
   const { zenkoScore, yakoScore, winningTeam } = EndOfTrickKitsunePawnMoveRule.getWinningTeamAndScoreDifference(playedCards, playedTokens, true)
@@ -32,7 +31,7 @@ export const EndOfTrickWinningTeamLogComponent: FC<MoveComponentProps<MaterialMo
     return (
       <Trans
         defaults="log.endOfTrick.winningTeam.ultimateWisdomReached"
-        values={{ zenkoScore, yakoScore, winningTeamName: winningTeam === TeamColor.Yako ? t('clan.yako') : t('clan.zenko'), numberOfMoves: numberOfMoves }}
+        values={{ zenkoScore: zenkoScore, yakoScore: yakoScore, winningTeamName: winningTeam === TeamColor.Yako ? t('clan.yako') : t('clan.zenko'), numberOfMoves: numberOfMoves }}
         components={{
           blue: <span css={zenkoTextCss} />,
           orange: <span css={yakoTextCss} />,
@@ -50,7 +49,7 @@ export const EndOfTrickWinningTeamLogComponent: FC<MoveComponentProps<MaterialMo
   return (
     <Trans
       defaults="log.endOfTrick.winningTeam"
-      values={{ zenkoScore, yakoScore, winningTeamName: winningTeam === TeamColor.Yako ? t('clan.yako') : t('clan.zenko'), numberOfMoves: numberOfMoves }}
+      values={{ zenkoScore: zenkoScore, yakoScore: yakoScore, winningTeamName: winningTeam === TeamColor.Yako ? t('clan.yako') : t('clan.zenko'), numberOfMoves: numberOfMoves }}
       components={{
         blue: <span css={zenkoTextCss} />,
         orange: <span css={yakoTextCss} />,
