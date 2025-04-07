@@ -33,7 +33,7 @@ export const kitsuCardLogPictureCss = css`
 `
 
 export const powerTokenLogPictureCss = css`
-  height: 1.5em;
+  height: 2.5em;
   position: relative;
 
   > picture {
