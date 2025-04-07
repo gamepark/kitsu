@@ -7,6 +7,7 @@ import { StrictMode } from 'react'
 import ReactDOM from 'react-dom'
 import { gameAnimations } from './animations/GameAnimations'
 import App from './App'
+import { KitsuHistory } from './history/KitsuHistory'
 import { KitsuTheme } from './KitsuTheme'
 import { Locators } from './locators/Locators'
 import { Material } from './material/Material'
@@ -26,6 +27,7 @@ ReactDOM.render(
       locators={Locators}
       animations={gameAnimations}
       tutorial={new KitsuTutorial()}
+      logs={new KitsuHistory()}
       theme={KitsuTheme}
     >
       <App />

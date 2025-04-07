@@ -20,7 +20,8 @@ export class EndOfTrickPickAvailablePowerToken extends PlayerTurnRule<number, Ma
     if (
       this.material(MaterialType.PowerToken)
         .location(LocationType.PowerTokenSpotOnClanCard)
-        .player((player) => player !== undefined && teamMembers.includes(player)).length !== 0
+        .player((player) => player !== undefined && teamMembers.includes(player)).length !== 0 ||
+      this.material(MaterialType.PowerToken).location(LocationType.PowerTokenSpotOnWisdomBoard).length === 0
     ) {
       const currentLeader = this.material(MaterialType.LeaderToken).getItem()?.location.player
       if (currentLeader === undefined) {
