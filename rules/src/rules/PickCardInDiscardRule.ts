@@ -15,7 +15,7 @@ export class PickCardInDiscardRule extends PlayerTurnRule<number, MaterialType, 
     const ruleMove = this.isParentCardKatana() ? this.startRule(RuleId.SelectKatanaTarget) : this.startPlayerTurn(this.getNextPlayerRuleId(), this.nextPlayer)
     const lastDiscardedCards = this.material(MaterialType.KitsuCard)
       .location(LocationType.KitsuCardDiscardSpotOnWisdomBoard)
-      .sort((item) => - (item.location.x ?? 0))
+      .sort((item) => -(item.location.x ?? 0))
       .limit(numberOfCardsToPick)
     return lastDiscardedCards.length === numberOfCardsToPick
       ? [lastDiscardedCards.moveItemsAtOnce({ type: LocationType.DiscardedCardsToPickSpot, player: this.player })]

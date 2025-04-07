@@ -34,7 +34,7 @@ export class SelectKatanaTargetRule extends PlayerTurnRule<number, MaterialType,
         type: LocationType.PlayedKitsuCardSpot,
         rotation: KitsuCardRotation.FaceDown,
         player: item.location.player,
-        x: item.location.x
+        x: item.location.x,
       }))
   }
 

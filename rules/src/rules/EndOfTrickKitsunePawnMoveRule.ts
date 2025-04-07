@@ -67,20 +67,19 @@ export class EndOfTrickKitsunePawnMoveRule extends PlayerTurnRule<number, Materi
   public static getWinningTeamAndScoreDifference(
     playedCards: Material<number, MaterialType, LocationType>,
     playedTokens: Material<number, MaterialType, LocationType>,
-    alreadyRevealed: boolean = false
+    alreadyRevealed = false,
   ): {
     zenkoScore: number
     yakoScore: number
     winningTeam: TeamColor | undefined
-    protectedCard: MaterialItem<number, LocationType, KitsuCard> | undefined,
+    protectedCard: MaterialItem<number, LocationType, KitsuCard> | undefined
   } {
     const numberOfColourExchangeEffects =
       playedCards.id<KitsuCard>((id) => isSpecialCard(id) && getSpecialCardType(id) === KitsuCardSpecialType.WhiteKitsune).length +
       playedTokens.id<PowerToken>(PowerToken.ColourExchange).length
     const invertColors = numberOfColourExchangeEffects % 2 === 1
     const protectionToken = playedTokens.id<PowerToken>(PowerToken.Protection).getItem<PowerToken>()
-    const protectedCard =
-      protectionToken !== undefined ? playedCards.index(protectionToken.location.parent).getItem<KitsuCard>() : undefined
+    const protectedCard = protectionToken !== undefined ? playedCards.index(protectionToken.location.parent).getItem<KitsuCard>() : undefined
     const plus3Token = playedTokens.id<PowerToken>(PowerToken.Plus3).getItem<PowerToken>()
     const isPlus3Yako =
       plus3Token !== undefined &&
@@ -89,9 +88,11 @@ export class EndOfTrickKitsunePawnMoveRule extends PlayerTurnRule<number, Materi
       plus3Token !== undefined &&
       (invertColors ? plus3Token.location.rotation !== PowerTokenPlus3Side.Zenko : plus3Token.location.rotation === PowerTokenPlus3Side.Zenko)
     const yakoScore =
-      EndOfTrickKitsunePawnMoveRule.getScore(playedCards, invertColors ? TeamColor.Zenko : TeamColor.Yako, alreadyRevealed ? undefined : protectedCard ) + (isPlus3Yako ? 3 : 0)
+      EndOfTrickKitsunePawnMoveRule.getScore(playedCards, invertColors ? TeamColor.Zenko : TeamColor.Yako, alreadyRevealed ? undefined : protectedCard) +
+      (isPlus3Yako ? 3 : 0)
     const zenkoScore =
-      EndOfTrickKitsunePawnMoveRule.getScore(playedCards, invertColors ? TeamColor.Yako : TeamColor.Zenko, alreadyRevealed ? undefined : protectedCard ) + (isPlus3Zenko ? 3 : 0)
+      EndOfTrickKitsunePawnMoveRule.getScore(playedCards, invertColors ? TeamColor.Yako : TeamColor.Zenko, alreadyRevealed ? undefined : protectedCard) +
+      (isPlus3Zenko ? 3 : 0)
     const winningTeam = Math.abs(yakoScore - zenkoScore) === 0 ? undefined : yakoScore > zenkoScore ? TeamColor.Yako : TeamColor.Zenko
     return { zenkoScore, yakoScore, winningTeam, protectedCard }
   }
