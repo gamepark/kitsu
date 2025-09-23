@@ -1,6 +1,6 @@
 {
   "name": "@gamepark/kitsu",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "The rules of Kitsu adapted for Game Park",
   "type": "module",
   "sideEffects": false,
