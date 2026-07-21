@@ -7,6 +7,7 @@ import FirstPlayerToken from '../images/Tokens/FirstPlayerToken.png'
 class LeaderTokenDescription extends TokenDescription<number, MaterialType, LocationType> {
   height = 4.0
   width = 3.5
+  transparency = true
   image = FirstPlayerToken
   help = LeaderTokenHelp
 }

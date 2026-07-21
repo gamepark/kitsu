@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import { faArrowRotateRight, faHandPointer, faSquarePlus } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { KitsuCard } from '@gamepark/kitsu/material/KitsuCard'
@@ -74,7 +73,7 @@ class KitsuCardDescription extends CardDescription<number, MaterialType, Locatio
     return false
   }
 
-  public isMenuAlwaysVisible(item: MaterialItem<number, LocationType>, context: ItemContext<number, MaterialType, LocationType>): boolean {
+  public isMenuAlwaysVisible(item: MaterialItem<number, LocationType, KitsuCard>, context: ItemContext<number, MaterialType, LocationType>): boolean {
     if (context.rules.game.rule?.id !== RuleId.SelectKatanaTarget) {
       return super.isMenuAlwaysVisible(item, context)
     }
@@ -133,16 +132,16 @@ class KitsuCardDescription extends CardDescription<number, MaterialType, Locatio
   ): React.ReactNode {
     const currentItemIndex = context.rules.material(MaterialType.KitsuCard).id<KitsuCard>(item.id).getIndex()
     const movesForThisCard = legalMoves
-      .filter(isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard))
+      .filter(isMoveItemType(MaterialType.KitsuCard))
       .filter((move) => move.itemIndex === currentItemIndex && move.location.rotation !== KitsuCardRotation.FaceDown)
     const powerTokenMovesWithThisCard = legalMoves
-      .filter(isMoveItemType<number, MaterialType, LocationType>(MaterialType.PowerToken))
+      .filter(isMoveItemType(MaterialType.PowerToken))
       .filter((move) => move.location.parent === currentItemIndex)
     if (movesForThisCard.length > 0 || powerTokenMovesWithThisCard.length > 0) {
       return (
         <>
           {movesForThisCard.map((move, index) => (
-            <ItemMenuButton move={move} label={<Trans defaults="button.card.play" />} key={`playKistuCard-${context.player}-${index}`} labelPosition="left">
+            <ItemMenuButton move={move} label={<Trans i18nKey="button.card.play" />} key={`playKistuCard-${context.player}-${index}`} labelPosition="left">
               <FontAwesomeIcon icon={faHandPointer} size="lg" />
             </ItemMenuButton>
           ))}
@@ -159,7 +158,7 @@ class KitsuCardDescription extends CardDescription<number, MaterialType, Locatio
                 moves={[tokenMove]}
                 radius={0.5 - 2 * tokenIndex}
                 angle={0}
-                label={<Trans defaults={translationKey} />}
+                label={<Trans i18nKey={translationKey} />}
                 labelPosition="left"
               >
                 <FontAwesomeIcon icon={faSquarePlus} size="lg" />
@@ -184,14 +183,14 @@ class KitsuCardDescription extends CardDescription<number, MaterialType, Locatio
   ): React.ReactNode {
     const currentItemIndex = context.rules.material(MaterialType.KitsuCard).id<KitsuCard>(item.id).getIndex()
     const moveItemIndexesForOtherPlayers = legalMoves
-      .filter((move) => isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard)(move))
+      .filter((move) => isMoveItemType(MaterialType.KitsuCard)(move))
       .map((move) => (move as MoveItem<number, MaterialType, LocationType>).itemIndex)
     if (!moveItemIndexesForOtherPlayers.includes(currentItemIndex)) {
       return
     }
     const movesToThisLocation = legalMoves.filter(
       (move) =>
-        isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard)(move) &&
+        isMoveItemType(MaterialType.KitsuCard)(move) &&
         move.location.type === LocationType.PlayedKitsuCardSpot &&
         move.itemIndex === currentItemIndex,
     )
@@ -203,7 +202,7 @@ class KitsuCardDescription extends CardDescription<number, MaterialType, Locatio
             <ItemMenuButton
               key={`selectKatanaTarget-${context.player}-${index}`}
               move={move}
-              label={<Trans defaults="button.card.flip" />}
+              label={<Trans i18nKey="button.card.flip" />}
               labelPosition={labelPosition}
             >
               <span className="fa-flip-vertical">
@@ -229,13 +228,13 @@ class KitsuCardDescription extends CardDescription<number, MaterialType, Locatio
   ): React.ReactNode {
     const currentItemIndex = context.rules.material(MaterialType.KitsuCard).id<KitsuCard>(item.id).getIndex()
     const movesForThisCard = legalMoves
-      .filter(isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard))
+      .filter(isMoveItemType(MaterialType.KitsuCard))
       .filter((move) => move.itemIndex === currentItemIndex)
 
     return (
       <>
         {movesForThisCard.map((move, index) => (
-          <ItemMenuButton key={`addDiscardedCardToPlayerHand-${context.player}-${index}`} move={move} label={<Trans defaults="button.card.addToHand" />}>
+          <ItemMenuButton key={`addDiscardedCardToPlayerHand-${context.player}-${index}`} move={move} label={<Trans i18nKey="button.card.addToHand" />}>
             <FontAwesomeIcon icon={faHandPointer} size="lg" />
           </ItemMenuButton>
         ))}
@@ -255,7 +254,7 @@ class KitsuCardDescription extends CardDescription<number, MaterialType, Locatio
   ): React.ReactNode {
     const currentItemIndex = context.rules.material(MaterialType.KitsuCard).id<KitsuCard>(item.id).getIndex()
     const movesForThisCard = legalMoves
-      .filter(isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard))
+      .filter(isMoveItemType(MaterialType.KitsuCard))
       .filter((move) => move.itemIndex === currentItemIndex)
     return (
       <>
@@ -263,7 +262,7 @@ class KitsuCardDescription extends CardDescription<number, MaterialType, Locatio
           <ItemMenuButton
             key={`sendCardToTeamMember-${context.player}-${index}`}
             move={move}
-            label={<Trans defaults="button.card.sendToTeamMember" />}
+            label={<Trans i18nKey="button.card.sendToTeamMember" />}
             labelPosition="left"
           >
             <FontAwesomeIcon icon={faHandPointer} size="lg" />

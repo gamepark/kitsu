@@ -101,7 +101,7 @@ describe('End of trick - kitsune pawn move rule', () => {
 
         // When
         const consequences = rule.onRuleStart(previousRuleMove)
-        const kistunePawnMoves = consequences.filter(isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsunePawn))
+        const kistunePawnMoves = consequences.filter(isMoveItemType(MaterialType.KitsunePawn))
 
         // Then
         expect(consequences).toHaveLength(expectedNumberOfKitsunePawnMoves + 1)
@@ -153,7 +153,7 @@ describe('End of trick - kitsune pawn move rule', () => {
 
         // When
         const consequences = rule.onRuleStart(previousRuleMove)
-        const kitsunePawnMoves = consequences.filter(isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard))
+        const kitsunePawnMoves = consequences.filter(isMoveItemType(MaterialType.KitsuCard))
 
         // Then
         expect(consequences).toHaveLength(1)
@@ -364,7 +364,7 @@ describe('End of trick - kitsune pawn move rule', () => {
 
         // When
         const consequences = rule.onRuleStart(previousRuleMove)
-        const kistunePawnMoves = consequences.filter(isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsunePawn))
+        const kistunePawnMoves = consequences.filter(isMoveItemType(MaterialType.KitsunePawn))
 
         // Then
         expect(consequences).toHaveLength(expectedNumberOfKitsunePawnMoves + 1)
@@ -456,7 +456,7 @@ describe('End of trick - kitsune pawn move rule', () => {
 
         // When
         const consequences = rule.onRuleStart(previousRuleMove)
-        const kistunePawnMoves = consequences.filter(isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsunePawn))
+        const kistunePawnMoves = consequences.filter(isMoveItemType(MaterialType.KitsunePawn))
 
         // Then
         expect(consequences).toHaveLength(expectedNumberOfKitsunePawnMoves + 1)
@@ -565,7 +565,7 @@ describe('End of trick - kitsune pawn move rule', () => {
 
         // When
         const consequences = rule.onRuleStart(previousRuleMove)
-        const kitsunePawnMoves = consequences.filter(isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsunePawn))
+        const kitsunePawnMoves = consequences.filter(isMoveItemType(MaterialType.KitsunePawn))
 
         // Then
         expect(consequences).toHaveLength(expectedReachedSpot + 1)

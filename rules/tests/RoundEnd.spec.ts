@@ -78,8 +78,8 @@ describe('RoundEnd rule tests', () => {
 
         // When
         const consequences = rule.onRuleStart(previousRuleMove)
-        const kitsuCardMoves = consequences.filter(isMoveItemTypeAtOnce<number, MaterialType, LocationType>(MaterialType.KitsuCard))
-        const victoryCardMoves = consequences.filter(isCreateItemType<number, MaterialType, LocationType>(MaterialType.VictoryCard))
+        const kitsuCardMoves = consequences.filter(isMoveItemTypeAtOnce(MaterialType.KitsuCard))
+        const victoryCardMoves = consequences.filter(isCreateItemType(MaterialType.VictoryCard))
         const customMoves = consequences.filter(isCustomMoveType<CustomMoveType>(CustomMoveType.PickRandomPlayer))
 
         // Then
@@ -126,7 +126,7 @@ describe('RoundEnd rule tests', () => {
 
         // When
         const consequences = rule.onRuleStart(previousRuleMove)
-        const victoryCardMoves = consequences.filter(isCreateItemType<number, MaterialType, LocationType>(MaterialType.VictoryCard))
+        const victoryCardMoves = consequences.filter(isCreateItemType(MaterialType.VictoryCard))
         const customMoves = consequences.filter(isCustomMoveType<CustomMoveType>(CustomMoveType.PickRandomPlayer))
 
         // Then
@@ -167,7 +167,7 @@ describe('RoundEnd rule tests', () => {
 
       // When
       const consequences = rule.onCustomMove(previousCustomMove)
-      const leaderTokenMoves = consequences.filter(isMoveItemType<number, MaterialType, LocationType>(MaterialType.LeaderToken))
+      const leaderTokenMoves = consequences.filter(isMoveItemType(MaterialType.LeaderToken))
       const ruleMoves = consequences.filter(isStartPlayerTurn<number, MaterialType, LocationType>)
 
       // Then

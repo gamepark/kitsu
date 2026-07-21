@@ -31,7 +31,7 @@ export class PickCardInDiscardRule extends PlayerTurnRule<number, MaterialType, 
 
   public afterItemMove(move: ItemMove<number, MaterialType, LocationType>, _context?: PlayMoveContext): MaterialMove<number, MaterialType, LocationType>[] {
     if (
-      isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard)(move) &&
+      isMoveItemType(MaterialType.KitsuCard)(move) &&
       move.location.type === LocationType.PlayerHand &&
       move.location.player === this.player
     ) {

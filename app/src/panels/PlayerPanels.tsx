@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react'
 import { KitsuRules } from '@gamepark/kitsu/KitsuRules'
 import { Memorize } from '@gamepark/kitsu/Memorize'

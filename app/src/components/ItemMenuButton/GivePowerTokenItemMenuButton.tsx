@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import { LocationType } from '@gamepark/kitsu/material/LocationType'
 import { MaterialType } from '@gamepark/kitsu/material/MaterialType'
 import { ItemMenuButton, usePlayerId, usePlayerName } from '@gamepark/react-game'
@@ -17,7 +16,7 @@ export const GivePowerTokenItemMenuButton: FC<PropsWithChildren<GivePowerTokenIt
   const me = usePlayerId<number>()
   const player = usePlayerName(playerId)
   const labelComponent =
-    playerId === me ? <Trans defaults="button.powerToken.takeForSelf" /> : <Trans defaults="button.powerToken.giveToPlayer" values={{ playerName: player }} />
+    playerId === me ? <Trans i18nKey="button.powerToken.takeForSelf" /> : <Trans i18nKey="button.powerToken.giveToPlayer" values={{ playerName: player }} />
   return (
     <ItemMenuButton move={move} x={x} y={y} label={labelComponent} labelPosition="right">
       {children}

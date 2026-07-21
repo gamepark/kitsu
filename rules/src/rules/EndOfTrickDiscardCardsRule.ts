@@ -30,9 +30,9 @@ export class EndOfTrickDiscardCardsRule extends PlayerTurnRule<number, MaterialT
 
   public afterItemMove(move: ItemMove<number, MaterialType, LocationType>, _context?: PlayMoveContext): MaterialMove<number, MaterialType, LocationType>[] {
     if (
-      (isMoveItemTypeAtOnce<number, MaterialType, LocationType>(MaterialType.KitsuCard)(move) &&
+      (isMoveItemTypeAtOnce(MaterialType.KitsuCard)(move) &&
         move.location.type === LocationType.KitsuCardDiscardSpotOnWisdomBoard) ||
-      (isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard)(move) &&
+      (isMoveItemType(MaterialType.KitsuCard)(move) &&
         move.location.type === LocationType.KitsuCardDiscardSpotOnWisdomBoard)
     ) {
       if (this.material(MaterialType.KitsuCard).location(LocationType.PlayerHand).length === 0) {

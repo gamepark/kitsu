@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import { KitsuCard } from '@gamepark/kitsu/material/KitsuCard'
 import { LocationType } from '@gamepark/kitsu/material/LocationType'
 import { MaterialType } from '@gamepark/kitsu/material/MaterialType'
@@ -19,7 +18,7 @@ export const PickDiscardCardCardsRevealed: FC<MoveComponentProps<MoveItemsAtOnce
   if (me === actingPlayer) {
     return (
       <Trans
-        defaults="log.pickDiscardCard.reveal.self"
+        i18nKey="log.pickDiscardCard.reveal.self"
         components={{
           cards: (
             <>
@@ -38,7 +37,7 @@ export const PickDiscardCardCardsRevealed: FC<MoveComponentProps<MoveItemsAtOnce
   }
   return (
     <Trans
-      defaults="log.pickDiscardCard.reveal.other"
+      i18nKey="log.pickDiscardCard.reveal.other"
       values={{ player: actingPlayerName }}
       components={{
         cards: (

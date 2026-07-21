@@ -18,7 +18,7 @@ export class RoundSetupDealCardsRule extends PlayerTurnRule<number, MaterialType
   }
 
   public afterItemMove(move: ItemMove<number, MaterialType, LocationType>, _context?: PlayMoveContext): MaterialMove<number, MaterialType, LocationType>[] {
-    if (isShuffleItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard)(move)) {
+    if (isShuffleItemType(MaterialType.KitsuCard)(move)) {
       const deck = this.material(MaterialType.KitsuCard).location(LocationType.KitsuCardDeckSpotOnWisdomBoard).deck()
       const currentLeader = this.material(MaterialType.LeaderToken).getItem()?.location.player
       if (currentLeader === undefined) {

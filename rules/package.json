@@ -2,8 +2,8 @@
   "name": "@gamepark/kitsu",
   "version": "1.2.0",
   "description": "The rules of Kitsu adapted for Game Park",
-  "type": "module",
   "sideEffects": false,
+  "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
@@ -19,30 +19,19 @@
     "access": "public"
   },
   "scripts": {
+    "test": "vitest",
     "build": "tsc",
-    "prepublishOnly": "tsc",
-    "publish": "lerna publish",
-    "test": "jest",
+    "prepack": "yarn build",
+    "publish": "yarn version ${0:-patch} && yarn npm publish && git commit -am v$(node -p \"require('./package.json').version\") && git tag v$(node -p \"require('./package.json').version\") && git push --follow-tags",
     "lint": "eslint --fix"
   },
   "peerDependencies": {
-    "@gamepark/rules-api": ">=6.29",
-    "lodash": ">=4.17"
+    "@gamepark/rules-api": ">=7",
+    "es-toolkit": "^1.45.1"
   },
   "devDependencies": {
-    "@eslint/js": "^9.22.0",
-    "@gamepark/rules-api": "~6.30.0",
-    "@types/jest": "^27.5.2",
-    "@types/lodash": "^4.17.7",
-    "eslint": "^9.22.0",
-    "eslint-config-prettier": "^10.1.1",
-    "eslint-plugin-prettier": "^5.2.3",
-    "globals": "^16.0.0",
-    "i18next": "^22.0.3",
-    "lodash": "^4.17.21",
-    "prettier": "3.5.3",
-    "ts-jest": "^27.1.5",
-    "ts-node": "^10.9.2",
-    "typescript-eslint": "^8.26.0"
+    "@gamepark/rules-api": "~7.6.4",
+    "es-toolkit": "^1.49.0",
+    "vitest": "^4.1.10"
   }
 }

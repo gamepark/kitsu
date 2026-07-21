@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import { KitsuRules } from '@gamepark/kitsu/KitsuRules'
 import { usePlayerId, usePlayerName, useRules } from '@gamepark/react-game'
 import { useTranslation } from 'react-i18next'

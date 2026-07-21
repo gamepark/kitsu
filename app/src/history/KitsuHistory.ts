@@ -62,7 +62,7 @@ export class KitsuHistory
     if (context.game.rule?.id === RuleId.RoundSetupDealCards) {
       return this.getRoundSetupeDealCardsMoveLogDescription(move, context)
     }
-    if (context.game.rule?.id === RuleId.SendCardToTeamMember && isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard)(move)) {
+    if (context.game.rule?.id === RuleId.SendCardToTeamMember && isMoveItemType(MaterialType.KitsuCard)(move)) {
       return this.getSendCardToTeamMemberMoveLogDescription(move, context, playerTeam)
     }
     if (context.game.rule?.id === RuleId.PlayKitsuCard) {
@@ -123,7 +123,7 @@ export class KitsuHistory
     context: MoveComponentContext<MaterialMove<number, MaterialType, LocationType>, number, MaterialGame<number, MaterialType, LocationType, RuleId>>,
     playerTeam: TeamColor,
   ): MovePlayedLogDescription | undefined {
-    if (isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard)(move)) {
+    if (isMoveItemType(MaterialType.KitsuCard)(move)) {
       if (move.location.type === LocationType.PlayedKitsuCardSpot) {
         return { Component: KitsuCardPlayedLogComponent, player: context.action.playerId, css: logComponentCss(playerTeam) }
       }
@@ -157,7 +157,7 @@ export class KitsuHistory
     context: MoveComponentContext<MaterialMove<number, MaterialType, LocationType, RuleId>, number, MaterialGame<number, MaterialType, LocationType, RuleId>>,
     playerTeam: TeamColor,
   ): MovePlayedLogDescription | undefined {
-    if (isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard)(move) && move.location.rotation === KitsuCardRotation.FaceDown) {
+    if (isMoveItemType(MaterialType.KitsuCard)(move) && move.location.rotation === KitsuCardRotation.FaceDown) {
       return { Component: KatanaTargetLogComponent, player: context.action.playerId, css: logComponentCss(playerTeam) }
     }
     return undefined
@@ -169,16 +169,16 @@ export class KitsuHistory
   ): MovePlayedLogDescription | undefined {
     if (
       (isStartRule<number, MaterialType, LocationType, RuleId>(move) || isStartPlayerTurn<number, MaterialType, LocationType, RuleId>(move)) &&
-      !context.action.consequences.some((move) => isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsunePawn)(move) && move.location.id !== 0)
+      !context.action.consequences.some((move) => isMoveItemType(MaterialType.KitsunePawn)(move) && move.location.id !== 0)
     ) {
       return { Component: EndOfTrickDrawLogComponent, css: logComponentCss() }
     }
-    if (isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard)(move) && move.reveal?.id !== undefined) {
+    if (isMoveItemType(MaterialType.KitsuCard)(move) && move.reveal?.id !== undefined) {
       return { Component: EndOfTrickProtectedCardRevealLogComponent, css: logComponentCss() }
     }
-    if (isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsunePawn)(move)) {
+    if (isMoveItemType(MaterialType.KitsunePawn)(move)) {
       const firstKitsuneConsequence = context.action.consequences.findIndex(
-        (move) => isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsunePawn)(move) && move.location.id !== 0,
+        (move) => isMoveItemType(MaterialType.KitsunePawn)(move) && move.location.id !== 0,
       )
       if (context.action.consequences.indexOf(move) === firstKitsuneConsequence) {
         return { Component: EndOfTrickWinningTeamLogComponent, css: logComponentCss() }
@@ -205,7 +205,7 @@ export class KitsuHistory
     ) {
       return { Component: EndOfTrickNoPickToken, css: logComponentCss() }
     }
-    if (isMoveItemType<number, MaterialType, LocationType>(MaterialType.PowerToken)(move) && move.location.type === LocationType.PowerTokenSpotOnClanCard) {
+    if (isMoveItemType(MaterialType.PowerToken)(move) && move.location.type === LocationType.PowerTokenSpotOnClanCard) {
       return { Component: EndOfTrickPickPowerTokenLogComponent, player: context.action.playerId, css: logComponentCss(playerTeam) }
     }
     return undefined
@@ -215,12 +215,12 @@ export class KitsuHistory
     move: MaterialMove<number, MaterialType, LocationType>,
     context: MoveComponentContext<MaterialMove<number, MaterialType, LocationType>, number, MaterialGame<number, MaterialType, LocationType, RuleId>>,
   ): MovePlayedLogDescription | undefined {
-    if (isShuffleItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard)(move)) {
+    if (isShuffleItemType(MaterialType.KitsuCard)(move)) {
       return { Component: ShufflingDeckLogComponent, css: logComponentCss() }
     }
-    if (isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard)(move) && move.location.type === LocationType.PlayerHand) {
+    if (isMoveItemType(MaterialType.KitsuCard)(move) && move.location.type === LocationType.PlayerHand) {
       const firstDealMove = context.action.consequences.findIndex(
-        (move) => isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard)(move) && move.location.type === LocationType.PlayerHand,
+        (move) => isMoveItemType(MaterialType.KitsuCard)(move) && move.location.type === LocationType.PlayerHand,
       )
       if (context.action.consequences.indexOf(move) === firstDealMove) {
         const rules = new RoundSetupDealCardsRule(context.game)
@@ -237,19 +237,19 @@ export class KitsuHistory
     if (
       isStartRule<number, MaterialType, LocationType, RuleId>(move) &&
       context.action.consequences.some(
-        (move) => isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard)(move) && move.location.type === LocationType.PlayerHand,
+        (move) => isMoveItemType(MaterialType.KitsuCard)(move) && move.location.type === LocationType.PlayerHand,
       )
     ) {
       return { Component: EndOfTrickPickCardsStartLogComponent, css: logComponentCss() }
     }
-    if (isMoveItemType<number, MaterialType, LocationType>(MaterialType.LeaderToken)(move)) {
+    if (isMoveItemType(MaterialType.LeaderToken)(move)) {
       return { Component: EndOfTrickMoveLeaderTokenLogComponent, css: logComponentCss() }
     }
     return undefined
   }
 
   private getRoundEndMoveLogDescription(move: MaterialMove<number, MaterialType, LocationType>): MovePlayedLogDescription | undefined {
-    if (isCreateItemType<number, MaterialType, LocationType>(MaterialType.VictoryCard)(move)) {
+    if (isCreateItemType(MaterialType.VictoryCard)(move)) {
       return { Component: RoundEndVictoryCardCreationLogComponent, css: logComponentCss() }
     }
     return undefined
@@ -260,13 +260,13 @@ export class KitsuHistory
     context: MoveComponentContext<MaterialMove<number, MaterialType, LocationType>, number, MaterialGame<number, MaterialType, LocationType, RuleId>>,
   ): MovePlayedLogDescription | undefined {
     if (
-      isMoveItemTypeAtOnce<number, MaterialType, LocationType>(MaterialType.KitsuCard)(move) &&
+      isMoveItemTypeAtOnce(MaterialType.KitsuCard)(move) &&
       move.location.type === LocationType.KitsuCardDiscardSpotOnWisdomBoard
     ) {
       return { Component: EndOfTrickDiscardTrickCardsLogComponent, css: logComponentCss() }
     }
     if (
-      isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard)(move) &&
+      isMoveItemType(MaterialType.KitsuCard)(move) &&
       move.location.type === LocationType.KitsuCardDiscardSpotOnWisdomBoard
     ) {
       const rule = new EndOfTrickDiscardCardsRule(context.game)
@@ -281,10 +281,10 @@ export class KitsuHistory
   }
 
   private getRoundSetupMoveKitsunePawnsMoveLogDescription(move: MaterialMove<number, MaterialType, LocationType>): MovePlayedLogDescription | undefined {
-    if (isMoveItemTypeAtOnce<number, MaterialType, LocationType>(MaterialType.KitsunePawn)(move)) {
+    if (isMoveItemTypeAtOnce(MaterialType.KitsunePawn)(move)) {
       return { Component: RoundSetupResetKitsunePawnPositionLogComponent, css: logComponentCss() }
     }
-    if (isMoveItemTypeAtOnce<number, MaterialType, LocationType>(MaterialType.PowerToken)(move)) {
+    if (isMoveItemTypeAtOnce(MaterialType.PowerToken)(move)) {
       return { Component: RoundSetupResetKitsunePawnPositionLogComponent, css: logComponentCss() }
     }
     return undefined
@@ -294,7 +294,7 @@ export class KitsuHistory
     move: MaterialMove<number, MaterialType, LocationType>,
     context: MoveComponentContext<MaterialMove<number, MaterialType, LocationType>, number, MaterialGame<number, MaterialType, LocationType, RuleId>>,
   ): MovePlayedLogDescription | undefined {
-    if (isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard)(move) && move.location.type === LocationType.PlayerHand) {
+    if (isMoveItemType(MaterialType.KitsuCard)(move) && move.location.type === LocationType.PlayerHand) {
       const rule = new KitsuRules(context.game)
       return {
         Component: EndOfTrickPickCardsCardDealtLogComponent,
@@ -311,13 +311,13 @@ export class KitsuHistory
   ): MovePlayedLogDescription | undefined {
     const rule = new PickCardInDiscardRule(context.game)
     if (
-      isMoveItemTypeAtOnce<number, MaterialType, LocationType>(MaterialType.KitsuCard)(move) &&
+      isMoveItemTypeAtOnce(MaterialType.KitsuCard)(move) &&
       move.location.type === LocationType.DiscardedCardsToPickSpot
     ) {
       const actingPlayer = rule.player
       return { Component: PickDiscardCardCardsRevealed, player: actingPlayer, css: logComponentCss(rule.remind<TeamColor>(Memorize.Team, actingPlayer)) }
     }
-    if (isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard)(move) && move.location.type === LocationType.PlayerHand) {
+    if (isMoveItemType(MaterialType.KitsuCard)(move) && move.location.type === LocationType.PlayerHand) {
       return {
         Component: PickDiscardCardCardPickedLogComponent,
         player: move.location.player,

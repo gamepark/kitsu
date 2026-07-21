@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import { LocationType } from '@gamepark/kitsu/material/LocationType'
 import { MaterialType } from '@gamepark/kitsu/material/MaterialType'
 import { PickCardInDiscardRule } from '@gamepark/kitsu/rules/PickCardInDiscardRule'
@@ -14,7 +13,7 @@ export const PickDiscardCardNoCardLogComponent: FC<MoveComponentProps<MaterialMo
   const actingPlayer = rule.player
   const actingPlayerName = usePlayerName(actingPlayer)
   if (me === actingPlayer) {
-    return <Trans defaults="log.pickDiscardCard.noCardAvailable.self" />
+    return <Trans i18nKey="log.pickDiscardCard.noCardAvailable.self" />
   }
-  return <Trans defaults="log.pickDiscardCard.noCardAvailable.other" values={{ player: actingPlayerName }} />
+  return <Trans i18nKey="log.pickDiscardCard.noCardAvailable.other" values={{ player: actingPlayerName }} />
 }

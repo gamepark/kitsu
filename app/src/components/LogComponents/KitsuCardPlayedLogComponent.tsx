@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import { KitsuRules } from '@gamepark/kitsu/KitsuRules'
 import { KitsuCard } from '@gamepark/kitsu/material/KitsuCard'
 import { LocationType } from '@gamepark/kitsu/material/LocationType'
@@ -8,7 +7,7 @@ import { PowerTokenPlus3Side } from '@gamepark/kitsu/material/PowerTokenPlus3Sid
 import { RuleId } from '@gamepark/kitsu/rules/RuleId'
 import { MoveComponentProps, Picture, usePlayerId, usePlayerName } from '@gamepark/react-game'
 import { MaterialGame, MoveItem } from '@gamepark/rules-api'
-import { isUndefined } from 'lodash'
+import { isUndefined } from 'es-toolkit'
 import { FC } from 'react'
 import { Trans } from 'react-i18next'
 import { kitsuCardLogPictureCss, powerTokenLogPictureCss } from '../../KitsuTheme'
@@ -28,7 +27,7 @@ export const KitsuCardPlayedLogComponent: FC<MoveComponentProps<MoveItem<number,
     if (me === player && !isUndefined(cardId)) {
       return (
         <Trans
-          defaults="log.playedCardWithToken.self"
+          i18nKey="log.playedCardWithToken.self"
           components={{
             card: <Picture src={kitsuCardDescription.images[cardId]} css={kitsuCardLogPictureCss} />,
             token: (
@@ -41,7 +40,7 @@ export const KitsuCardPlayedLogComponent: FC<MoveComponentProps<MoveItem<number,
     }
     return (
       <Trans
-        defaults="log.playedCardWithToken.other"
+        i18nKey="log.playedCardWithToken.other"
         values={{ player: playerName }}
         components={{
           card: (
@@ -65,11 +64,11 @@ export const KitsuCardPlayedLogComponent: FC<MoveComponentProps<MoveItem<number,
     )
   }
   if (me === player && !isUndefined(cardId)) {
-    return <Trans defaults="log.playedCard.self" components={{ card: <Picture src={kitsuCardDescription.images[cardId]} css={kitsuCardLogPictureCss} /> }} />
+    return <Trans i18nKey="log.playedCard.self" components={{ card: <Picture src={kitsuCardDescription.images[cardId]} css={kitsuCardLogPictureCss} /> }} />
   }
   return (
     <Trans
-      defaults="log.playedCard.other"
+      i18nKey="log.playedCard.other"
       values={{ player: playerName }}
       components={{
         card: (

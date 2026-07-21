@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import { KitsuCard } from '@gamepark/kitsu/material/KitsuCard'
 import { LocationType } from '@gamepark/kitsu/material/LocationType'
 import { MaterialType } from '@gamepark/kitsu/material/MaterialType'
@@ -20,7 +19,7 @@ export const EndOfTrickPickCardsCardDealtLogComponent: FC<MoveComponentProps<Mov
   if (me === receivingPlayer) {
     return (
       <Trans
-        defaults="log.endOfTrick.draw2Cards.cardDrawn.self"
+        i18nKey="log.endOfTrick.draw2Cards.cardDrawn.self"
         components={{
           card: (
             <Picture
@@ -40,7 +39,7 @@ export const EndOfTrickPickCardsCardDealtLogComponent: FC<MoveComponentProps<Mov
   }
   return (
     <Trans
-      defaults="log.endOfTrick.draw2Cards.cardDrawn.other"
+      i18nKey="log.endOfTrick.draw2Cards.cardDrawn.other"
       values={{ player: receivingPlayerName }}
       components={{ card: <Picture src={kitsuCardDescription.backImage} css={kitsuCardLogPictureCss} /> }}
     />

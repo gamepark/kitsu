@@ -90,7 +90,7 @@ describe('End fo trick - pick available power token tests', () => {
 
       // When
       const legalMoves = rule.getPlayerMoves()
-      const powerTokenMoves = legalMoves.filter(isMoveItemType<number, MaterialType, LocationType>(MaterialType.PowerToken))
+      const powerTokenMoves = legalMoves.filter(isMoveItemType(MaterialType.PowerToken))
       const powerTokenIdFromMoves = powerTokenMoves.map((move) => game.items[MaterialType.PowerToken]![move.itemIndex].id)
 
       // Then

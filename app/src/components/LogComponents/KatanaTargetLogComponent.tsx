@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import { KitsuCard } from '@gamepark/kitsu/material/KitsuCard'
 import { LocationType } from '@gamepark/kitsu/material/LocationType'
 import { MaterialType } from '@gamepark/kitsu/material/MaterialType'
@@ -25,7 +24,7 @@ export const KatanaTargetLogComponent: FC<MoveComponentProps<MoveItem<number, Ma
   if (me === actingPlayer) {
     return (
       <Trans
-        defaults="log.selectKatanaTarget.selectTarget.self"
+        i18nKey="log.selectKatanaTarget.selectTarget.self"
         values={{ targetPlayer: targetPlayerName }}
         components={{ card: <Picture src={kitsuCardDescription.images[targetCardId]} css={kitsuCardLogPictureCss} /> }}
       />
@@ -34,14 +33,14 @@ export const KatanaTargetLogComponent: FC<MoveComponentProps<MoveItem<number, Ma
   if (me === targetPlayer)
     return (
       <Trans
-        defaults="log.selectKatanaTarget.selectTarget.other.own"
+        i18nKey="log.selectKatanaTarget.selectTarget.other.own"
         values={{ player: actingPlayerName }}
         components={{ card: <Picture src={kitsuCardDescription.images[targetCardId]} css={kitsuCardLogPictureCss} /> }}
       />
     )
   return (
     <Trans
-      defaults="log.selectKatanaTarget.selectTarget.other"
+      i18nKey="log.selectKatanaTarget.selectTarget.other"
       values={{ player: actingPlayerName, targetPlayer: targetPlayerName }}
       components={{ card: <Picture src={kitsuCardDescription.images[targetCardId]} css={kitsuCardLogPictureCss} /> }}
     />

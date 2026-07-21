@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import { LocationType } from '@gamepark/kitsu/material/LocationType'
 import { MaterialType } from '@gamepark/kitsu/material/MaterialType'
 import { isSetupCardMaterial, SetupCard } from '@gamepark/kitsu/material/SetupCard'

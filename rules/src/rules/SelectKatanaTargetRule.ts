@@ -40,7 +40,7 @@ export class SelectKatanaTargetRule extends PlayerTurnRule<number, MaterialType,
 
   public afterItemMove(move: ItemMove<number, MaterialType, LocationType>, _context?: PlayMoveContext): MaterialMove<number, MaterialType, LocationType>[] {
     if (
-      isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard)(move) &&
+      isMoveItemType(MaterialType.KitsuCard)(move) &&
       move.location.type === LocationType.PlayedKitsuCardSpot &&
       move.location.rotation === KitsuCardRotation.FaceDown
     ) {

@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import { LocationType } from '@gamepark/kitsu/material/LocationType'
 import { MaterialType } from '@gamepark/kitsu/material/MaterialType'
 import { MoveComponentProps, Picture, usePlayerId, usePlayerName } from '@gamepark/react-game'
@@ -15,14 +14,14 @@ export const EndOfTrickMoveLeaderTokenLogComponent: FC<MoveComponentProps<MoveIt
   if (me === newLeader) {
     return (
       <Trans
-        defaults="log.endOfTrick.leaderTokenMove.self"
+        i18nKey="log.endOfTrick.leaderTokenMove.self"
         components={{ token: <Picture src={leaderTokenDescription.image} css={leaderTokenLogPictureCss} /> }}
       />
     )
   }
   return (
     <Trans
-      defaults="log.endOfTrick.leaderTokenMove.other"
+      i18nKey="log.endOfTrick.leaderTokenMove.other"
       values={{ player: newLeaderName }}
       components={{ token: <Picture src={leaderTokenDescription.image} css={leaderTokenLogPictureCss} /> }}
     />

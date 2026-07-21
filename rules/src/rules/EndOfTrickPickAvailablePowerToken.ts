@@ -53,7 +53,7 @@ export class EndOfTrickPickAvailablePowerToken extends PlayerTurnRule<number, Ma
 
   public afterItemMove(move: ItemMove<number, MaterialType, LocationType>, _context?: PlayMoveContext): MaterialMove<number, MaterialType, LocationType>[] {
     if (
-      isMoveItemType<number, MaterialType, LocationType>(MaterialType.PowerToken)(move) &&
+      isMoveItemType(MaterialType.PowerToken)(move) &&
       typeof move.location.player === 'number' &&
       this.teamMembers.includes(move.location.player)
     ) {

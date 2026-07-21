@@ -60,7 +60,7 @@ describe('End of trick - Discard cards rule ', () => {
 
         // When
         const moves = rule.onRuleStart(previousRuleMove)
-        const kistuCardMoves = moves.filter(isMoveItemTypeAtOnce<number, MaterialType, LocationType>(MaterialType.KitsuCard))
+        const kistuCardMoves = moves.filter(isMoveItemTypeAtOnce(MaterialType.KitsuCard))
 
         // Then
         expect(kistuCardMoves).toHaveLength(1)
@@ -165,8 +165,8 @@ describe('End of trick - Discard cards rule ', () => {
 
         // When
         const consequences = rule.onRuleStart(previousRuleMove)
-        const kitsuCardMoves = consequences.filter(isMoveItemTypeAtOnce<number, MaterialType, LocationType>(MaterialType.KitsuCard))
-        const powerTokenMoves = consequences.filter(isMoveItemTypeAtOnce<number, MaterialType, LocationType>(MaterialType.PowerToken))
+        const kitsuCardMoves = consequences.filter(isMoveItemTypeAtOnce(MaterialType.KitsuCard))
+        const powerTokenMoves = consequences.filter(isMoveItemTypeAtOnce(MaterialType.PowerToken))
         const ruleMoves = consequences.filter(isStartRule<number, MaterialType, LocationType>)
 
         // Then
@@ -202,7 +202,7 @@ describe('End of trick - Discard cards rule ', () => {
 
         // When
         const consequences = rule.afterItemMove(previousMove)
-        const kitsuCardMoves = consequences.filter(isMoveItemTypeAtOnce<number, MaterialType, LocationType>(MaterialType.KitsuCard))
+        const kitsuCardMoves = consequences.filter(isMoveItemTypeAtOnce(MaterialType.KitsuCard))
 
         // Then
         expect(consequences).toHaveLength(1)

@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import { KitsuCard } from '@gamepark/kitsu/material/KitsuCard'
 import { LocationType } from '@gamepark/kitsu/material/LocationType'
 import { MaterialType } from '@gamepark/kitsu/material/MaterialType'
@@ -16,7 +15,7 @@ export const EndOfTrickDiscardPlayerHandLogComponent: FC<MoveComponentProps<Mate
   const originalOwner = rule.material(MaterialType.KitsuCard).index(moveItem.itemIndex).getItem<KitsuCard>()?.location.player
   const originalOwnerName = usePlayerName(originalOwner)
   if (me === originalOwner) {
-    return <Trans defaults="log.endOfTrick.discardRemainingHandCard.self" />
+    return <Trans i18nKey="log.endOfTrick.discardRemainingHandCard.self" />
   }
-  return <Trans defaults="log.endOfTrick.discardRemainingHandCard.other" values={{ player: originalOwnerName }} />
+  return <Trans i18nKey="log.endOfTrick.discardRemainingHandCard.other" values={{ player: originalOwnerName }} />
 }

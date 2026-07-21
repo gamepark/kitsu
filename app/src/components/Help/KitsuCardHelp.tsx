@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import { KitsuRules } from '@gamepark/kitsu/KitsuRules'
 import { getKitsuCardType, isKitsuCardMaterial, KitsuCard, KitsuCardType } from '@gamepark/kitsu/material/KitsuCard'
 import { LocationType } from '@gamepark/kitsu/material/LocationType'

@@ -52,7 +52,7 @@ describe('End of trick - Move leader token rule tests', () => {
 
         // When
         const consequences = rule.onRuleStart(previousRuleMove)
-        const leaderTokenMoves = consequences.filter(isMoveItemType<number, MaterialType, LocationType>(MaterialType.LeaderToken))
+        const leaderTokenMoves = consequences.filter(isMoveItemType(MaterialType.LeaderToken))
         const ruleMoves = consequences.filter(isStartRule<number, MaterialType, LocationType>)
 
         // Then
@@ -80,7 +80,7 @@ describe('End of trick - Move leader token rule tests', () => {
 
         // When
         const consequences = rule.onRuleStart(previousRuleMove)
-        const leaderTokenMoves = consequences.filter(isMoveItemType<number, MaterialType, LocationType>(MaterialType.LeaderToken))
+        const leaderTokenMoves = consequences.filter(isMoveItemType(MaterialType.LeaderToken))
         const ruleMoves = consequences.filter(isStartPlayerTurn<number, MaterialType, LocationType>)
 
         // Then

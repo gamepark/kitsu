@@ -20,7 +20,7 @@ describe('Round setup - move kitsune pawns rule tests', () => {
         id: RuleId.RoundSetupMoveKitsunePawns,
         kind: MoveKind.RulesMove,
       })
-      const kitsuneTokenMoves = moves.filter(isMoveItemTypeAtOnce<number, MaterialType, LocationType>(MaterialType.KitsunePawn))
+      const kitsuneTokenMoves = moves.filter(isMoveItemTypeAtOnce(MaterialType.KitsunePawn))
 
       // Then
       expect(kitsuneTokenMoves).toHaveLength(1)
@@ -77,8 +77,8 @@ describe('Round setup - move kitsune pawns rule tests', () => {
 
         // When
         const consequences = rule.onRuleStart(previousRuleMove)
-        const kistunePawnsMoves = consequences.filter(isMoveItemTypeAtOnce<number, MaterialType, LocationType>(MaterialType.KitsunePawn))
-        const powerTokenMoves = consequences.filter(isMoveItemTypeAtOnce<number, MaterialType, LocationType>(MaterialType.PowerToken))
+        const kistunePawnsMoves = consequences.filter(isMoveItemTypeAtOnce(MaterialType.KitsunePawn))
+        const powerTokenMoves = consequences.filter(isMoveItemTypeAtOnce(MaterialType.PowerToken))
         const ruleMoves = consequences.filter(isStartRule<number, MaterialType, LocationType>)
 
         // Then

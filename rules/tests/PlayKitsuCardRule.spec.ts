@@ -69,7 +69,7 @@ describe('PlayKitsuCardRule tests', () => {
 
         // Then
         expect(moves).toHaveLength(expectedNumberOfMoves)
-        expect(moves.every((move) => isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard)(move))).toBe(true)
+        expect(moves.every((move) => isMoveItemType(MaterialType.KitsuCard)(move))).toBe(true)
         expect(moves.every((move) => (move as MoveItem<number, MaterialType, LocationType>).location.type === LocationType.PlayedKitsuCardSpot)).toBe(true)
         expect(moves.every((move) => (move as MoveItem<number, MaterialType, LocationType>).location.player === 1)).toBe(true)
         expect(moves.map((move) => game.items[MaterialType.KitsuCard]![(move as MoveItem<number, MaterialType, LocationType>).itemIndex].id)).toEqual(
@@ -290,7 +290,7 @@ describe('PlayKitsuCardRule tests', () => {
           // When
           const allowedMoves = rule.getPlayerMoves()
           const playableCardIds = allowedMoves
-            .filter((move) => isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard)(move))
+            .filter((move) => isMoveItemType(MaterialType.KitsuCard)(move))
             .map((move) => {
               const cardIndex = (move as MoveItem<number, MaterialType, LocationType>).itemIndex
               return game.items[MaterialType.KitsuCard]![cardIndex].id as KitsuCard
@@ -337,7 +337,7 @@ describe('PlayKitsuCardRule tests', () => {
           // When
           const allowedMoves = rule.getPlayerMoves()
           const playableCardIds = allowedMoves
-            .filter((move) => isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard)(move))
+            .filter((move) => isMoveItemType(MaterialType.KitsuCard)(move))
             .map((move) => {
               const cardIndex = (move as MoveItem<number, MaterialType, LocationType>).itemIndex
               return game.items[MaterialType.KitsuCard]![cardIndex].id as KitsuCard
@@ -394,9 +394,9 @@ describe('PlayKitsuCardRule tests', () => {
 
           // When
           const legalMoves = rule.getPlayerMoves()
-          const cardMoves = legalMoves.filter(isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard))
+          const cardMoves = legalMoves.filter(isMoveItemType(MaterialType.KitsuCard))
           const cardIdsInMoves = cardMoves.map((move) => game.items[MaterialType.KitsuCard]![move.itemIndex].id as KitsuCard)
-          const tokenMoves = legalMoves.filter(isMoveItemType<number, MaterialType, LocationType>(MaterialType.PowerToken))
+          const tokenMoves = legalMoves.filter(isMoveItemType(MaterialType.PowerToken))
           const tokenTargetCardIds = tokenMoves.map((move) => game.items[MaterialType.KitsuCard]![move.location.parent!].id as KitsuCard)
 
           // Then
@@ -443,8 +443,8 @@ describe('PlayKitsuCardRule tests', () => {
 
           // When
           const consequences = rule.afterItemMove(itemMove)
-          const selectMoves = consequences.filter(isSelectItemType<number, MaterialType, LocationType>(MaterialType.PowerToken))
-          const moveTokenMoves = consequences.filter(isMoveItemType<number, MaterialType, LocationType>(MaterialType.PowerToken))
+          const selectMoves = consequences.filter(isSelectItemType(MaterialType.PowerToken))
+          const moveTokenMoves = consequences.filter(isMoveItemType(MaterialType.PowerToken))
 
           // Then
           expect(consequences).toHaveLength(1)
@@ -495,7 +495,7 @@ describe('PlayKitsuCardRule tests', () => {
 
             // When
             const legalMoves = rule.getPlayerMoves()
-            const tokenMoves = legalMoves.filter(isMoveItemType<number, MaterialType, LocationType>(MaterialType.PowerToken))
+            const tokenMoves = legalMoves.filter(isMoveItemType(MaterialType.PowerToken))
             const tokenMovesCardIds = tokenMoves.map((move) => game.items[MaterialType.KitsuCard]![move.location.parent!].id as KitsuCard)
 
             // Then

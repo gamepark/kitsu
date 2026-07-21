@@ -1,5 +1,5 @@
 import { MaterialGameSetup } from '@gamepark/rules-api'
-import { shuffle } from 'lodash'
+import { shuffle } from 'es-toolkit'
 import { KitsuOptions } from './KitsuOptions'
 import { KitsuRules } from './KitsuRules'
 import { kitsuCardIds, last24PlayersKitsuCardEnumValueIndex } from './material/KitsuCard'

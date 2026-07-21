@@ -54,7 +54,7 @@ describe('End of trick - Pick cards', () => {
 
         // When
         const consequences = rule.onRuleStart(previousRuleMove)
-        const dealCardMoves = consequences.filter(isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard))
+        const dealCardMoves = consequences.filter(isMoveItemType(MaterialType.KitsuCard))
         const ruleMoves = consequences.filter(isStartPlayerTurn<number, MaterialType, LocationType>)
 
         // Then

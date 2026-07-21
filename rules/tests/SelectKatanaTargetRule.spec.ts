@@ -248,7 +248,7 @@ describe('SelectKatanaTarget rule tests', () => {
 
       // When
       const allowedMoves = rule.getPlayerMoves()
-      const allowedCardIds = allowedMoves.filter(isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard)).map((move) => {
+      const allowedCardIds = allowedMoves.filter(isMoveItemType(MaterialType.KitsuCard)).map((move) => {
         const cardIndex = move.itemIndex
         return game.items[MaterialType.KitsuCard]![cardIndex].id
       })
@@ -285,7 +285,7 @@ describe('SelectKatanaTarget rule tests', () => {
     // When
     const legalMoves = rule.getPlayerMoves()
     const kitsuCardFaceDownMoves = legalMoves
-      .filter(isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard))
+      .filter(isMoveItemType(MaterialType.KitsuCard))
       .filter((move) => move.location.rotation === KitsuCardRotation.FaceDown)
 
     // Then

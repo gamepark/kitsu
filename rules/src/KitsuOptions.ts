@@ -1,6 +1,5 @@
-import { OptionsSpec, OptionsValidationError } from '@gamepark/rules-api'
-import { TFunction } from 'i18next'
-import { sumBy } from 'lodash'
+import { OptionsSpec, OptionsValidationError, TFunction } from '@gamepark/rules-api'
+import { sumBy } from 'es-toolkit'
 import { TeamColor, teamColors } from './TeamColor'
 
 /**

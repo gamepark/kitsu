@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import { KitsuRules } from '@gamepark/kitsu/KitsuRules'
 import { LocationType } from '@gamepark/kitsu/material/LocationType'
 import { MaterialType } from '@gamepark/kitsu/material/MaterialType'
@@ -14,5 +13,5 @@ export const EndOfTrickDrawLogComponent: FC<MoveComponentProps<MaterialMove<numb
   const rule = new KitsuRules(context.game as MaterialGame<number, MaterialType, LocationType, RuleId>)
   const playedCards = rule.material(MaterialType.KitsuCard).location(LocationType.PlayedKitsuCardSpot)
   const score = EndOfTrickKitsunePawnMoveRule.getScore(playedCards, TeamColor.Zenko)
-  return <Trans defaults="log.endOfTrick.draw" values={{ teamsScore: score }} />
+  return <Trans i18nKey="log.endOfTrick.draw" values={{ teamsScore: score }} />
 }

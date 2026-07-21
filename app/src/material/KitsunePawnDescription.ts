@@ -9,6 +9,7 @@ import ZenkoPawn from '../images/Tokens/ZenkoKitsuneToken.png'
 class KitsunePawnDescription extends TokenDescription<number, MaterialType, LocationType, KitsunePawn> {
   height = 2.54
   width = 2.16
+  transparency = true
   images = {
     [KitsunePawn.Yako]: YakoPawn,
     [KitsunePawn.Zenko]: ZenkoPawn,

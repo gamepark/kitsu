@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import { ClanCard, isClanCardMaterial } from '@gamepark/kitsu/material/ClanCard'
 import { LocationType } from '@gamepark/kitsu/material/LocationType'
 import { MaterialType } from '@gamepark/kitsu/material/MaterialType'

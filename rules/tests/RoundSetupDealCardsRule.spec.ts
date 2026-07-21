@@ -22,7 +22,7 @@ describe('Round setup - deal card rule tests', () => {
       const shuffleMove = moves[0]
 
       // Then
-      expect(isShuffleItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard)(shuffleMove)).toBe(true)
+      expect(isShuffleItemType(MaterialType.KitsuCard)(shuffleMove)).toBe(true)
       expect((shuffleMove as Shuffle).indexes).toHaveLength(24)
     })
 
@@ -44,7 +44,7 @@ describe('Round setup - deal card rule tests', () => {
       const dealCardMoves = moves
         .filter(
           (move) =>
-            isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard)(move) && (move as MoveItem).location.type === LocationType.PlayerHand,
+            isMoveItemType(MaterialType.KitsuCard)(move) && (move as MoveItem).location.type === LocationType.PlayerHand,
         )
         .map((move, index) => ({ index: index, move: move as MoveItem }))
       const firstPlayerMoves = dealCardMoves.filter(({ move }) => move.location.player === 1)

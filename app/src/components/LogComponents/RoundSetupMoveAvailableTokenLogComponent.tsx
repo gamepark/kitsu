@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import { Trans } from 'react-i18next'
 
-export const RoundSetupMoveAvailableTokenLogComponent = () => <Trans defaults="log.roundSetup.availablePowerTokenMove" />
+export const RoundSetupMoveAvailableTokenLogComponent = () => <Trans i18nKey="log.roundSetup.availablePowerTokenMove" />

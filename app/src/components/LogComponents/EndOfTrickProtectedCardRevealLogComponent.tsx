@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import { KitsuCard } from '@gamepark/kitsu/material/KitsuCard'
 import { LocationType } from '@gamepark/kitsu/material/LocationType'
 import { MaterialType } from '@gamepark/kitsu/material/MaterialType'
@@ -37,5 +36,5 @@ export const EndOfTrickProtectedCardRevealLogComponent: FC<MoveComponentProps<Mo
   if (me === owningPlayer) {
     return <Trans default="log.endOfTrick.revealProtectedCard.self" components={componentsProp} />
   }
-  return <Trans defaults="log.endOfTrick.revealProtectedCard.other" values={{ player: owningPlayerName }} components={componentsProp} />
+  return <Trans i18nKey="log.endOfTrick.revealProtectedCard.other" values={{ player: owningPlayerName }} components={componentsProp} />
 }

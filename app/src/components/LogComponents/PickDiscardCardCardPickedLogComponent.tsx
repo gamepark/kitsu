@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import { KitsuCard } from '@gamepark/kitsu/material/KitsuCard'
 import { LocationType } from '@gamepark/kitsu/material/LocationType'
 import { MaterialType } from '@gamepark/kitsu/material/MaterialType'
@@ -20,14 +19,14 @@ export const PickDiscardCardCardPickedLogComponent: FC<MoveComponentProps<MoveIt
   if (me === actingPlayer && cardId !== undefined) {
     return (
       <Trans
-        defaults="log.pickDiscardCard.pickCard.self"
+        i18nKey="log.pickDiscardCard.pickCard.self"
         components={{ card: <Picture src={kitsuCardDescription.images[cardId]} css={kitsuCardLogPictureCss} /> }}
       />
     )
   }
   return (
     <Trans
-      defaults="log.pickDiscardCard.pickCard.other"
+      i18nKey="log.pickDiscardCard.pickCard.other"
       values={{ player: actingPlayerName }}
       components={{ card: <Picture src={kitsuCardDescription.backImage} css={kitsuCardLogPictureCss} /> }}
     />

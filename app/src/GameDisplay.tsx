@@ -1,14 +1,8 @@
-/** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react'
-import { GameTable, GameTableNavigation } from '@gamepark/react-game'
-import { FC } from 'react'
+import { DevToolsHub, GameTable, GameTableNavigation } from '@gamepark/react-game'
 import { PlayerPanels } from './panels/PlayerPanels'
 
-interface GameDisplayProps {
-  players: number
-}
-
-export const GameDisplay: FC<GameDisplayProps> = () => {
+export function GameDisplay() {
   return (
     <>
       <GameTable
@@ -17,16 +11,16 @@ export const GameDisplay: FC<GameDisplayProps> = () => {
         yMin={-40}
         yMax={40}
         margin={{ top: 7, left: 0, right: 0, bottom: 0 }}
-        css={
-          process.env.NODE_ENV === 'development' &&
-          css`
-            border: 1px solid white;
-          `
-        }
+        css={process.env.NODE_ENV === 'development' && tableBorder}
       >
         <GameTableNavigation />
         <PlayerPanels />
+        {process.env.NODE_ENV === 'development' && <DevToolsHub fabBottom="calc(5em)" />}
       </GameTable>
     </>
   )
 }
+
+const tableBorder = css`
+  border: 1px solid white;
+`

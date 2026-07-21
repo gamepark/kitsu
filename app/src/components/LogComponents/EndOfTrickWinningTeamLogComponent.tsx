@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import { KitsunePawn } from '@gamepark/kitsu/material/KitsunePawn'
 import { LocationType } from '@gamepark/kitsu/material/LocationType'
 import { MaterialType } from '@gamepark/kitsu/material/MaterialType'
@@ -23,14 +22,14 @@ export const EndOfTrickWinningTeamLogComponent: FC<MoveComponentProps<MaterialMo
     .id<KitsunePawn>(winningTeam === TeamColor.Yako ? KitsunePawn.Yako : KitsunePawn.Zenko)
     .getIndex()
   const kitsunePawnConsequences = context.action.consequences
-    .filter(isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsunePawn))
+    .filter(isMoveItemType(MaterialType.KitsunePawn))
     .filter((consequence) => consequence.itemIndex === winningKitsunePawnItemIndex && consequence.location.id !== 0)
   const numberOfMoves = kitsunePawnConsequences.length
   const ultimateWisdomReached = kitsunePawnConsequences[kitsunePawnConsequences.length - 1].location.id === 13
   if (ultimateWisdomReached) {
     return (
       <Trans
-        defaults="log.endOfTrick.winningTeam.ultimateWisdomReached"
+        i18nKey="log.endOfTrick.winningTeam.ultimateWisdomReached"
         values={{ zenkoScore: zenkoScore, yakoScore: yakoScore, winningTeamName: winningTeam === TeamColor.Yako ? t('clan.yako') : t('clan.zenko'), numberOfMoves: numberOfMoves }}
         components={{
           blue: <span css={zenkoTextCss} />,
@@ -48,7 +47,7 @@ export const EndOfTrickWinningTeamLogComponent: FC<MoveComponentProps<MaterialMo
   }
   return (
     <Trans
-      defaults="log.endOfTrick.winningTeam"
+      i18nKey="log.endOfTrick.winningTeam"
       values={{ zenkoScore: zenkoScore, yakoScore: yakoScore, winningTeamName: winningTeam === TeamColor.Yako ? t('clan.yako') : t('clan.zenko'), numberOfMoves: numberOfMoves }}
       components={{
         blue: <span css={zenkoTextCss} />,

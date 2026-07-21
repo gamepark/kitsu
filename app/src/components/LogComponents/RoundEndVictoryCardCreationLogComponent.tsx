@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import { LocationType } from '@gamepark/kitsu/material/LocationType'
 import { MaterialType } from '@gamepark/kitsu/material/MaterialType'
 import { VictoryCard } from '@gamepark/kitsu/material/VictoryCard'
@@ -16,7 +15,7 @@ export const RoundEndVictoryCardCreationLogComponent: FC<MoveComponentProps<Mate
   const winningTeam = (createMove.item as MaterialItem<number, LocationType, VictoryCard>).id === VictoryCard.Zenko ? TeamColor.Zenko : TeamColor.Yako
   return (
     <Trans
-      defaults="log.roundEnd.victoryCardCreation"
+      i18nKey="log.roundEnd.victoryCardCreation"
       values={{ team: winningTeam === TeamColor.Zenko ? t('clan.zenko') : t('clan.yako') }}
       components={{
         card: <Picture src={victoryCardDescription.images[createMove.item.id as VictoryCard]} css={kitsuCardLogPictureCss} />,

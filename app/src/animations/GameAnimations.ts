@@ -8,6 +8,6 @@ export const gameAnimations = new MaterialGameAnimations()
 
 gameAnimations
   .when()
-  .rule<RuleId>(RuleId.RoundSetupDealCards)
-  .move((move) => isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard)(move) && move.location.type === LocationType.PlayerHand)
+  .rule(RuleId.RoundSetupDealCards)
+  .move((move) => isMoveItemType(MaterialType.KitsuCard)(move) && move.location.type === LocationType.PlayerHand)
   .duration(0.5)

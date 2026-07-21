@@ -125,8 +125,8 @@ export class KitsuRules
   private isUnpredictableMoveBecauseOfProtectionToken(move: MaterialMove<number, MaterialType, LocationType>): boolean {
     return (
       this.material(MaterialType.PowerToken).id<PowerToken>(PowerToken.Protection).location(LocationType.PowerTokenSpotOnKitsuCard).length === 1 &&
-      (isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsunePawn)(move) ||
-        isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard)(move))
+      (isMoveItemType(MaterialType.KitsunePawn)(move) ||
+        isMoveItemType(MaterialType.KitsuCard)(move))
     )
   }
 }

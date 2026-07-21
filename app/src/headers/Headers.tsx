@@ -1,5 +1,3 @@
-/** @jsxImportSource @emotion/react */
-
 import { RuleId } from '@gamepark/kitsu/rules/RuleId'
 import { ComponentType } from 'react'
 import { EndOfTrickDecideEndOfRoundHeader } from './EndOfTrickDecideEndOfRoundHeader'

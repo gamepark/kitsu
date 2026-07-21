@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import { KitsuRules } from '@gamepark/kitsu/KitsuRules'
 import { KitsuCard } from '@gamepark/kitsu/material/KitsuCard'
 import { LocationType } from '@gamepark/kitsu/material/LocationType'
@@ -21,7 +20,7 @@ export const KitsuCardReceiveFromTeamMemberLogComponent: FC<MoveComponentProps<M
   if (me === playerReceivingCard && move.reveal?.id !== undefined) {
     return (
       <Trans
-        defaults="log.receiveCard.self"
+        i18nKey="log.receiveCard.self"
         values={{ player: playerSendingCardName }}
         components={{ card: <Picture src={kitsuCardDescription.images[move.reveal.id as KitsuCard]} css={kitsuCardLogPictureCss} /> }}
       />
@@ -29,7 +28,7 @@ export const KitsuCardReceiveFromTeamMemberLogComponent: FC<MoveComponentProps<M
   }
   return (
     <Trans
-      defaults="log.receiveCard.other"
+      i18nKey="log.receiveCard.other"
       values={{ sendingPlayer: playerSendingCardName, player: playerReceivingCardName }}
       components={{ card: <Picture src={kitsuCardDescription.backImage} css={kitsuCardLogPictureCss} /> }}
     />

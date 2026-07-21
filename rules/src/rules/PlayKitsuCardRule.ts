@@ -57,7 +57,7 @@ export class PlayKitsuCardRule extends PlayerTurnRule<number, MaterialType, Loca
   }
 
   public afterItemMove(move: ItemMove<number, MaterialType, LocationType>, _context?: PlayMoveContext): MaterialMove<number, MaterialType, LocationType>[] {
-    if (isMoveItemType<number, MaterialType, LocationType>(MaterialType.PowerToken)(move) && move.location.type === LocationType.PowerTokenSpotOnKitsuCard) {
+    if (isMoveItemType(MaterialType.PowerToken)(move) && move.location.type === LocationType.PowerTokenSpotOnKitsuCard) {
       const powerToken = this.material(MaterialType.PowerToken).getItem<PowerToken>(move.itemIndex)
       const isProtectionPowerToken = powerToken.id === PowerToken.Protection
       const parentCard = this.material(MaterialType.KitsuCard).index(move.location.parent)
@@ -74,7 +74,7 @@ export class PlayKitsuCardRule extends PlayerTurnRule<number, MaterialType, Loca
       return [cardMove]
     }
     if (
-      isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard)(move) &&
+      isMoveItemType(MaterialType.KitsuCard)(move) &&
       move.location.type === LocationType.PlayedKitsuCardSpot &&
       move.location.player === this.player
     ) {
@@ -127,11 +127,11 @@ export class PlayKitsuCardRule extends PlayerTurnRule<number, MaterialType, Loca
     const consideredCardIndexes = allCards.id((cardId: KitsuCard) => getKitsuCardType(cardId) === previousPlayerTeamCardType).getIndexes()
     return allMoves.filter(
       (move) =>
-        (isMoveItemType<number, MaterialType, LocationType>(MaterialType.KitsuCard)(move) && consideredCardIndexes.includes(move.itemIndex)) ||
-        (isMoveItemType<number, MaterialType, LocationType>(MaterialType.PowerToken)(move) &&
+        (isMoveItemType(MaterialType.KitsuCard)(move) && consideredCardIndexes.includes(move.itemIndex)) ||
+        (isMoveItemType(MaterialType.PowerToken)(move) &&
           typeof move.location.parent === 'number' &&
           consideredCardIndexes.includes(move.location.parent)) ||
-        isSelectItemType<number, MaterialType, LocationType>(MaterialType.PowerToken)(move),
+        isSelectItemType(MaterialType.PowerToken)(move),
     )
   }
 

@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import { KitsuRules } from '@gamepark/kitsu/KitsuRules'
 import { KitsunePawn } from '@gamepark/kitsu/material/KitsunePawn'
 import { LocationType } from '@gamepark/kitsu/material/LocationType'

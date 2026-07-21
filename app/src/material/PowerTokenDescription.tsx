@@ -1,5 +1,3 @@
-/** @jsxImportSource @emotion/react */
-
 import { faHandPointer } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { LocationType } from '@gamepark/kitsu/material/LocationType'
@@ -20,9 +18,10 @@ import Plus3YakoToken from '../images/Tokens/PowerPlus3YakoToken.png'
 import Plus3ZenkoToken from '../images/Tokens/PowerPlus3ZenkoToken.png'
 import ProtectionToken from '../images/Tokens/PowerProtectionToken.png'
 
-class PowerTokenDescription extends TokenDescription<number, MaterialType, LocationType, Partial<Record<'front' | 'back', PowerToken>>> {
+class PowerTokenDescription extends TokenDescription<number, MaterialType, LocationType, PowerToken> {
   height = 3.136
   width = 3.2
+  transparency = true
   images = {
     [PowerToken.ColourExchange]: ColourExchangeToken,
     [PowerToken.NoAdvance]: NoAdvanceToken,
@@ -60,7 +59,7 @@ class PowerTokenDescription extends TokenDescription<number, MaterialType, Locat
     return
   }
 
-  public isMenuAlwaysVisible(item: MaterialItem<number, LocationType>, context: ItemContext<number, MaterialType, LocationType>): boolean {
+  public isMenuAlwaysVisible(item: MaterialItem<number, LocationType, PowerToken>, context: ItemContext<number, MaterialType, LocationType>): boolean {
     if (
       context.player === undefined ||
       context.player !== context.rules.game.rule?.player ||
@@ -78,7 +77,7 @@ class PowerTokenDescription extends TokenDescription<number, MaterialType, Locat
   }
 
   private getItemMenuButtonsForPlayKitsuCardRule(
-    item: MaterialItem<number, LocationType>,
+    item: MaterialItem<number, LocationType, PowerToken>,
     context: ItemContext<number, MaterialType, LocationType>,
     _legalMoves: MaterialMove<number, MaterialType, LocationType>[],
   ): React.ReactNode {
@@ -106,7 +105,7 @@ class PowerTokenDescription extends TokenDescription<number, MaterialType, Locat
   ): React.ReactNode {
     const currentItemIndex = context.rules.material(MaterialType.PowerToken).id<PowerToken>(item.id).getIndex()
     const giveTokenMoves = legalMoves
-      .filter(isMoveItemType<number, MaterialType, LocationType>(MaterialType.PowerToken))
+      .filter(isMoveItemType(MaterialType.PowerToken))
       .filter((move) => move.itemIndex === currentItemIndex)
     if (giveTokenMoves.length > 0) {
       return (

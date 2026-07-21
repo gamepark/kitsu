@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import { LocationType } from '@gamepark/kitsu/material/LocationType'
 import { MaterialType } from '@gamepark/kitsu/material/MaterialType'
 import { RoundSetupDealCardsRule } from '@gamepark/kitsu/rules/RoundSetupDealCardsRule'
@@ -15,7 +14,7 @@ export const RoundSetupDealCardLogComponent: FC<MoveComponentProps<MaterialMove<
   const actingPlayerName = usePlayerName(actingPlayer)
   const numberOfCardsDealt = rule.game.players.length === 6 ? 5 : 6
   if (me === actingPlayer) {
-    return <Trans defaults="log.roundSetup.dealCards.self" values={{ numberOfCards: numberOfCardsDealt }} />
+    return <Trans i18nKey="log.roundSetup.dealCards.self" values={{ numberOfCards: numberOfCardsDealt }} />
   }
-  return <Trans defaults="log.roundSetup.dealCards.other" values={{ numberOfCards: numberOfCardsDealt, player: actingPlayerName }} />
+  return <Trans i18nKey="log.roundSetup.dealCards.other" values={{ numberOfCards: numberOfCardsDealt, player: actingPlayerName }} />
 }

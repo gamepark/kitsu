@@ -67,6 +67,10 @@ class PlayedKitsuCardSpotLocator extends FlexLocator<number, MaterialType, Locat
     return (180 * playerIndex) / numberOfSectors
   }
 
+  public getPositionDependencies(_location: Location<number, LocationType>, context: MaterialContext<number, MaterialType, LocationType>): unknown {
+    return context.rules.game.rule?.id === RuleId.SendCardToTeamMember
+  }
+
   public getLocationDescription(
     location: Location<number, LocationType>,
     context: MaterialContext<number, MaterialType, LocationType> | ItemContext<number, MaterialType, LocationType>,

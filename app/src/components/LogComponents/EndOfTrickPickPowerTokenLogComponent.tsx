@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import { KitsuRules } from '@gamepark/kitsu/KitsuRules'
 import { LocationType } from '@gamepark/kitsu/material/LocationType'
 import { MaterialType } from '@gamepark/kitsu/material/MaterialType'
@@ -25,18 +24,18 @@ export const EndOfTrickPickPowerTokenLogComponent: FC<MoveComponentProps<MoveIte
   const componentProp = { powerToken: <Picture src={powerTokenDescription.images[powerToken.id]} css={powerTokenLogPictureCss} /> }
   if (me === actingPlayer) {
     if (me === targetPlayer) {
-      return <Trans defaults="log.endOfTrick.pickPowerToken.selfToSelf" components={componentProp} />
+      return <Trans i18nKey="log.endOfTrick.pickPowerToken.selfToSelf" components={componentProp} />
     }
-    return <Trans defaults="log.endOfTrick.pickPowerToken.selfToOther" values={{ targetPlayer: targetPlayerName }} components={componentProp} />
+    return <Trans i18nKey="log.endOfTrick.pickPowerToken.selfToOther" values={{ targetPlayer: targetPlayerName }} components={componentProp} />
   } else if (me === targetPlayer) {
-    return <Trans defaults="log.endOfTrick.pickPowerToken.otherToSelf" values={{ player: actingPlayerName }} components={componentProp} />
+    return <Trans i18nKey="log.endOfTrick.pickPowerToken.otherToSelf" values={{ player: actingPlayerName }} components={componentProp} />
   } else {
     if (actingPlayer === targetPlayer) {
-      return <Trans defaults="log.endOfTrick.pickPowerToken.otherToThemselves" values={{ player: actingPlayerName }} components={componentProp} />
+      return <Trans i18nKey="log.endOfTrick.pickPowerToken.otherToThemselves" values={{ player: actingPlayerName }} components={componentProp} />
     }
     return (
       <Trans
-        defaults="log.endOfTrick.pickPowerToken.otherToOther"
+        i18nKey="log.endOfTrick.pickPowerToken.otherToOther"
         values={{ player: actingPlayerName, targetPlayer: targetPlayerName }}
         components={componentProp}
       />

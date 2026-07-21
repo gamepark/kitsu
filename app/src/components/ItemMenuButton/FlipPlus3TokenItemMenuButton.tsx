@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import { faArrowRotateRight } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { LocationType } from '@gamepark/kitsu/material/LocationType'
@@ -32,7 +31,7 @@ export const FlipPlus3TokenItemMenuButton: FC<FlipPlus3TokenItemMenuButtonProps>
       options={{ transient: true }}
       radius={3.5}
       angle={0}
-      label={<Trans defaults="button.powerToken.plus3.flip" values={{ clan: translatedClan }} />}
+      label={<Trans i18nKey="button.powerToken.plus3.flip" values={{ clan: translatedClan }} />}
     >
       <span className="fa-flip-vertical">
         <FontAwesomeIcon icon={faArrowRotateRight} rotation={90} size="lg" />

@@ -11,6 +11,10 @@ class DiscardedCardsToPickSpotLocator extends FlexLocator<number, MaterialType, 
   public getCoordinates(location: Location, context: MaterialContext): Partial<Coordinates> {
     return context.rules.material(MaterialType.KitsuCard).location(location.type).length === 4 ? { x: -60.5, y: -25 } : { x: -66, y: -25 }
   }
+
+  public getPositionDependencies(location: Location, context: MaterialContext): unknown {
+    return context.rules.material(MaterialType.KitsuCard).location(location.type).length
+  }
 }
 
 export const discardedCardsToPickSpotLocator = new DiscardedCardsToPickSpotLocator()
