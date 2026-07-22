@@ -17,7 +17,7 @@ export const KitsunePawnHelp: FC<MaterialHelpProps<number, MaterialType, Locatio
   return (
     <>
       <h2>{t('help.kitsunePawn.title')}</h2>
-      <p>{isPawnOfMyTeam ? t('help.kitsunePawn.description.myTeam') : t('help.kistunePawn.description.otherTeam')}</p>
+      <p>{isPawnOfMyTeam ? t('help.kitsunePawn.description.myTeam') : t('help.kitsunePawn.description.otherTeam')}</p>
     </>
   )
 }

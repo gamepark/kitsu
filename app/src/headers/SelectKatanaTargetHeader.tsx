@@ -9,7 +9,7 @@ export const SelectKatanaTargetHeader = () => {
   const activePlayer = rules?.getActivePlayer()
   const player = usePlayerName(activePlayer)
   if (activePlayer === me) {
-    return <>{t('header.selectKatanaTaget.active')}</>
+    return <>{t('header.selectKatanaTarget.active')}</>
   }
   return <>{t('header.selectKatanaTarget.other', { name: player })}</>
 }
