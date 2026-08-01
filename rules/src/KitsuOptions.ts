@@ -1,4 +1,4 @@
-import { OptionsSpec, OptionsValidationError, TFunction } from '@gamepark/rules-api'
+import { OptionsSpec, OptionsSpecV2, OptionsValidationError, TFunction } from '@gamepark/rules-api'
 import { sumBy } from 'es-toolkit'
 import { TeamColor, teamColors } from './TeamColor'
 
@@ -18,16 +18,39 @@ export interface KitsuOptions {
 }
 
 /**
- * This object describes all the options a game can have, and will be used by GamePark website to create automatically forms for you game
- * (forms for friendly games, or forms for matchmaking preferences, for instance).
+ * What Kitsu is: two clans, and a table split between them.
+ *
+ * `teams` says both. The platform derives the legal table sizes from it — two
+ * clans of equal size means 2, 4 or 6 players, never an odd count — and assigns
+ * the clans balanced. The two rules the old `validate` below threw for are
+ * therefore no longer Kitsu's to state; they are what declaring teams *means*.
+ *
+ * Clan names are not here by design: a v2 spec carries no text. They live in the
+ * options document published with the game's translations, under the keys the
+ * platform derives from this spec — `teams`, `teams.1`, `teams.2`.
+ */
+export const KitsuOptionsSpecV2: OptionsSpecV2 = {
+  specVersion: 2,
+  players: { min: 2, max: 6 },
+  teams: { values: teamColors }
+}
+
+/**
+ * The legacy declaration, superseded by `KitsuOptionsSpecV2`.
+ *
+ * Kept exported only because a few platform screens still read the v1 spec for
+ * its labels and per-player options; nothing here should be edited any more, and
+ * the whole object goes once those screens have moved. `validate` is dead code
+ * for game creation already: the platform generates from the v2 spec, which can
+ * no longer produce a table this function would refuse.
  */
 export const KitsuOptionsSpec: OptionsSpec<KitsuOptions> = {
   players: {
     team: {
       label: (t) => t('clan'),
       values: teamColors,
-      valueSpec: (color) => ({ label: (t) => getTeamName(color, t) }),
-    },
+      valueSpec: (color) => ({ label: (t) => getTeamName(color, t) })
+    }
   },
   validate: (options, t) => {
     if (options.players) {
@@ -40,7 +63,7 @@ export const KitsuOptionsSpec: OptionsSpec<KitsuOptions> = {
         throw new OptionsValidationError(t('invalid.teams'), ['players.team'])
       }
     }
-  },
+  }
 }
 
 export function getTeamName(color: TeamColor | undefined, t: TFunction) {

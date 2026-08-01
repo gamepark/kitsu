@@ -1,3 +1,3 @@
 export { KitsuRules } from './KitsuRules'
-export { KitsuOptionsSpec } from './KitsuOptions'
+export { KitsuOptionsSpec, KitsuOptionsSpecV2 } from './KitsuOptions'
 export { KitsuSetup } from './KitsuSetup'
