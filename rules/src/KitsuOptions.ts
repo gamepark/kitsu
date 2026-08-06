@@ -1,5 +1,4 @@
-import { OptionsSpec, OptionsSpecV2, OptionsValidationError, TFunction } from '@gamepark/rules-api'
-import { sumBy } from 'es-toolkit'
+import { OptionsSpecV2, TFunction } from '@gamepark/rules-api'
 import { TeamColor, teamColors } from './TeamColor'
 
 /**
@@ -33,37 +32,6 @@ export const KitsuOptionsSpecV2: OptionsSpecV2 = {
   specVersion: 2,
   players: { min: 2, max: 6 },
   teams: { values: teamColors }
-}
-
-/**
- * The legacy declaration, superseded by `KitsuOptionsSpecV2`.
- *
- * Kept exported only because a few platform screens still read the v1 spec for
- * its labels and per-player options; nothing here should be edited any more, and
- * the whole object goes once those screens have moved. `validate` is dead code
- * for game creation already: the platform generates from the v2 spec, which can
- * no longer produce a table this function would refuse.
- */
-export const KitsuOptionsSpec: OptionsSpec<KitsuOptions> = {
-  players: {
-    team: {
-      label: (t) => t('clan'),
-      values: teamColors,
-      valueSpec: (color) => ({ label: (t) => getTeamName(color, t) })
-    }
-  },
-  validate: (options, t) => {
-    if (options.players) {
-      if (options.players.length % 2 === 1) {
-        throw new OptionsValidationError(t('invalid.player.count'), ['players.team'])
-      }
-      const zenko = sumBy(options.players, (p) => (p.team === TeamColor.Zenko ? 1 : 0))
-      const yako = sumBy(options.players, (p) => (p.team === TeamColor.Yako ? 1 : 0))
-      if (zenko > options.players.length / 2 || yako > options.players.length / 2) {
-        throw new OptionsValidationError(t('invalid.teams'), ['players.team'])
-      }
-    }
-  }
 }
 
 export function getTeamName(color: TeamColor | undefined, t: TFunction) {

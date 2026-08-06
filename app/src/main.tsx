@@ -1,4 +1,4 @@
-import { KitsuOptionsSpec } from '@gamepark/kitsu/KitsuOptions'
+import { KitsuOptionsSpecV2 } from '@gamepark/kitsu/KitsuOptions'
 import { KitsuRules } from '@gamepark/kitsu/KitsuRules'
 import { KitsuSetup } from '@gamepark/kitsu/KitsuSetup'
 import { GameProvider } from '@gamepark/react-game'
@@ -17,7 +17,7 @@ createRoot(document.getElementById('root')!).render(
     <GameProvider
       game="kitsu"
       Rules={KitsuRules}
-      optionsSpec={KitsuOptionsSpec}
+      optionsSpec={KitsuOptionsSpecV2}
       GameSetup={KitsuSetup}
       material={Material}
       locators={Locators}

@@ -10,10 +10,6 @@
     "dist"
   ],
   "author": "Romain Fromi <romain@game-park.com> (https://game-park.com/)",
-  "contributors": [
-    "SwHawk <swhawk.gameparkdev@swhawk.eu>",
-    "Kuppo <mathieu.guerry@hotmail.fr>"
-  ],
   "license": "ISC",
   "publishConfig": {
     "access": "public"
@@ -30,8 +26,12 @@
     "es-toolkit": "^1.45.1"
   },
   "devDependencies": {
-    "@gamepark/rules-api": "~7.7.0",
+    "@gamepark/rules-api": "~7.7.2",
     "es-toolkit": "^1.50.0",
     "vitest": "^4.1.10"
-  }
+  },
+  "contributors": [
+    "SwHawk <swhawk.gameparkdev@swhawk.eu>",
+    "Kuppo <mathieu.guerry@hotmail.fr>"
+  ]
 }
